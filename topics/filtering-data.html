@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Documentation</title>
+		<link href="/styles.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div style="display: flex; flex: 1">
+			<aside>
+        <h2>Contents</h2>
+        <ul>
+           <li>
+              <a href="/topics/getting-started">
+                 <h3>Getting Started</h3>
+              </a>
+           </li>
+           <li>
+              <a href="/topics/file-formats.html">
+                 <h3>File Formats</h3>
+              </a>
+              <ul>
+                 <li><a href="/topics/file-formats#JBIN">JBIN (would link to the header/section)</a></li>
+              </ul>
+           </li>
+           <li>
+              <a href="/topics/database-usage.html">
+                 <h3>Database Usage</h3>
+              </a>
+           </li>
+           <li>
+              <a href="/topics/transforming-data.html"
+                 >
+                 <h3>Transforming Data</h3>
+              </a>
+           </li>
+           <li>
+              <a href="/topics/filtering-data.html">
+                 <h3>Filtering Data</h3>
+              </a>
+           </li>
+           <li>
+              <a href="/topics/Contact.html">
+                 <h3>Contact</h3>
+              </a>
+           </li>
+        </ul>
+     </aside>
+
+			<!-- Main Content -->
+			<main>
+				<h2>Filters</h2>
+				<p>
+					The Filters package provides a robust set of tools for transforming
+					and evaluating JSON objects based on specific conditions. Filters can
+					be combined using logical operations and configured to work with
+					coercive comparisons for flexibility in data evaluation.
+				</p>
+
+				<h3>Core Interfaces and Classes</h3>
+				<ul>
+					<li>
+						<strong>Filter:</strong> The base interface for defining filters
+						that evaluate each record in a collection and return only those that
+						meet specified conditions.
+					</li>
+					<li>
+						<strong>AndFilter:</strong> Combines multiple filters, requiring all
+						to evaluate the record as true.
+					</li>
+					<li>
+						<strong>OrFilter:</strong> Combines multiple filters, requiring at
+						least one to evaluate the record as true.
+					</li>
+					<li>
+						<strong>NotFilter:</strong> Inverts the result of another filter.
+					</li>
+					<li>
+						<strong>ComparatorFilter:</strong> Abstract class for filters that
+						use a coercive comparator to evaluate key-value conditions.
+					</li>
+					<li>
+						<strong>EqualsFilter:</strong> Filters records where a specified
+						key's value is equal to a given value.
+					</li>
+					<li>
+						<strong>GreaterThanFilter:</strong> Filters records where a
+						specified key's value is greater than a given value.
+					</li>
+					<li>
+						<strong>GreaterThanOrEqualFilter:</strong> Filters records where a
+						specified key's value is greater than or equal to a given value.
+					</li>
+					<li>
+						<strong>LessThanFilter:</strong> Filters records where a specified
+						key's value is less than a given value.
+					</li>
+					<li>
+						<strong>LessThanOrEqualFilter:</strong> Filters records where a
+						specified key's value is less than or equal to a given value.
+					</li>
+				</ul>
+
+				<h3>Filter Interface</h3>
+				<p>
+					The <code>Filter</code> interface extends <code>Transformer</code>,
+					allowing filters to work within transformation pipelines.
+				</p>
+
+				<h4>Key Methods</h4>
+				<ul>
+					<li>
+						<code
+							>Iterator&lt;JSONObject&gt; transform(Iterator&lt;JSONObject&gt;
+							iterator):</code
+						>
+						Applies the filter condition to each record in the iterator,
+						returning only those that pass the filter. This method is inherited
+						from the <code>Transformer</code> interface.
+					</li>
+					<li>
+						<code>boolean test(JSONObject record):</code> Tests if the given
+						record meets the filter condition. If the record passes the
+						condition, it returns <code>true</code>, otherwise
+						<code>false</code>.
+					</li>
+				</ul>
+
+        <pre><code>
+// Custom Filter that checks if a field contains a specific substring
+public class ContainsSubstringFilter implements Filter
+{
+    private String field;
+    private String substring;
+
+    // Constructor to initialize the field and substring to check for
+    public ContainsSubstringFilter(String field, String substring) {
+        this.field = field;
+        this.substring = substring;
+    }
+
+    // Implementing the 'test' method from Filter interface
+    @Override
+    public boolean test(JSONObject record)
+    {
+        // Check if the field exists and is a string
+        if (record.has(field) && record.get(field) instanceof String)
+        {
+            String value = record.getString(field);
+            return value.contains(substring);
+        }
+        return false;
+    }
+
+    // Implementing the 'transform' method from Transformer interface
+    @Override
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
+      {
+        return new Iterator<JSONObject>()
+          {
+            @Override
+            public boolean hasNext()
+            {
+                while (iterator.hasNext())
+                {
+                    JSONObject next = iterator.next();
+                    // Skip any records that don't pass the filter
+                    if (test(next)) return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public JSONObject next()
+            {
+                return iterator.next();
+            }
+        };
+    }
+}
+          </code></pre>
+
+				<h3>Logical Filters</h3>
+
+				<h4>AndFilter</h4>
+				<p>
+					Combines multiple filters, requiring all of them to evaluate the
+					record as true.
+				</p>
+				<pre><code>
+Filter filter = new AndFilter(
+    new GreaterThanFilter("age", 18),
+    new EqualsFilter("status", "active")
+);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>OrFilter</h4>
+				<p>
+					Combines multiple filters, requiring at least one to evaluate the
+					record as true.
+				</p>
+				<pre><code>
+Filter filter = new OrFilter(
+    new EqualsFilter("role", "admin"),
+    new EqualsFilter("role", "moderator")
+);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>NotFilter</h4>
+				<p>Inverts the result of another filter.</p>
+				<pre><code>
+Filter filter = new NotFilter(new EqualsFilter("status", "inactive"));
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+				<h3>Comparator-Based Filters</h3>
+
+				<h4>EqualsFilter</h4>
+				<p>
+					Filters records where a specified key's value is equal to a given
+					value.
+				</p>
+				<pre><code>
+Filter filter = new EqualsFilter("country", "USA");
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>GreaterThanFilter</h4>
+				<p>
+					Filters records where a specified key's value is greater than a given
+					value.
+				</p>
+				<pre><code>
+Filter filter = new GreaterThanFilter("age", 30);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>GreaterThanOrEqualFilter</h4>
+				<p>
+					Filters records where a specified key's value is greater than or equal
+					to a given value.
+				</p>
+				<pre><code>
+Filter filter = new GreaterThanOrEqualFilter("score", 85);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>LessThanFilter</h4>
+				<p>
+					Filters records where a specified key's value is less than a given
+					value.
+				</p>
+				<pre><code>
+Filter filter = new LessThanFilter("price", 100);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+
+				<h4>LessThanOrEqualFilter</h4>
+				<p>
+					Filters records where a specified key's value is less than or equal to
+					a given value.
+				</p>
+				<pre><code>
+Filter filter = new LessThanOrEqualFilter("quantity", 50);
+
+Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
+</code></pre>
+<h3>Custom Comparisons</h3>
+				<p>
+					The <code>CoerciveComparator</code> allows for comparisons between
+					values of different types, supporting nulls, numbers, and other
+					comparables. It is used internally by
+					<code>ComparatorFilter</code> and its subclasses for flexible and
+					robust evaluations.
+				</p>
+
+				<h3>Best Practices</h3>
+				<ul>
+					<li>
+						Combine filters with <code>AndFilter</code> and
+						<code>OrFilter</code> to define complex filtering criteria.
+					</li>
+					<li>
+						Use <code>NotFilter</code> to exclude records based on specific
+						conditions.
+					</li>
+					<li>
+						When working with numeric or comparable fields, leverage
+						<code>ComparatorFilter</code> subclasses like
+						<code>GreaterThanFilter</code> for concise evaluations.
+					</li>
+				</ul>
+			</main>
+		</div>
+	</body>
+</html>

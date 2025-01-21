@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Documentation</title>
+		<link href="/styles.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div style="display: flex; flex: 1">
+			<aside>
+				<h2>Contents</h2>
+				<ul>
+					<li>
+						<a href="/topics/getting-started">
+							<h3>Getting Started</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/file-formats.html">
+							<h3>File Formats</h3>
+						</a>
+						<ul>
+							<li>
+								<a href="/topics/file-formats#JBIN"
+									>JBIN (would link to the header/section)</a
+								>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="/topics/database-usage.html">
+							<h3>Database Usage</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/transforming-data.html">
+							<h3>Transforming Data</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/filtering-data.html">
+							<h3>Filtering Data</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/Contact.html">
+							<h3>Contact</h3>
+						</a>
+					</li>
+				</ul>
+			</aside>
+
+			<!-- Main Content -->
+			<main>
+				<h2>Data Transformations</h2>
+				<p>
+					Convirgance provides a flexible framework for transforming streams of
+					JSON objects using a variety of built-in transformers. These
+					transformers can clean, filter, group, and enrich data during
+					iteration, allowing for efficient and scalable data manipulation.
+				</p>
+
+				<h3>Core Interfaces and Classes</h3>
+				<ul>
+					<li>
+						<strong>Transformer:</strong> The base interface for applying
+						transformations to JSON objects lazily during iteration.
+					</li>
+					<li>
+						<strong>IdentityTransformer:</strong> A specialized transformer that
+						guarantees one output record per input record, allowing
+						modifications to individual records.
+					</li>
+					<li>
+						<strong>CoerceStringsTransformer:</strong> Converts string values
+						into other data types, such as <code>Integer</code>,
+						<code>Double</code>, and <code>Boolean</code>.
+					</li>
+					<li>
+						<strong>InsertKeyTransformer:</strong> Adds or modifies a key-value
+						pair in JSON objects.
+					</li>
+					<li>
+						<strong>SortedGroupByTransformer:</strong> Groups JSON objects based
+						on specified fields, assuming the data is already sorted.
+					</li>
+					<li>
+						<strong>UnsortedGroupByTransformer:</strong> Groups JSON objects on
+						specified fields without requiring prior sorting.
+					</li>
+				</ul>
+
+				<h3>Transformer Interface</h3>
+				<p>
+					The <code>Transformer</code> interface provides a way to lazily apply
+					transformations to JSON objects.
+				</p>
+
+				<h4>Key Method</h4>
+				<ul>
+					<li>
+						<code
+							>Iterable&lt;JSONObject&gt; transform(Iterable&lt;JSONObject&gt;
+							iterable):</code
+						>
+						Lazily transforms a collection of JSON objects.
+					</li>
+				</ul>
+
+				<h4>Usage Example</h4>
+				<pre><code>
+Transformer transformer = new CoerceStringsTransformer();
+Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
+
+for (JSONObject record : transformed) {
+    System.out.println(record);
+}
+</code></pre>
+				<h3>CoerceStringsTransformer</h3>
+				<p>
+					The <code>CoerceStringsTransformer</code> converts string values into
+					other data types such as <code>Integer</code>, <code>Double</code>,
+					and <code>Boolean</code>.
+				</p>
+
+				<h4>Usage Example</h4>
+				<pre><code>
+Transformer transformer = new CoerceStringsTransformer();
+Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
+
+for (JSONObject record : transformed) {
+    System.out.println(record);
+}
+</code></pre>
+				<h3>InsertKeyTransformer</h3>
+				<p>
+					The <code>InsertKeyTransformer</code> allows adding or modifying a
+					key-value pair in JSON objects.
+				</p>
+
+				<h4>Constructor</h4>
+				<ul>
+					<li>
+						<code>InsertKeyTransformer(String key, Object value):</code>
+						Initializes the transformer with the key and value to insert.
+					</li>
+				</ul>
+
+				<h4>Usage Example</h4>
+				<pre><code>
+Transformer transformer = new InsertKeyTransformer("newKey", "newValue");
+Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
+
+for (JSONObject record : transformed) {
+    System.out.println(record);
+}
+</code></pre>
+				<h3>SortedGroupByTransformer</h3>
+				<p>
+					The <code>SortedGroupByTransformer</code> groups data based on
+					specified fields. The data must already be sorted for accurate
+					grouping.
+				</p>
+
+				<h4>Constructor</h4>
+				<ul>
+					<li>
+						<code
+							>SortedGroupByTransformer(String[] fields, String output):</code
+						>
+						Groups related data on the specified fields and assigns it to the
+						output field.
+					</li>
+				</ul>
+
+				<h4>Usage Example</h4>
+				<pre><code>
+Transformer transformer = new SortedGroupByTransformer(new String[]{"field1", "field2"}, "groupedData");
+Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
+
+for (JSONObject record : transformed) {
+    System.out.println(record);
+}
+</code></pre>
+				<h3>UnsortedGroupByTransformer</h3>
+				<p>
+					The <code>UnsortedGroupByTransformer</code> groups data based on
+					specified fields without requiring the data to be sorted beforehand.
+				</p>
+
+				<h4>Constructor</h4>
+				<ul>
+					<li>
+						<code
+							>UnsortedGroupByTransformer(String[] fields, String output):</code
+						>
+						Groups related data on the specified fields and assigns it to the
+						output field.
+					</li>
+				</ul>
+
+				<h4>Usage Example</h4>
+				<pre><code>
+Transformer transformer = new UnsortedGroupByTransformer(new String[]{"field1"}, "groupedData");
+Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
+
+for (JSONObject record : transformed) {
+    System.out.println(record);
+}
+</code></pre>
+				<h3>Best Practices</h3>
+				<ul>
+					<li>
+						Use <code>CoerceStringsTransformer</code> to standardize data types
+						before processing.
+					</li>
+					<li>
+						Leverage <code>SortedGroupByTransformer</code> for efficient
+						grouping when working with pre-sorted data.
+					</li>
+					<li>
+						Apply <code>UnsortedGroupByTransformer</code> when sorting is not
+						guaranteed but grouping is required.
+					</li>
+					<li>
+						Combine transformers to build complex transformation pipelines.
+					</li>
+				</ul>
+			</main>
+		</div>
+	</body>
+</html>
