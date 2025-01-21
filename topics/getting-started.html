@@ -114,7 +114,7 @@ public class Demo {
     public static void main(String[] args)
     {
         DBMS dbms = new DBMS(source);
-        Iterable&lt;JSONObject&gt;  results = dbms.query(new Query("select * from CUSTOMER"));
+        Iterable&lt;JSONObject&gt; results = dbms.query(new Query("select * from CUSTOMER"));
 
         GreaterThanFilter targetCustomer = new GreaterThanFilter("Devices", 10);
         LessThanFilter targetArea = new LessThanFilter("ZIP", 20000);
