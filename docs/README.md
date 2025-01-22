@@ -90,4 +90,4 @@ We welcome contributions! Check out our [Contributing Guide](CONTRIBUTING.md) to
 
 ## License
 
-Convirgance is available under the Apache 2.0 License. See [LICENSE](LICENSE) for details.
+Convirgance is available under the MIT License. See [License](https://raw.githubusercontent.com/InvirganceOpenSource/convirgance/refs/heads/main/LICENSE.md) for more details.
