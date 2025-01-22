@@ -4,13 +4,13 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 ## Supported Formats
 
-| Format        | Description                                             | Read/Write |
-| ------------- | ------------------------------------------------------- | ---------- |
-| CSV           | Comma-separated values, widely used for tabular data.   | Read/Write |
-| JSON          | JavaScript Object Notation, common for structured data. | Read/Write |
-| SQL           | Structured Query Language, for relational databases.    | Read/Write |
-| Excel (TBD)   | Microsoft Excel spreadsheets (.xls, .xlsx).             | Read/Write |
-| Parquet (TBD) | Columnar storage file format for big data applications. | Read/Write |
+| Format        | Description                                              | Read/Write |
+| ------------- | -------------------------------------------------------- | ---------- |
+| CSV           | Comma-separated values, widely used for tabular data.    | Read/Write |
+| JSON          | JavaScript Object Notation, common for structured data.  | Read/Write |
+| Delimited     | Custom-delimited files (CSV, TSV, etc) for tabular data. | Read/Write |
+| Excel (TBD)   | Microsoft Excel spreadsheets (.xls, .xlsx).              | Read/Write |
+| Parquet (TBD) | Columnar storage file format for big data applications.  | Read/Write |
 
 ## Extending the Input Interface
 
