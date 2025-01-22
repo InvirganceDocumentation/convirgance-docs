@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Documentation</title>
+		<title>Transformations</title>
 		<link href="/styles.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -55,10 +55,11 @@
 			<main>
 				<h2>Data Transformations</h2>
 				<p>
-					Convirgance provides a flexible framework for transforming streams of
-					JSON objects using a variety of built-in transformers. These
-					transformers can clean, filter, group, and enrich data during
-					iteration, allowing for efficient and scalable data manipulation.
+					Transformations provide tools for modifying and enriching data on the
+					fly. They include identity transformations, which map records
+					one-to-one while making changes, and grouping transformations for
+					aggregating data. These tools ensure that raw data can be cleaned,
+					formatted, and grouped to meet analytical needs.
 				</p>
 
 				<h3>Core Interfaces and Classes</h3>
@@ -113,7 +114,8 @@
 Transformer transformer = new CoerceStringsTransformer();
 Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 </code></pre>
@@ -129,7 +131,8 @@ for (JSONObject record : transformed) {
 Transformer transformer = new CoerceStringsTransformer();
 Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 </code></pre>
@@ -152,7 +155,8 @@ for (JSONObject record : transformed) {
 Transformer transformer = new InsertKeyTransformer("newKey", "newValue");
 Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 </code></pre>
@@ -179,7 +183,8 @@ for (JSONObject record : transformed) {
 Transformer transformer = new SortedGroupByTransformer(new String[]{"field1", "field2"}, "groupedData");
 Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 </code></pre>
@@ -205,7 +210,8 @@ for (JSONObject record : transformed) {
 Transformer transformer = new UnsortedGroupByTransformer(new String[]{"field1"}, "groupedData");
 Iterable&lt;JSONObject&gt; transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 </code></pre>

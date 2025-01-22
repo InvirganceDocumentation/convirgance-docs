@@ -3,59 +3,64 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Documentation</title>
+		<title>Filtering Data</title>
 		<link href="/styles.css" rel="stylesheet" />
 	</head>
 	<body>
 		<div style="display: flex; flex: 1">
 			<aside>
-        <h2>Contents</h2>
-        <ul>
-           <li>
-              <a href="/topics/getting-started">
-                 <h3>Getting Started</h3>
-              </a>
-           </li>
-           <li>
-              <a href="/topics/file-formats.html">
-                 <h3>File Formats</h3>
-              </a>
-              <ul>
-                 <li><a href="/topics/file-formats#JBIN">JBIN (would link to the header/section)</a></li>
-              </ul>
-           </li>
-           <li>
-              <a href="/topics/database-usage.html">
-                 <h3>Database Usage</h3>
-              </a>
-           </li>
-           <li>
-              <a href="/topics/transforming-data.html"
-                 >
-                 <h3>Transforming Data</h3>
-              </a>
-           </li>
-           <li>
-              <a href="/topics/filtering-data.html">
-                 <h3>Filtering Data</h3>
-              </a>
-           </li>
-           <li>
-              <a href="/topics/Contact.html">
-                 <h3>Contact</h3>
-              </a>
-           </li>
-        </ul>
-     </aside>
+				<h2>Contents</h2>
+				<ul>
+					<li>
+						<a href="/topics/getting-started">
+							<h3>Getting Started</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/file-formats.html">
+							<h3>File Formats</h3>
+						</a>
+						<ul>
+							<li>
+								<a href="/topics/file-formats#JBIN"
+									>JBIN (would link to the header/section)</a
+								>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="/topics/database-usage.html">
+							<h3>Database Usage</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/transforming-data.html">
+							<h3>Transforming Data</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/filtering-data.html">
+							<h3>Filtering Data</h3>
+						</a>
+					</li>
+					<li>
+						<a href="/topics/Contact.html">
+							<h3>Contact</h3>
+						</a>
+					</li>
+				</ul>
+			</aside>
 
 			<!-- Main Content -->
 			<main>
 				<h2>Filters</h2>
 				<p>
-					The Filters package provides a robust set of tools for transforming
-					and evaluating JSON objects based on specific conditions. Filters can
-					be combined using logical operations and configured to work with
-					coercive comparisons for flexibility in data evaluation.
+					Filters allow for advanced record filtering based on specified
+					conditions. They can be combined logically, such as requiring all
+					conditions to be met <code>(AND)</code>, only one <code>(OR)</code>,
+					or negating conditions <code>(NOT)</code>. Comparisons are flexible,
+					allowing for type coercion and handling nulls, enabling effective
+					filtering of data streams.
 				</p>
 
 				<h3>Core Interfaces and Classes</h3>
@@ -127,7 +132,7 @@
 					</li>
 				</ul>
 
-        <pre><code>
+				<pre><code>
 // Custom Filter that checks if a field contains a specific substring
 public class ContainsSubstringFilter implements Filter
 {
@@ -135,7 +140,8 @@ public class ContainsSubstringFilter implements Filter
     private String substring;
 
     // Constructor to initialize the field and substring to check for
-    public ContainsSubstringFilter(String field, String substring) {
+    public ContainsSubstringFilter(String field, String substring)
+    {
         this.field = field;
         this.substring = substring;
     }
@@ -150,14 +156,15 @@ public class ContainsSubstringFilter implements Filter
             String value = record.getString(field);
             return value.contains(substring);
         }
+
         return false;
     }
 
     // Implementing the 'transform' method from Transformer interface
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
-      {
-        return new Iterator<JSONObject>()
+    public Iterator&lt;JSONObject&gt; transform(Iterator&lt;JSONObject&gt; iterator)
+    {
+        return new Iterator&lt;JSONObject&gt;()
           {
             @Override
             public boolean hasNext()
@@ -275,7 +282,7 @@ Filter filter = new LessThanOrEqualFilter("quantity", 50);
 
 Iterable&lt;JSONObject&gt; filtered = filter.transform(sourceData);
 </code></pre>
-<h3>Custom Comparisons</h3>
+				<h3>Custom Comparisons</h3>
 				<p>
 					The <code>CoerciveComparator</code> allows for comparisons between
 					values of different types, supporting nulls, numbers, and other

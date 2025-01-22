@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Documentation</title>
+		<title>Database</title>
 		<link href="/styles.css" rel="stylesheet" />
 	</head>
 	<body>
@@ -55,10 +55,10 @@
 			<main>
 				<h2>Database Operations</h2>
 				<p>
-					Convirgance provides a powerful and extensible framework for managing
-					database operations. These operations are structured around the
-					<code>AtomicOperation</code> interface, which ensures safe and
-					consistent execution of queries, transactions, and batch processes.
+					Database operations encapsulate interactions with a data source. This
+					includes querying, batch processing, and managing transactions to
+					ensure atomicity. Operations simplify the complexity of working with
+					databases, enabling safe, efficient, and reusable data manipulations.
 				</p>
 
 				<h3>Core Interfaces and Classes</h3>
@@ -114,7 +114,8 @@
 /**
   * A custom implementation of the AtomicOperation interface that logs each record in a table to an external system.
   */
-public class LoggingOperation implements AtomicOperation {
+public class LoggingOperation implements AtomicOperation
+{
     private Query query; // The query to fetch the records.
     private Logger logger; // The logging system to use.
 
@@ -124,7 +125,8 @@ public class LoggingOperation implements AtomicOperation {
       * @param query The query to execute.
       * @param logger The logger for recording entries.
       */
-    public LoggingOperation(Query query, Logger logger) {
+    public LoggingOperation(Query query, Logger logger)
+    {
         this.query = query;
         this.logger = logger;
     }
@@ -136,18 +138,25 @@ public class LoggingOperation implements AtomicOperation {
       * @throws SQLException If a database error occurs.
       */
     @Override
-    public void execute(Connection connection) throws SQLException {
+    public void execute(Connection connection) throws SQLException
+    {
+        JSONObject record;
+        ResultSetMetaData metaData;
+
         // Prepare the statement and execute the query
         try (PreparedStatement statement = connection.prepareStatement(query.toString());
-              ResultSet resultSet = statement.executeQuery()) {
-            // Iterate over the results
+              ResultSet resultSet = statement.executeQuery())
+              {
+
             while (resultSet.next()) {
-                JSONObject record = new JSONObject();
-                ResultSetMetaData metaData = resultSet.getMetaData();
-                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                record = new JSONObject();
+                metaData = resultSet.getMetaData();
+
+                for (int i = 1; i <= metaData.getColumnCount(); i++)
+                {
                     record.put(metaData.getColumnName(i), resultSet.getObject(i));
                 }
-                // Log each record
+
                 logger.log(record.toString());
             }
         }
@@ -175,16 +184,15 @@ public class LoggingOperation implements AtomicOperation {
 
 				<h4>Usage Example</h4>
 				<pre><code>
-public void transactionOperation() {
-    DBMS dbms = new DBMS(source);
+public void transactionOperation()
+{
+    DBMS database = new DBMS(source);
 
     QueryOperation insertCustomer = new QueryOperation(new Query("INSERT INTO CUSTOMER (id, name) VALUES (1, 'Alice')"));
     QueryOperation updateAccount = new QueryOperation(new Query("UPDATE ACCOUNT SET balance = balance - 100 WHERE id = 1"));
 
     TransactionOperation transaction = new TransactionOperation(List.of(insertCustomer, updateAccount));
-    dbms.execute(transaction);
-
-    System.out.println("Transaction completed successfully.");
+    database.execute(transaction);
 }
         </code></pre>
 
@@ -208,7 +216,8 @@ public void transactionOperation() {
 
 				<h4>Usage Example</h4>
 				<pre><code>
-public void batchOperation() {
+public void batchOperation()
+{
     Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (?, ?, ?)");
     List&lt;JSONObject&gt; records = List.of(
         new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
@@ -220,8 +229,6 @@ public void batchOperation() {
 
     DBMS dbms = new DBMS(source);
     dbms.execute(batch);
-
-    System.out.println("Batch operation completed.");
 }
         </code></pre>
 
@@ -233,14 +240,18 @@ public void batchOperation() {
 
 				<h4>Example Usage</h4>
 				<pre><code>
-Query query = new Query("SELECT * FROM CUSTOMER WHERE id = ?");
-query.setParameter(1, 12345);
+public void queryOperation()
+{
+    Query query = new Query("SELECT * FROM CUSTOMER WHERE id = ?");
+    query.setParameter(1, 12345);
 
-DBMS dbms = new DBMS(source);
-Iterable&lt;JSONObject&gt; results = dbms.query(query);
+    DBMS dbms = new DBMS(source);
+    Iterable&lt;JSONObject&gt; results = dbms.query(query);
 
-for (JSONObject record : results) {
-    System.out.println(record);
+    for (JSONObject record : results)
+    {
+        System.out.println(record);
+    }
 }
         </code></pre>
 
