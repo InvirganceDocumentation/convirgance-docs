@@ -84,10 +84,6 @@ We're here to help:
 - [GitHub Issues](https://github.com/InvirganceOpenSource) - Report bugs or request features
 - [Contact](contact.md) - Get in touch with the team
 
-## Contributing
-
-We welcome contributions! Check out our [Contributing Guide](CONTRIBUTING.md) to get started.
-
 ## License
 
 Convirgance is available under the MIT License. See [License](https://raw.githubusercontent.com/InvirganceOpenSource/convirgance/refs/heads/main/LICENSE.md) for more details.
