@@ -52,7 +52,7 @@ public class Demo
         Iterable<JSONObject> result = devices.transform(filtered);
 
         // Execute the query and write the results
-        output.write(target, audience);
+        output.write(target, result);
     }
 }
 ```
