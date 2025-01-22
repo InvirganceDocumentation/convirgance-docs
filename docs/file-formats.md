@@ -4,12 +4,12 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 ## Supported Formats
 
-| Format | Description | Read/Write |
-|--------|-------------|------------|
-| CSV | Comma-separated values, widely used for tabular data. | Read/Write |
-| JSON | JavaScript Object Notation, common for structured data. | Read/Write |
-| SQL | Structured Query Language, for relational databases. | Read/Write |
-| Excel (TBD) | Microsoft Excel spreadsheets (.xls, .xlsx). | Read/Write |
+| Format        | Description                                             | Read/Write |
+| ------------- | ------------------------------------------------------- | ---------- |
+| CSV           | Comma-separated values, widely used for tabular data.   | Read/Write |
+| JSON          | JavaScript Object Notation, common for structured data. | Read/Write |
+| SQL           | Structured Query Language, for relational databases.    | Read/Write |
+| Excel (TBD)   | Microsoft Excel spreadsheets (.xls, .xlsx).             | Read/Write |
 | Parquet (TBD) | Columnar storage file format for big data applications. | Read/Write |
 
 ## Extending the Input Interface
@@ -22,35 +22,43 @@ Convirgance provides an extensible input interface to allow developers to integr
 /**
  * An implementation of the Input interface to handle CSV files.
  */
-public class CSVInput implements Input<JSONObject> {
+public class CSVInput implements Input<JSONObject>
+{
     @Override
-    public JSONObject read(String filePath) throws IOException {
+    public JSONObject read(String filePath) throws IOException
+    {
         JSONObject row;
         JSONObject result = new JSONObject();
         String[] values;
         String[] headers;
         String line;
-        
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath))) {
+
+        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath)))
+        {
             line = null;
             headers = null;
-            
-            // Read CSV line by line
-            while ((line = buffer.readLine()) != null) {
+
+            while ((line = buffer.readLine()) != null)
+            {
                 values = line.split(",");
-                if (headers == null) {
+                if (headers == null)
+                {
                     headers = values;
-                } else {
+                }
+                else
+                {
                     row = new JSONObject();
-                    
-                    for (int i = 0; i < headers.length; i++) {
+
+                    for (int i = 0; i < headers.length; i++)
+                    {
                         row.put(headers[i], values[i]);
                     }
-                    
+
                     result.append("rows", row);
                 }
             }
         }
+
         return result;
     }
 }
@@ -76,34 +84,39 @@ Convirgance also allows developers to extend its output interface for supporting
 /**
  * An implementation of the Output interface to handle CSV file writing.
  */
-public class CSVOutput implements Output<JSONObject> {
+public class CSVOutput implements Output<JSONObject>
+{
     @Override
-    public void write(String filePath, JSONObject data) throws IOException {
+    public void write(String filePath, JSONObject data) throws IOException
+    {
         JSONObject firstRow;
         JSONObject row;
         String line;
         String headers;
         JSONArray rows;
-        
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath)))
+        {
             rows = data.getJSONArray("rows");
-            
+
             // Write headers
-            if (rows.length() > 0) {
+            if (rows.length() > 0)
+            {
                 firstRow = rows.getJSONObject(0);
                 headers = String.join(",", firstRow.keySet());
                 writer.write(headers);
                 writer.newLine();
             }
-            
+
             // Write data rows
-            for (int i = 0; i < rows.length(); i++) {
+            for (int i = 0; i < rows.length(); i++)
+            {
                 row = rows.getJSONObject(i);
-                
+
                 line = row.keySet().stream()
                     .map(key -> row.optString(key, ""))
                     .collect(Collectors.joining(","));
-                
+
                 writer.write(line);
                 writer.newLine();
             }
@@ -130,19 +143,23 @@ public class CSVOutput implements Output<JSONObject> {
 ```java
 import com.convirgance.Convirgance;
 
-public class Demo {
+public class Demo
+{
     private static DataSource source;
-    
-    public static void main(String[] args) {
+
+    public static void main(String[] args)
+    {
         DBMS database = new DBMS(source);
-        Iterable<JSONObject> results = database.query(new Query("select * from CUSTOMER"));
-        String[] fields = new String[]{"Names", "Device Count", "Dependents"};
-        
+        Iterable<JSONObject> results;
+        String[] fields;
+
         // This will delimit the content with '?' using only the provided headers
         DelimitedOutput input = new DelimitedOutput(fields, "?");
-        
         ByteArrayTarget target = new ByteArrayTarget();
-        
+
+        results = database.query(new Query("select * from CUSTOMER"));
+        fields = new String[]{"Names", "Device Count", "Dependents"};
+
         // Write out the results with only the three fields.
         output.write(target, audience);
     }
@@ -154,15 +171,17 @@ public class Demo {
 ```java
 import com.convirgance.Convirgance;
 
-public class Demo {
+public class Demo
+{
     private static DataSource source;
-    
-    public static void main(String[] args) {
+
+    public static void main(String[] args)
+    {
         source = new FileSource(new File(filename));
         input = new JSONInput().read(source);
-        
+
         ByteArrayTarget target = new ByteArrayTarget();
-        
+
         // Write out the results with only the three fields.
         output.write(target, audience);
     }
@@ -174,12 +193,15 @@ public class Demo {
 ```java
 import com.convirgance.Convirgance;
 
-public class Demo {
-    public static void main(String[] args) {
+public class Demo
+{
+    public static void main(String[] args)
+    {
         ByteArrayTarget target = new ByteArrayTarget();
         CSVOutput output = new CSVOutput();
-        
-        try(OutputCursor cursor = output.write(target)) {
+
+        try(OutputCursor cursor = output.write(target))
+        {
             cursor.write(new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]"));
         }
     }
@@ -191,17 +213,20 @@ public class Demo {
 ```java
 import com.convirgance.Convirgance;
 
-public class Demo {
+public class Demo
+{
     private static DataSource source;
-    
-    public static void main(String[] args) {
+
+    public static void main(String[] args)
+    {
         DBMS database = new DBMS(source);
         Iterable<JSONObject> results = database.query(new Query("select * from CUSTOMER"));
         ByteArrayTarget target = new ByteArrayTarget();
         JBINInput input = new JBINInput();
         JBINOutput output = new JBINOutput();
-        
-        try(OutputCursor cursor = output.write(target)) {
+
+        try(OutputCursor cursor = output.write(target))
+        {
             cursor.write(results);
         }
     }

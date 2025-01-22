@@ -1,6 +1,6 @@
 # Getting Started with Convirgance
 
-Welcome to the Convirgance documentation! This section will guide you through the basics of Convirgance, a new approach to application database access, and the goals it aims to solve.
+Welcome to the Convirgance documentation! This section will guide you through the basics.
 
 ## What is Convirgance?
 
@@ -29,25 +29,27 @@ Here's a basic example of using Convirgance to query a database:
 ```java
 import com.convirgance.Convirgance;
 
-public class Demo {
+public class Demo
+{
     private static DataSource source;
 
-    public static void main(String[] args) {
-        DBMS dbms = new DBMS(source);
-        Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
-
-        GreaterThanFilter targetCustomer = new GreaterThanFilter("Devices", 10);
-        LessThanFilter targetArea = new LessThanFilter("ZIP", 20000);
-        CoerceStringsTransformer transformer = new CoerceStringsTransformer();
+    public static void main(String[] args)
+    {
+        DBMS database = new DBMS(source);
+        CoerceStringsTransformer parser = new CoerceStringsTransformer();
 
         DelimitedInput input = new DelimitedInput();
         DelimitedOutput output = new DelimitedOutput();
         ByteArrayTarget target = new ByteArrayTarget();
 
+        Iterable<JSONObject> rows = database.query(new Query("select * from CUSTOMER"));
+        GreaterThanFilter devices = new GreaterThanFilter("Devices", 10);
+        LessThanFilter zip = new LessThanFilter("ZIP", 20000);
+
         // Used to convert Zip Codes stored as a string into their actual type (int).
-        Iterable<JSONObject> converted = transformer.transform(results);
-        Iterable<JSONObject> area = targetArea.transform(converted);
-        Iterable<JSONObject> audience = targetCustomer.transform(area);
+        Iterable<JSONObject> parsed = parser.transform(rows);
+        Iterable<JSONObject> filtered = zip.transform(parsed);
+        Iterable<JSONObject> result = devices.transform(filtered);
 
         // Execute the query and write the results
         output.write(target, audience);

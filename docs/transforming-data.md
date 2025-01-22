@@ -25,7 +25,8 @@ The `Transformer` interface provides a way to lazily apply transformations to JS
 Transformer transformer = new CoerceStringsTransformer();
 Iterable<JSONObject> transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 ```
@@ -40,7 +41,8 @@ The `CoerceStringsTransformer` converts string values into other data types such
 Transformer transformer = new CoerceStringsTransformer();
 Iterable<JSONObject> transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 ```
@@ -50,6 +52,7 @@ for (JSONObject record : transformed) {
 The `InsertKeyTransformer` allows adding or modifying a key-value pair in JSON objects.
 
 ### Constructor
+
 - `InsertKeyTransformer(String key, Object value)`: Initializes the transformer with the key and value to insert.
 
 ### Usage Example
@@ -58,7 +61,8 @@ The `InsertKeyTransformer` allows adding or modifying a key-value pair in JSON o
 Transformer transformer = new InsertKeyTransformer("newKey", "newValue");
 Iterable<JSONObject> transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 ```
@@ -68,6 +72,7 @@ for (JSONObject record : transformed) {
 The `SortedGroupByTransformer` groups data based on specified fields. The data must already be sorted for accurate grouping.
 
 ### Constructor
+
 - `SortedGroupByTransformer(String[] fields, String output)`: Groups related data on the specified fields and assigns it to the output field.
 
 ### Usage Example
@@ -77,9 +82,11 @@ Transformer transformer = new SortedGroupByTransformer(
     new String[]{"field1", "field2"},
     "groupedData"
 );
+
 Iterable<JSONObject> transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 ```
@@ -89,6 +96,7 @@ for (JSONObject record : transformed) {
 The `UnsortedGroupByTransformer` groups data based on specified fields without requiring the data to be sorted beforehand.
 
 ### Constructor
+
 - `UnsortedGroupByTransformer(String[] fields, String output)`: Groups related data on the specified fields and assigns it to the output field.
 
 ### Usage Example
@@ -100,7 +108,8 @@ Transformer transformer = new UnsortedGroupByTransformer(
 );
 Iterable<JSONObject> transformed = transformer.transform(sourceData);
 
-for (JSONObject record : transformed) {
+for (JSONObject record : transformed)
+{
     System.out.println(record);
 }
 ```

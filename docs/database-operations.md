@@ -24,24 +24,26 @@ A custom implementation of the `AtomicOperation` interface that logs each record
 
 ```java
 /**
- * A custom implementation of the AtomicOperation interface that logs each record 
+ * A custom implementation of the AtomicOperation interface that logs each record
  * in a table to an external system.
  */
-public class LoggingOperation implements AtomicOperation {
+public class LoggingOperation implements AtomicOperation
+{
     private Query query; // The query to fetch the records.
     private Logger logger; // The logging system to use.
-    
+
     /**
      * Constructor to initialize the query and logger.
      *
      * @param query The query to execute.
      * @param logger The logger for recording entries.
      */
-    public LoggingOperation(Query query, Logger logger) {
+    public LoggingOperation(Query query, Logger logger)
+    {
         this.query = query;
         this.logger = logger;
     }
-    
+
     /**
      * Executes the logging operation within a transaction.
      *
@@ -49,21 +51,25 @@ public class LoggingOperation implements AtomicOperation {
      * @throws SQLException If a database error occurs.
      */
     @Override
-    public void execute(Connection connection) throws SQLException {
+    public void execute(Connection connection) throws SQLException
+    {
         JSONObject record;
         ResultSetMetaData metaData;
-        
+
         try (PreparedStatement statement = connection.prepareStatement(query.toString());
-             ResultSet resultSet = statement.executeQuery()) {
-            
-            while (resultSet.next()) {
+             ResultSet resultSet = statement.executeQuery())
+            {
+
+            while (resultSet.next())
+            {
                 record = new JSONObject();
                 metaData = resultSet.getMetaData();
-                
-                for (int i = 1; i <= metaData.getColumnCount(); i++) {
+
+                for (int i = 1; i <= metaData.getColumnCount(); i++)
+                {
                     record.put(metaData.getColumnName(i), resultSet.getObject(i));
                 }
-                
+
                 logger.log(record.toString());
             }
         }
@@ -83,19 +89,21 @@ The `TransactionOperation` class allows multiple `AtomicOperation` instances to 
 ### Usage Example
 
 ```java
-public void transactionOperation() {
+public void transactionOperation()
+{
     DBMS database = new DBMS(source);
-    
+
     QueryOperation insertCustomer = new QueryOperation(
         new Query("INSERT INTO CUSTOMER (id, name) VALUES (1, 'Alice')")
     );
     QueryOperation updateAccount = new QueryOperation(
         new Query("UPDATE ACCOUNT SET balance = balance - 100 WHERE id = 1")
     );
-    
+
     TransactionOperation transaction = new TransactionOperation(
         List.of(insertCustomer, updateAccount)
     );
+
     database.execute(transaction);
 }
 ```
@@ -112,18 +120,25 @@ The `BatchOperation` class is designed for executing bulk queries efficiently. I
 ### Usage Example
 
 ```java
-public void batchOperation() {
+public void batchOperation()
+{
+    Query query;
+    List<JSONObject> records;
+    BatchOperation batch;
+    DBMS database;
+
     Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (?, ?, ?)");
-    List<JSONObject> records = List.of(
+
+    records = List.of(
         new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
         new JSONObject().put("id", 2).put("name", "Bob").put("age", 25)
     );
-    
-    BatchOperation batch = new BatchOperation(query, records);
-    batch.setCommit(50); // Commit after every 50 records
-    
-    DBMS dbms = new DBMS(source);
-    dbms.execute(batch);
+
+    batch = new BatchOperation(query, records);
+    batch.setCommit(50);
+
+    database = new DBMS(source);
+    database.execute(batch);
 }
 ```
 
@@ -134,14 +149,20 @@ The `Query` class encapsulates a SQL query for execution. It allows parameterize
 ### Example Usage
 
 ```java
-public void queryOperation() {
-    Query query = new Query("SELECT * FROM CUSTOMER WHERE id = ?");
+public void queryOperation()
+{
+    Query query;
+    DBMS database;
+    Iterable<JSONObject> results
+
+    query = new Query("SELECT * FROM CUSTOMER WHERE id = ?");
     query.setParameter(1, 12345);
-    
-    DBMS dbms = new DBMS(source);
-    Iterable<JSONObject> results = dbms.query(query);
-    
-    for (JSONObject record : results) {
+
+    database = new DBMS(source);
+    results; = database.query(query);
+
+    for (JSONObject record : results)
+    {
         System.out.println(record);
     }
 }
@@ -151,4 +172,5 @@ public void queryOperation() {
 
 - Use `TransactionOperation` for critical workflows that involve multiple steps to ensure consistency.
 - Leverage `BatchOperation` for large-scale data processing to optimize performance.
+  - Using interval commits to avoid overflowing the transaction buffer
 - Always validate query parameters to prevent SQL injection and ensure data integrity.

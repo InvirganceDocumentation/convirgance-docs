@@ -26,50 +26,60 @@ The `Filter` interface extends `Transformer`, allowing filters to work within tr
 
 ```java
 // Custom Filter that checks if a field contains a specific substring
-public class ContainsSubstringFilter implements Filter {
+public class ContainsSubstringFilter implements Filter
+{
     private String field;
     private String substring;
-    
+
     // Constructor to initialize the field and substring to check for
-    public ContainsSubstringFilter(String field, String substring) {
+    public ContainsSubstringFilter(String field, String substring)
+    {
         this.field = field;
         this.substring = substring;
     }
-    
+
     // Implementing the 'test' method from Filter interface
     @Override
-    public boolean test(JSONObject record) {
+    public boolean test(JSONObject record)
+    {
         // Check if the field exists and is a string
-        if (record.has(field) && record.get(field) instanceof String) {
+        if (record.has(field) && record.get(field) instanceof String)
+        {
             String value = record.getString(field);
             return value.contains(substring);
         }
-        
+
         return false;
     }
-    
-    // Implementing the 'transform' method from Transformer interface
+
+    // Implementing the 'transform' method, testing each record (this example assumes the iterator is sorted)
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
-        return new Iterator<JSONObject>() {
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
+    {
+        return new Iterator<JSONObject>()
+        {
             @Override
-            public boolean hasNext() {
-                while (iterator.hasNext()) {
+            public boolean hasNext()
+            {
+                while (iterator.hasNext())
+                {
                     JSONObject next = iterator.next();
-                    // Skip any records that don't pass the filter
+
                     if (test(next)) return true;
                 }
-                
+
                 return false;
             }
-            
+
             @Override
-            public JSONObject next() {
+            public JSONObject next()
+            {
                 return iterator.next();
             }
         };
     }
 }
+```
 
 ## Logical Filters
 

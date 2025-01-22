@@ -17,8 +17,8 @@ Here's how simple it is to query a database and transform the results:
 
 ```java
 // Query your database
-DBMS dbms = new DBMS(source);
-Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
+DBMS database = new DBMS(source);
+Iterable<JSONObject> results = database.query(new Query("select * from CUSTOMER"));
 
 // Filter customers (like a SQL WHERE clause)
 Filter activeHighValueCustomers = new AndFilter(
@@ -81,8 +81,7 @@ Using Maven:
 
 We're here to help:
 
-- [GitHub Issues](https://github.com/convirgance/issues) - Report bugs or request features
-- [Documentation](https://docs.convirgance.com) - Detailed guides and API reference
+- [GitHub Issues](https://github.com/InvirganceOpenSource) - Report bugs or request features
 - [Contact](contact.md) - Get in touch with the team
 
 ## Contributing
