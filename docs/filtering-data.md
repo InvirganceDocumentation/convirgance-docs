@@ -17,7 +17,9 @@ Filters provide SQL-like operations for working with your data stream. You can u
 | `<`      | Less than comparison                                |
 | `<=`     | Less than or equal comparison                       |
 
-## Filter Interface
+## Interfaces
+
+### Filter
 
 The `Filter` interface extends `Transformer`, allowing filters to work within transformation pipelines.
 
@@ -41,9 +43,9 @@ Filter nameFilter = new Filter()
 Iterator<JSONObject> filtered = nameFilter.transform(records);
 ```
 
-### Examples
+### Comparitive
 
-The below example filters data from some `file` source. Compararing it to the database.
+The below example uses a customer `ComparatorFilter` to collect JSONObjects that are considered 'old'.
 
 ```java
 DBMS database = new DBMS(source);
@@ -80,100 +82,6 @@ for(JSONObject oldRecord : old)
 
 
 ```
-
-## Logical Filters
-
-### AndFilter
-
-Combines multiple filters, requiring all of them to evaluate the record as true.
-
-```java
-Filter filter = new AndFilter(
-    new GreaterThanFilter("age", 18),
-    new EqualsFilter("status", "active")
-);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### OrFilter
-
-Combines multiple filters, requiring at least one to evaluate the record as true.
-
-```java
-Filter filter = new OrFilter(
-    new EqualsFilter("role", "admin"),
-    new EqualsFilter("role", "moderator")
-);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### NotFilter
-
-Inverts the result of another filter.
-
-```java
-Filter filter = new NotFilter(new EqualsFilter("status", "inactive"));
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-## Comparator-Based Filters
-
-### EqualsFilter
-
-Filters records where a specified key's value is equal to a given value.
-
-```java
-Filter filter = new EqualsFilter("country", "USA");
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### GreaterThanFilter
-
-Filters records where a specified key's value is greater than a given value.
-
-```java
-Filter filter = new GreaterThanFilter("age", 30);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### GreaterThanOrEqualFilter
-
-Filters records where a specified key's value is greater than or equal to a given value.
-
-```java
-Filter filter = new GreaterThanOrEqualFilter("score", 85);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### LessThanFilter
-
-Filters records where a specified key's value is less than a given value.
-
-```java
-Filter filter = new LessThanFilter("price", 100);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-### LessThanOrEqualFilter
-
-Filters records where a specified key's value is less than or equal to a given value.
-
-```java
-Filter filter = new LessThanOrEqualFilter("quantity", 50);
-
-Iterable<JSONObject> filtered = filter.transform(sourceData);
-```
-
-## Custom Comparisons
-
-The `CoerciveComparator` allows for comparisons between values of different types, supporting nulls, numbers, and other comparables. It is used internally by `ComparatorFilter` and its subclasses for flexible and robust evaluations.
 
 ## Best Practices
 
