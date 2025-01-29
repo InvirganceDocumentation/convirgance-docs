@@ -63,13 +63,14 @@ dbms.update(operation);
 
 ### BatchOperation
 
+The `BatchOperation` provides a simple way to insert a large amount of objects.
+
 ```java
-Query query;
 List<JSONObject> records;
 BatchOperation batch;
-DBMS database;
 
-Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (?, ?, ?)");
+DBMS database = new DBMS(source);
+Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (:id, :name, :age)");
 
 records = List.of(
     new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
@@ -79,9 +80,7 @@ records = List.of(
 batch = new BatchOperation(query, records);
 batch.setCommit(50);
 
-database = new DBMS(source);
 database.execute(batch);
-
 ```
 
 ## Transactions: Inserts and Queries
@@ -100,21 +99,23 @@ transaction = new TransactionOperation(truncate, resequence, batch);
 
 ### Bulk Insert and Query
 
+Here is an example utilizing `TransactionOperation`. Which executes each operation sequentially, if at any point an issue occurs all changes are rolled back.
+
 ```java
 DBMS dbms = new DBMS(source);
 
-// Creates the insert statement for JSONObjects
+// Creates the insert statement for JSONObjects.
 Query query = getInsertQuery();
 Query reset = new Query("truncate table SETTINGS");
 
 TransactionOperation transaction;
 QueryOperation truncate = new QueryOperation(reset);
-BatchOperation batch;
 
-batch = new BatchOperation(query, input.read(source));
+// Reading in JSONObjects from a file 'source'.
+InputCursor<JSONObject> items = input.read(file);
+BatchOperation batch = new BatchOperation(query, items);
 
 transaction = new TransactionOperation(truncate, batch);
-
 dbms.update(transaction);
 ```
 
