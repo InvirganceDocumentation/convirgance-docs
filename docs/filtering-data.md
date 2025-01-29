@@ -69,8 +69,10 @@ JSONArray updatedItems = new JSONArray();
 dateFilter.setKey("last_update");
 dateFilter.setValue("2007-01-01");
 
-for(JSONObject oldRecord : old) {
-    if(dateFilter.test(oldRecord)) {
+for(JSONObject oldRecord : old)
+{
+    if(dateFilter.test(oldRecord))
+    {
         updatedItems.put(oldRecord);
         continue;
     }
