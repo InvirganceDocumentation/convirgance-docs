@@ -8,7 +8,36 @@ The Convirgance DBMS streamlines database operations by abstracting complex impl
 
 ### Parameter Binding.
 
-Convirgance's parameter binding system works directly with your SQL and JSON data. This lightweight approach gives you the security benefits of prepared statements while maintaining the flexibility and performance of raw SQL – perfect for applications that need to move fast without sacrificing reliability.
+Convirgance's parameter binding system utilizes named bindings, allowing fearless updates furthermore templates can be created allowing you to save time. The below example uses the named bindings from the query agaisnt the customer(record).
+
+```java
+DBMS dbms = new DBMS(source);
+String template = "insert into CUSTOMER values (:CUSTOMER_ID, :ZIP, :NAME, :ADDRESS, :CITY, :STATE, :PHONE, :EMAIL)";
+Query query = new Query(template);
+
+JSONObject record = createNewCustomer();
+
+QueryOperation operation = new QueryOperation(query, record);
+dbms.update(operation);
+```
+
+## Querying Data
+
+### Example Usage
+
+```java
+Query query = new Query("SELECT * FROM CUSTOMER");
+DBMS database;
+Iterable<JSONObject> results
+
+database = new DBMS(source);
+results; = database.query(query);
+
+for (JSONObject record : results)
+{
+    System.out.println(record);
+}
+```
 
 ## Inserting Data
 
@@ -51,24 +80,6 @@ batch.setCommit(50);
 database = new DBMS(source);
 database.execute(batch);
 
-```
-
-## Querying Data
-
-### Example Usage
-
-```java
-Query query = new Query("SELECT * FROM CUSTOMER");
-DBMS database;
-Iterable<JSONObject> results
-
-database = new DBMS(source);
-results; = database.query(query);
-
-for (JSONObject record : results)
-{
-    System.out.println(record);
-}
 ```
 
 ## Transactions: Inserts and Queries
