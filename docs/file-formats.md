@@ -246,7 +246,7 @@ output.write(target, audience);
 
 ### CSV
 
-Writing out to CSV from JSON it pretty simple, fields names are converted into headers.
+Writing out to CSV from JSON is pretty simple, fields names are converted into headers and any values found matching the field names are added below.
 
 ```java
 JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
