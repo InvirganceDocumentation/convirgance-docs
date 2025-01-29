@@ -212,7 +212,7 @@ The following examples are for files with native support.
 Delimited files provide a way to organize data seperated by a specific character.
 
 ```java
-Iterable<JSONObject> results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
+JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
 
 String[] fields = new String[]{"name", "devices"};
 
@@ -224,7 +224,7 @@ ByteArrayTarget target = new ByteArrayTarget();
 output.write(target, results);
 
 /*
-The files output would look something like
+The files output would look something like:
 
   John?3
 */
@@ -246,21 +246,33 @@ output.write(target, audience);
 
 ### CSV
 
+Writing out to CSV from JSON it pretty simple, fields names are converted into headers.
+
 ```java
+JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
 ByteArrayTarget target = new ByteArrayTarget();
 CSVOutput output = new CSVOutput();
 
 try(OutputCursor cursor = output.write(target))
 {
-    cursor.write(new JSONArray("[{\"name\":\"John\"}]"));
+    cursor.write(example);
     cursor.close();
 }
+
+/*
+Output would look like:
+
+  name, devices
+  John, 3
+*/
 ```
 
 ### JBIN
 
+`JBIN` is useful in high throughput situations. Here is an example of writing a `JSONObject` into `JBIN`.
+
 ```java
-Iterable<JSONObject> results =  new JSONArray("[{\"name\":\"John\"}]");
+JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
 ByteArrayTarget target = new ByteArrayTarget();
 
 JBINOutput output = new JBINOutput();
