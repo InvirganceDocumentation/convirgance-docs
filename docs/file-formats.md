@@ -232,16 +232,19 @@ The files output would look something like:
 
 ### JSON
 
-<!-- TODO fix this  -->
+The below examples reads in from some example file and prints out the `toString()` representation of the record.
 
 ```java
-// filename being the path to some json file
-FileSource source = new FileSource(new File(filename));
+FileSource source = new FileSource(new File("./example.json"));
 Iterable<JSONObject> input = new JSONInput().read(source);
 
-ByteArrayTarget target = new ByteArrayTarget();
+for(JSONObject record : input){
+  System.out.println(record);
+}
 
-output.write(target, audience);
+/*
+  {"name": "John", "devices": 3}
+*/
 ```
 
 ### CSV
