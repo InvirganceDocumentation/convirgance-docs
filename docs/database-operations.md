@@ -26,7 +26,7 @@ Iterable<JSONObject> results = dbms.query(query);
 
 ## Querying Data
 
-### Example Usage
+### Example
 
 Here we simply retreive all the customers and print out their information.
 
@@ -42,6 +42,8 @@ for (JSONObject record : results)
 ```
 
 ## Inserting Data
+
+### Example
 
 ```java
 // Connect to database
