@@ -12,7 +12,7 @@ Parameter binding in Convirgance is a secure method for incorporating values int
 
 ```java
 DBMS dbms = new DBMS(source);
-String template = "SELECT * FROM CUSTOMER " +
+String template = "SELECT * FROM customer " +
                  "WHERE DISCOUNT_CODE = :membershipType " +
                  "AND STATE = :state";
 
@@ -72,7 +72,7 @@ List<JSONObject> records;
 BatchOperation batch;
 
 DBMS database = new DBMS(source);
-Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (:id, :name, :age)");
+Query query = new Query("INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)");
 
 records = List.of(
     new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
@@ -108,7 +108,7 @@ DBMS dbms = new DBMS(source);
 
 // Creates the insert statement for JSONObjects.
 Query query = getInsertQuery();
-Query reset = new Query("truncate table SETTINGS");
+Query reset = new Query("TRUNCATE table SETTINGS");
 
 TransactionOperation transaction;
 QueryOperation truncate = new QueryOperation(reset);
