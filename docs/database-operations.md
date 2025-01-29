@@ -45,20 +45,17 @@ for (JSONObject record : results)
 
 ### Example
 
+In this example we insert a single `JSONObject`. You can see the Convirgance named bindings in use through the `template` string.
+
 ```java
-// Connect to database
-DBMS dbms = new DBMS(source);
 String template = "INSERT INTO customer VALUES (:id, :name, :email)";
-Query insert;
-QueryOperation operation;
+String example = String example = "{ \"id\": 1, \"name\": \"John\", \"email\": \"john@email.com\" }";
 
-JSONObject customer = new JSONObject();
-customer.put("id", 1);
-customer.put("name", "John");
-customer.put("email", "john@email.com");
+JSONObject customer = new JSONObject(example);
 
-insert = new Query(template, customer);
-operation = new QueryOperation(insert);
+DBMS dbms = new DBMS(source);
+Query insert = new Query(template, customer);
+QueryOperation operation = new QueryOperation(insert);
 
 dbms.update(operation);
 ```
@@ -68,18 +65,17 @@ dbms.update(operation);
 The `BatchOperation` provides a simple way to insert a large amount of objects.
 
 ```java
-List<JSONObject> records;
-BatchOperation batch;
+String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
 
-DBMS database = new DBMS(source);
-Query query = new Query("INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)");
-
-records = List.of(
+List<JSONObject> records = List.of(
     new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
     new JSONObject().put("id", 2).put("name", "Bob").put("age", 25)
 );
 
-batch = new BatchOperation(query, records);
+DBMS database = new DBMS(source);
+Query query = new Query(template);
+
+BatchOperation batch = new BatchOperation(query, records);
 batch.setCommit(50);
 
 database.execute(batch);
