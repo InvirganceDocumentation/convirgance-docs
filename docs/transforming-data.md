@@ -13,6 +13,8 @@ Transformations let you modify your data as it flows through your application. T
 
 ### Usage Example
 
+The following example showcases joining two table, using the `SortedGroupByTransformer` to group the data into a more compact from.
+
 ```java
 String[] fields = new String[]
 {
@@ -25,12 +27,13 @@ Query query = new Query("SELECT * FROM \"orders\" o\n"
                 + "order by o.order_id, l.line_id");
 
 Iterable<JSONObject> results = dbms.query(query);
+
 /*
 Results would look like something similiar to this, not very useful. But it looks like the data is sorted.
 
-{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
-{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
-{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
+  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
+  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
+  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
 */
 
 Iterable<JSONObject> customerData = sorter.transform(results)
