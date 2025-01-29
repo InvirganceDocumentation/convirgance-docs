@@ -8,7 +8,7 @@ The Convirgance DBMS streamlines database operations by abstracting complex impl
 
 ### Parameter Binding.
 
-Parameter binding in Convirgance is a secure method for incorporating values into SQL queries using named parameters. Each parameter is prefixed with a colon (:) in the SQL template and matched with corresponding values in a JSONObject. Using named parameters keeps query logic flexible by avoiding the traditional `?` approach.
+Parameter binding in Convirgance is a secure method for incorporating values into SQL queries using named parameters. Each parameter is prefixed with a colon (:) in the SQL template and matched with corresponding values in a JSONObject. Using named parameters keeps query logic flexible by avoiding the traditional `?` approach. Additionally inputs are sanitized during the binding process.
 
 ```java
 DBMS dbms = new DBMS(source);
@@ -83,9 +83,9 @@ database.execute(batch);
 
 ## Transactions: Inserts and Queries
 
-#### A brief overview
+### Example
 
-Below is a example with pseudo methods, showcasing that `TransactionOperation` executes queries sequentially. Any number of Queries can be provided.
+Below is a example with pseudo methods, showcasing that `TransactionOperation` executes queries sequentially. Any number of Queries can be provided if at any point an issue occurs all changes are rolled back.
 
 ```java
 Query truncate = createTruncateStatement();
@@ -97,7 +97,7 @@ transaction = new TransactionOperation(truncate, resequence, batch);
 
 ### Bulk Insert and Query
 
-Here is an example utilizing `TransactionOperation`. Which executes each operation sequentially, if at any point an issue occurs all changes are rolled back.
+Here is an example utilizing `TransactionOperation`.
 
 ```java
 DBMS dbms = new DBMS(source);

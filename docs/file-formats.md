@@ -15,11 +15,19 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 Each format supports full read and write operations with configurable parsing options.
 
-## Extending the Input Interface
+## The Input/Output Interfaces
 
-Convirgance provides an extensible input interface to allow developers to integrate support for new data formats. By implementing the `Input` interface, developers can define custom readers for various formats.
+Convirgance provides an extensible input interface to allow you to integrate support for new data formats by defining custom readers and writers.
 
-### Example: Customer Properties File Implementation
+### Best Practices
+
+- Ensure proper escaping of special characters (e.g., commas, quotes) in CSV files.
+- Validate input data to match format-specific requirements.
+- Optimize performance for writing large files by using buffered output streams.
+- Ensure robust error handling to deal with malformed files.
+- Optimize performance for large files by using streaming approaches where applicable.
+
+### Example: Properties File
 
 #### Example Input
 
@@ -106,20 +114,6 @@ public class PropertiesInput implements Input<JSONObject>
 }
 ```
 
-### Steps to Add Support for Other Formats
-
-1. **Implement the Input Interface**: Create a class implementing `Input<T>`, where `T` is the desired output type, such as `JSONObject`.
-2. **Handle File Reading Logic**: Write the logic to parse the specific file format and convert the data into the desired structure.
-
-### Best Practices
-
-- Ensure robust error handling to deal with malformed files.
-- Optimize performance for large files by using streaming approaches where applicable.
-
-## Extending the Output Interface
-
-Convirgance also allows developers to extend its output interface for supporting additional file formats. By implementing the `Output` interface, you can define custom writers to generate files in new formats.
-
 ### Example: PropertiesOutput Implementation
 
 ```java
@@ -168,18 +162,7 @@ public class PropertiesOutput implements Output
 }
 ```
 
-### Steps to Add Support for Other Output Formats
-
-1. **Implement the Output Interface**: Create a class implementing `Output`.
-2. **Handle File Writing Logic**: Write the logic to convert the input data structure into the desired file format.
-
-### Best Practices
-
-- Ensure proper escaping of special characters (e.g., commas, quotes) in CSV files.
-- Validate input data to match format-specific requirements.
-- Optimize performance for writing large files by using buffered output streams.
-
-### Scenarios
+### Using the Properties Implementation
 
 #### Reading properties values from a Database
 
@@ -199,8 +182,9 @@ byte[] bytes;
 PropertiesInput input = new PropertiesInput();
 PropertiesOutput output = new PropertiesOutput();
 ByteArraySource byteSource;
+File example = new File("./user.properties")
 
-FileTarget target = new FileTarget(new File("./user.properties"));
+FileTarget target = new FileTarget(example);
 
 DBMS dbms = new DBMS(source);
 Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
@@ -217,32 +201,43 @@ accuracy.0=0.75
 model.0=photoshop-cs6
 ```
 
-You can find an example covering inserting data [here](./database-operations.md#transactions-inserting-and-querying-data)
+Want to learn more about inserting data? Documentation covering that is found [here](./database-operations.md#inserting-data)
 
-## Format-Specific Examples
+## More File Examples
+
+The following examples are for files with native support.
 
 ### Delimited Files
 
-```java
-Iterable<JSONObject> results =  new JSONArray("[{\"name\":\"John\"}]");
+Delimited files provide a way to organize data seperated by a specific character.
 
-// Notice that our source data is missing fields, these will be supplemented and assigned to null.
-String[] fields = new String[]{"name", "Device Count", "Dependents"};
+```java
+Iterable<JSONObject> results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
+
+String[] fields = new String[]{"name", "devices"};
 
 // This will delimit the content with '?' using only the provided headers.
-DelimitedOutput input = new DelimitedOutput(fields, "?");
+DelimitedOutput output = new DelimitedOutput(fields, "?");
 ByteArrayTarget target = new ByteArrayTarget();
 
 // Write out the results with only the three fields.
-output.write(target, audience);
+output.write(target, results);
+
+/*
+The files output would look something like
+
+  John?3
+*/
 ```
 
 ### JSON
 
+<!-- TODO fix this  -->
+
 ```java
 // filename being the path to some json file
-source = new FileSource(new File(filename));
-input = new JSONInput().read(source);
+FileSource source = new FileSource(new File(filename));
+Iterable<JSONObject> input = new JSONInput().read(source);
 
 ByteArrayTarget target = new ByteArrayTarget();
 

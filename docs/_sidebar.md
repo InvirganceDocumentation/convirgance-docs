@@ -16,29 +16,25 @@
 
 - [Database Operations](database-operations.md)
 
-  - [Core Interfaces and Classes](database-operations.md#core-interfaces-and-classes)
-  - [AtomicOperation Interface](database-operations.md#atomicoperation-interface)
-  - [Example: Custom AtomicOperation](database-operations.md#example-custom-atomicoperation)
-  - [TransactionOperation](database-operations.md#transactionoperation)
-  - [BatchOperation](database-operations.md#batchoperation)
-  - [Query Class](database-operations.md#query-class)
+  - [The DBMS](database-operations.md#the-dbms)
+  - [Querying Data](database-operations.md#querying-data)
+  - [Inserting Data](database-operations.md#inserting-data)
+  - [Transactions: Inserts and Queries](database-operations.md#transactions-inserts-and-queries)
   - [Best Practices](database-operations.md#best-practices)
 
-- [Filtering Data](filtering-data.md)
+- [Filtering Data](filtering-data.md#filters)
 
-  - [Core Interfaces and Classes](filtering-data.md#core-interfaces-and-classes)
-  - [Filter Interface](filtering-data.md#filter-interface)
-  - [Logical Filters](filtering-data.md#logical-filters)
-  - [Comparator-Based Filters](filtering-data.md#comparator-based-filters)
-  - [Custom Comparisons](filtering-data.md#custom-comparisons)
+  - [Types of Filters](filtering-data.md#types-of-filters)
+  - [Examples](filtering-data.md#examples)
+  - [Interface Examples](filtering-data.md#interface-examples)
   - [Best Practices](filtering-data.md#best-practices)
 
-- [File Formats](file-formats.md)
+- [File Formats](file-formats.md#file-formats)
 
   - [Supported Formats](file-formats.md#supported-formats)
-  - [Extending the Input Interface](file-formats.md#extending-the-input-interface)
-  - [Extending the Output Interface](file-formats.md#extending-the-output-interface)
-  - [Format-Specific Examples](file-formats.md#format-specific-examples)
+  - [Extending the Input Interface](file-formats.md#the-input-interface)
+  - [Example: A Custom Properties File](file-formats.md#example-properties-file)
+  - [More File Examples](file-formats.md#more-file-examples)
 
 - [Transforming Data](transforming-data.md)
 
