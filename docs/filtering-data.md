@@ -4,8 +4,6 @@ Filters provide SQL-like operations for working with your data stream. You can u
 
 # Core Interfaces and Classes
 
-# Core Interfaces and Classes
-
 | Symbol   | Description                                         |
 | -------- | --------------------------------------------------- |
 | `Filter` | Base interface for filter evaluation and conditions |
@@ -41,6 +39,44 @@ Filter nameFilter = new Filter()
 };
 
 Iterator<JSONObject> filtered = nameFilter.transform(records);
+```
+
+### Examples
+
+The below example filters data from some `file` source. Compararing it to the database.
+
+```java
+DBMS database = new DBMS(source);
+
+String search = "Select last_update FROM customer";
+
+ComparatorFilter dateFilter = new ComparatorFilter()
+{
+    @Override
+    public boolean test(JSONObject record)
+    {
+        Date otherDate = new SimpleDateFormat("yyyy-MM-dd").parse(record.get(getKey()));
+        Date currentDate = new SimpleDateFormat("yyyy-MM-dd").parse(getValue());
+
+        return currentDate.after(otherDate);
+    }
+};
+
+Iterable<JSONObject> old = database.query(new Query(search));
+
+JSONArray updatedItems = new JSONArray();
+
+dateFilter.setKey("last_update");
+dateFilter.setValue("2007-01-01");
+
+for(JSONObject oldRecord : old) {
+    if(dateFilter.test(oldRecord)) {
+        updatedItems.put(oldRecord);
+        continue;
+    }
+}
+
+
 ```
 
 ## Logical Filters
