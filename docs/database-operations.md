@@ -8,30 +8,32 @@ The Convirgance DBMS streamlines database operations by abstracting complex impl
 
 ### Parameter Binding.
 
-Convirgance's parameter binding system utilizes named bindings, allowing fearless updates furthermore templates can be created allowing you to save time. The below example uses the named bindings from the query agaisnt the customer(record).
+Parameter binding in Convirgance is a secure method for incorporating values into SQL queries using named parameters. Each parameter is prefixed with a colon (:) in the SQL template and matched with corresponding values in a JSONObject. Using named parameters keeps query logic flexible by avoiding the traditional `?` approach.
 
 ```java
 DBMS dbms = new DBMS(source);
-String template = "insert into CUSTOMER values (:CUSTOMER_ID, :ZIP, :NAME, :ADDRESS, :CITY, :STATE, :PHONE, :EMAIL)";
-Query query = new Query(template);
+String template = "SELECT * FROM CUSTOMER " +
+                 "WHERE DISCOUNT_CODE = :membershipType " +
+                 "AND STATE = :state";
 
-JSONObject record = createNewCustomer();
+JSONObject bindings = new JSONObject();
+bindings.put("membershipType", "G");
+bindings.put("state", "CA");
 
-QueryOperation operation = new QueryOperation(query, record);
-dbms.update(operation);
+Query query = new Query(template, bindings);
+Iterable<JSONObject> results = dbms.query(query);
 ```
 
 ## Querying Data
 
 ### Example Usage
 
+Here we simply retreive all the customers and print out their information.
+
 ```java
 Query query = new Query("SELECT * FROM CUSTOMER");
-DBMS database;
-Iterable<JSONObject> results
-
-database = new DBMS(source);
-results; = database.query(query);
+DBMS database = new DBMS(source);
+Iterable<JSONObject> results = database.query(query);
 
 for (JSONObject record : results)
 {
