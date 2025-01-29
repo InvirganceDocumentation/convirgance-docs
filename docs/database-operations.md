@@ -124,3 +124,7 @@ dbms.update(transaction);
 - Leverage `BatchOperation` for large-scale data processing to optimize performance.
   - Using interval commits to avoid overflowing the transaction buffer
 - Always validate query parameters to prevent SQL injection and ensure data integrity.
+
+## Further Reading
+
+- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/package-summary.html)

@@ -101,14 +101,13 @@ for (JSONObject record : transformed)
 }
 ```
 
-## Further Reading
-
-- Doc links
-<!-- TODO add javadoc link -->
-
 ## Best Practices
 
 - Use `CoerceStringsTransformer` to standardize data types before processing.
 - Leverage `SortedGroupByTransformer` for efficient grouping when working with pre-sorted data.
 - Apply `UnsortedGroupByTransformer` when sorting is not guaranteed but grouping is required.
 - Combine transformers to build complex transformation pipelines.
+
+## Further Reading
+
+- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/package-summary.html)

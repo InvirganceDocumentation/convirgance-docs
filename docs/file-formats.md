@@ -276,3 +276,7 @@ try(OutputCursor cursor = output.write(target))
     cursor.close();
 }
 ```
+
+## Further Reading
+
+- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/source/package-summary.html)

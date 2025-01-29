@@ -142,3 +142,7 @@ The `CoerciveComparator` allows for comparisons between values of different type
 - Combine filters with `AndFilter` and `OrFilter` to define complex filtering criteria.
 - Use `NotFilter` to exclude records based on specific conditions.
 - When working with numeric or comparable fields, leverage `ComparatorFilter` subclasses like `GreaterThanFilter` for concise evaluations.
+
+## Further Reading
+
+- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/filter/package-summary.html)
