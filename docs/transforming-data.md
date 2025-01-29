@@ -2,103 +2,68 @@
 
 Transformations let you modify your data as it flows through your application. Think of them as a pipeline where each step can clean, enrich, or reshape your data. Common uses include converting data types (like turning strings into numbers), grouping related records together (similar to SQL GROUP BY), or adding computed fields. This allows you to adapt data from one format or structure to another without loading everything into memory at once.
 
-## Transformer Interface
-
-The `Transformer` interface provides a way to lazily apply transformations to JSON objects.
-
-### Usage Example
-
-```java
-Transformer transformer = new CoerceStringsTransformer();
-Iterable<JSONObject> transformed = transformer.transform(sourceData);
-
-for (JSONObject record : transformed)
-{
-    System.out.println(record);
-}
-```
-
-## CoerceStringsTransformer
-
-The `CoerceStringsTransformer` converts string values into other data types such as `Integer`, `Double`, and `Boolean`.
+| Name                       | Description                                                                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| CoerceStringsTransformer   | Transforms objects into their actual counterparts, evaluating key values into their real data type.          |
+| IdentityTransformer        | A Interface used when creating transformers.                                                                 |
+| InsertKeyTransformer       | For replacing existing key:value pairs.                                                                      |
+| SortedGroupByTransformer   | Used when working with data thats already sorted, grouping similar values on a provided JSON field criteria. |
+| Transformer                | The heart of the transformer library, implement this when creating your own.                                 |
+| UnsortedGroupByTransformer | The opposite of SortedGroupBy, works on unsorted data and returns the sorted + grouped version.              |
 
 ### Usage Example
 
 ```java
-Transformer transformer = new CoerceStringsTransformer();
-Iterable<JSONObject> transformed = transformer.transform(sourceData);
-
-for (JSONObject record : transformed)
+String[] fields = new String[]
 {
-    System.out.println(record);
-}
-```
+    "ORDER_ID", "RECIPIENT", "TOTAL", "ITEMS"
+};
+SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
 
-## InsertKeyTransformer
+Query query = new Query("SELECT * FROM \"orders\" o\n"
+                + "JOIN order_line l ON l.order_id = o.order_id "
+                + "order by o.order_id, l.line_id");
 
-The `InsertKeyTransformer` allows adding or modifying a key-value pair in JSON objects.
+Iterable<JSONObject> results = dbms.query(query);
+/*
+Results would look like something similiar to this, not very useful. But it looks like the data is sorted.
 
-### Constructor
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
+*/
 
-- `InsertKeyTransformer(String key, Object value)`: Initializes the transformer with the key and value to insert.
+Iterable<JSONObject> customerData = sorter.transform(results)
 
-### Usage Example
-
-```java
-Transformer transformer = new InsertKeyTransformer("newKey", "newValue");
-Iterable<JSONObject> transformed = transformer.transform(sourceData);
-
-for (JSONObject record : transformed)
-{
-    System.out.println(record);
-}
-```
-
-## SortedGroupByTransformer
-
-The `SortedGroupByTransformer` groups data based on specified fields. The data must already be sorted for accurate grouping.
-
-### Constructor
-
-- `SortedGroupByTransformer(String[] fields, String output)`: Groups related data on the specified fields and assigns it to the output field.
-
-### Usage Example
-
-```java
-Transformer transformer = new SortedGroupByTransformer(
-    new String[]{"field1", "field2"},
-    "groupedData"
-);
-
-Iterable<JSONObject> transformed = transformer.transform(sourceData);
-
-for (JSONObject record : transformed)
-{
-    System.out.println(record);
-}
-```
-
-## UnsortedGroupByTransformer
-
-The `UnsortedGroupByTransformer` groups data based on specified fields without requiring the data to be sorted beforehand.
-
-### Constructor
-
-- `UnsortedGroupByTransformer(String[] fields, String output)`: Groups related data on the specified fields and assigns it to the output field.
-
-### Usage Example
-
-```java
-Transformer transformer = new UnsortedGroupByTransformer(
-    new String[]{"field1"},
-    "groupedData"
-);
-Iterable<JSONObject> transformed = transformer.transform(sourceData);
-
-for (JSONObject record : transformed)
-{
-    System.out.println(record);
-}
+/*
+Using the transformer would return the following. Much more concise, and notable a much smaller footprint
+  {
+    "RECIPIENT": "bob",
+    "TOTAL": 54.12,
+    "ORDER_ID": 1,
+    "ITEMS": 3,
+    "lines": [
+      {
+        "LINE_ID": 1,
+        "PRODUCT": "Fish tank",
+        "PRICE": 30,
+        "QUANTITY": 1
+      },
+      {
+        "LINE_ID": 2,
+        "PRODUCT": "Fish food",
+        "PRICE": 4,
+        "QUANTITY": 3
+      },
+      {
+        "LINE_ID": 3,
+        "PRODUCT": "Fish filter",
+        "PRICE": 12.12,
+        "QUANTITY": 1
+      }
+    ]
+  }
+*/
 ```
 
 ## Best Practices
