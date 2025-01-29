@@ -2,170 +2,107 @@
 
 Database operations provide a unified way to work with your database while maintaining data consistency and performance. Rather than dealing with low-level JDBC code, you can work with intuitive concepts like atomic operations (where everything either succeeds or fails together), batch processing for better performance, and simple querying that returns easy-to-use JSON objects. This gives you the control of direct SQL with the safety of managed transactions.
 
-## Core Interfaces and Classes
+## The DBMS
 
-- **AtomicOperation**: Represents a single, encapsulated database operation. This interface ensures that the operation can be executed safely within a managed transaction.
-- **Query**: Encapsulates a SQL query for execution against a database. Provides a way to parameterize and reuse queries.
-- **QueryOperation**: Executes a single query as an atomic operation. Parameters are bound to ensure safe execution.
-- **TransactionOperation**: Groups multiple atomic operations into a single transaction. Guarantees that either all operations succeed, or none are applied.
-- **BatchOperation**: Facilitates bulk operations by batching multiple records into a single query for improved performance.
+The Convirgance DBMS streamlines database operations by abstracting complex implementation details into a simple, robust interface. By handling the heavy lifting of connection management and transaction safety, developers can focus on their core application logic by simply providing a data `source` and using the straightforward `query` and `update` operations.
 
-## AtomicOperation Interface
+### Parameter Binding.
 
-The `AtomicOperation` interface defines a standard way to encapsulate database operations, ensuring proper lifecycle management and transaction safety.
+Convirgance's parameter binding system works directly with your SQL and JSON data. This lightweight approach gives you the security benefits of prepared statements while maintaining the flexibility and performance of raw SQL – perfect for applications that need to move fast without sacrificing reliability.
 
-### Key Methods
-
-- `void execute(Connection connection)`: Executes the operation using the provided database connection.
-
-## Example: Custom AtomicOperation
-
-A custom implementation of the `AtomicOperation` interface that logs each record in a table to an external system.
+## Inserting Data
 
 ```java
-/**
- * A custom implementation of the AtomicOperation interface that logs each record
- * in a table to an external system.
- */
-public class LoggingOperation implements AtomicOperation
-{
-    private Query query; // The query to fetch the records.
-    private Logger logger; // The logging system to use.
+// Connect to database
+DBMS dbms = new DBMS(source);
+String template = "INSERT INTO customer VALUES (:id, :name, :email)";
+Query insert;
+QueryOperation operation;
 
-    /**
-     * Constructor to initialize the query and logger.
-     *
-     * @param query The query to execute.
-     * @param logger The logger for recording entries.
-     */
-    public LoggingOperation(Query query, Logger logger)
-    {
-        this.query = query;
-        this.logger = logger;
-    }
+JSONObject customer = new JSONObject();
+customer.put("id", 1);
+customer.put("name", "John");
+customer.put("email", "john@email.com");
 
-    /**
-     * Executes the logging operation within a transaction.
-     *
-     * @param connection The database connection to use.
-     * @throws SQLException If a database error occurs.
-     */
-    @Override
-    public void execute(Connection connection) throws SQLException
-    {
-        JSONObject record;
-        ResultSetMetaData metaData;
+insert = new Query(template, customer);
+operation = new QueryOperation(insert);
 
-        try (PreparedStatement statement = connection.prepareStatement(query.toString());
-             ResultSet resultSet = statement.executeQuery())
-            {
-
-            while (resultSet.next())
-            {
-                record = new JSONObject();
-                metaData = resultSet.getMetaData();
-
-                for (int i = 1; i <= metaData.getColumnCount(); i++)
-                {
-                    record.put(metaData.getColumnName(i), resultSet.getObject(i));
-                }
-
-                logger.log(record.toString());
-            }
-        }
-    }
-}
+dbms.update(operation);
 ```
 
-## TransactionOperation
-
-The `TransactionOperation` class allows multiple `AtomicOperation` instances to be executed as a single transaction, ensuring atomicity.
-
-### Key Features
-
-- Groups multiple operations for execution within a transaction.
-- Handles rollback in case of failure, maintaining database consistency.
-
-### Usage Example
+### BatchOperation
 
 ```java
-public void transactionOperation()
-{
-    DBMS database = new DBMS(source);
+Query query;
+List<JSONObject> records;
+BatchOperation batch;
+DBMS database;
 
-    QueryOperation insertCustomer = new QueryOperation(
-        new Query("INSERT INTO CUSTOMER (id, name) VALUES (1, 'Alice')")
-    );
-    QueryOperation updateAccount = new QueryOperation(
-        new Query("UPDATE ACCOUNT SET balance = balance - 100 WHERE id = 1")
-    );
+Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (?, ?, ?)");
 
-    TransactionOperation transaction = new TransactionOperation(
-        List.of(insertCustomer, updateAccount)
-    );
+records = List.of(
+    new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
+    new JSONObject().put("id", 2).put("name", "Bob").put("age", 25)
+);
 
-    database.execute(transaction);
-}
+batch = new BatchOperation(query, records);
+batch.setCommit(50);
+
+database = new DBMS(source);
+database.execute(batch);
+
 ```
 
-## BatchOperation
-
-The `BatchOperation` class is designed for executing bulk queries efficiently. It reduces overhead by batching multiple records into a single operation.
-
-### Key Features
-
-- Executes multiple inserts, updates, or deletes in a single query.
-- Supports setting a commit size for better control over batch transactions.
-
-### Usage Example
-
-```java
-public void batchOperation()
-{
-    Query query;
-    List<JSONObject> records;
-    BatchOperation batch;
-    DBMS database;
-
-    Query query = new Query("INSERT INTO CUSTOMER (id, name, age) VALUES (?, ?, ?)");
-
-    records = List.of(
-        new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
-        new JSONObject().put("id", 2).put("name", "Bob").put("age", 25)
-    );
-
-    batch = new BatchOperation(query, records);
-    batch.setCommit(50);
-
-    database = new DBMS(source);
-    database.execute(batch);
-}
-```
-
-## Query Class
-
-The `Query` class encapsulates a SQL query for execution. It allows parameterized queries and ensures safe binding of values.
+## Querying Data
 
 ### Example Usage
 
 ```java
-public void queryOperation()
+Query query = new Query("SELECT * FROM CUSTOMER");
+DBMS database;
+Iterable<JSONObject> results
+
+database = new DBMS(source);
+results; = database.query(query);
+
+for (JSONObject record : results)
 {
-    Query query;
-    DBMS database;
-    Iterable<JSONObject> results
-
-    query = new Query("SELECT * FROM CUSTOMER WHERE id = ?");
-    query.setParameter(1, 12345);
-
-    database = new DBMS(source);
-    results; = database.query(query);
-
-    for (JSONObject record : results)
-    {
-        System.out.println(record);
-    }
+    System.out.println(record);
 }
+```
+
+## Transactions: Inserts and Queries
+
+#### A brief overview
+
+Below is a example with pseudo methods, showcasing that `TransactionOperation` executes queries sequentially. Any number of Queries can be provided.
+
+```java
+Query truncate = createTruncateStatement();
+Query resequence = createResetSequenceStatement();
+Query data = createDefaultDataInsert();
+
+transaction = new TransactionOperation(truncate, resequence, batch);
+```
+
+### Bulk Insert and Query
+
+```java
+DBMS dbms = new DBMS(source);
+
+// Creates the insert statement for JSONObjects
+Query query = getInsertQuery();
+Query reset = new Query("truncate table SETTINGS");
+
+TransactionOperation transaction;
+QueryOperation truncate = new QueryOperation(reset);
+BatchOperation batch;
+
+batch = new BatchOperation(query, input.read(source));
+
+transaction = new TransactionOperation(truncate, batch);
+
+dbms.update(transaction);
 ```
 
 ## Best Practices

@@ -18,23 +18,21 @@ Here's how simple it is to query a database and transform the results:
 ```java
 // Query your database
 DBMS database = new DBMS(source);
-Iterable<JSONObject> results = database.query(new Query("select * from CUSTOMER"));
+Query query = new Query("select * from CUSTOMER");
+Iterable<JSONObject> results = database.query(query);
 
-// Filter customers (like a SQL WHERE clause)
-Filter activeHighValueCustomers = new AndFilter(
-    new GreaterThanFilter("purchases", 1000),
-    new EqualsFilter("status", "active")
-);
-
-// Transform the data (like SQL GROUP BY)
-Transformer groupByRegion = new SortedGroupByTransformer(
-    new String[]{"region"},
-    "customers"
-);
+for(JSONObject record : results.iterator())
+{
+  System.out.println(record.toString(4));
+}
 
 // Output to CSV
 CSVOutput output = new CSVOutput();
-output.write(target, groupByRegion.transform(activeHighValueCustomers.transform(results)));
+output.write(target, results);
+```
+
+```java
+// transform example
 ```
 
 ## Getting Started
@@ -71,9 +69,9 @@ Using Maven:
 
 ```xml
 <dependency>
-    <groupId>com.convirgance</groupId>
-    <artifactId>convirgance-core</artifactId>
-    <version>$VERSION$</version>
+    <groupId>com.invirgance</groupId>
+    <artifactId>convirgance</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -81,7 +79,7 @@ Using Maven:
 
 We're here to help:
 
-- [GitHub Issues](https://github.com/InvirganceOpenSource) - Report bugs or request features
+- [GitHub Issues](https://github.com/InvirganceOpenSource/convirgance/issues) - Report bugs or request features
 - [Contact](contact.md) - Get in touch with the team
 
 ## License

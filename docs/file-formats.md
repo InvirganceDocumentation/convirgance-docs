@@ -4,62 +4,104 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 ## Supported Formats
 
-| Format        | Description                                              | Read/Write |
-| ------------- | -------------------------------------------------------- | ---------- |
-| CSV           | Comma-separated values, widely used for tabular data.    | Read/Write |
-| JSON          | JavaScript Object Notation, common for structured data.  | Read/Write |
-| Delimited     | Custom-delimited files (CSV, TSV, etc) for tabular data. | Read/Write |
-| Excel (TBD)   | Microsoft Excel spreadsheets (.xls, .xlsx).              | Read/Write |
-| Parquet (TBD) | Columnar storage file format for big data applications.  | Read/Write |
+| Format         | Description                                    | Read/Write | Extensions     |
+| -------------- | ---------------------------------------------- | ---------- | -------------- |
+| CSV            | Comma-separated values for tabular data        | Read/Write | `.csv`         |
+| Pipe Delimited | Column data separated by pipes                 | Read/Write | `.psv`, `.txt` |
+| Tab Delimited  | Column data separated by tabs                  | Read/Write | `.tsv`, `.txt` |
+| Delimited      | Custom delimiter-separated data                | Read/Write | `.txt`         |
+| JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
+| JBIN           | Binary JSON format                             | Read/Write | `.jbin`        |
+
+Each format supports full read and write operations with configurable parsing options.
 
 ## Extending the Input Interface
 
 Convirgance provides an extensible input interface to allow developers to integrate support for new data formats. By implementing the `Input` interface, developers can define custom readers for various formats.
 
-### Example: CSVInput Implementation
+### Example: Customer Properties File Implementation
+
+#### Example Input
+
+Here is the data for our example properties file.
+
+```sh
+# Example 'pet_type.properties' file
+dog=true
+cat=false
+```
+
+#### Example Output
+
+Example output from the `PropertiesInput`'s read as it processes the stream of the example file, printing out each record. Further clarification, the example implementation reads the example files `stream` into an `Iterable` of `JSONObject`s, a for-each loop is used to print each `JSONObject`.
+
+```json
+{"dog":"true"}
+{"cat":"false"}
+```
+
+### Example: PropertiesInput Implementation
 
 ```java
-/**
- * An implementation of the Input interface to handle CSV files.
- */
-public class CSVInput implements Input<JSONObject>
+// Reads the data from a .properties file and returns a stream of JSONObjects.
+public class PropertiesInput implements Input<JSONObject>
 {
     @Override
-    public JSONObject read(String filePath) throws IOException
+    public InputCursor<JSONObject> read(Source source)
     {
-        JSONObject row;
-        JSONObject result = new JSONObject();
-        String[] values;
-        String[] headers;
-        String line;
+        return new PropertiesInputCursor(source);
+    }
 
-        try (BufferedReader buffer = new BufferedReader(new FileReader(filePath)))
+    private class PropertiesInputCursor implements InputCursor<JSONObject>
+    {
+        BufferedReader reader;
+
+        // public PropertiesInputCursor(Source source)...
+
+        @Override
+        public CloseableIterator<JSONObject> iterator()
         {
-            line = null;
-            headers = null;
+            return new CloseableIterator<JSONObject>(){
+                String nextLine;
 
-            while ((line = buffer.readLine()) != null)
-            {
-                values = line.split(",");
-                if (headers == null)
                 {
-                    headers = values;
-                }
-                else
-                {
-                    row = new JSONObject();
-
-                    for (int i = 0; i < headers.length; i++)
+                    try
                     {
-                        row.put(headers[i], values[i]);
+                        nextLine = reader.readLine();
+                    }
+                    catch (IOException ex)
+                    {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
+                // @Override
+                // public boolean hasNext()...
+
+                @Override
+                public JSONObject next()
+                {
+                    String[] property = nextLine.split("=", 2);
+                    JSONObject obj = new JSONObject();
+
+                    try
+                    {
+                        nextLine = reader.readLine();
+                    }
+                    catch (IOException ex)
+                    {
+                        throw new RuntimeException(ex);
                     }
 
-                    result.append("rows", row);
-                }
-            }
-        }
 
-        return result;
+                    obj.put(property[0], property[1]);
+                    return obj;
+                }
+
+                // @Override
+                // public void close() throws IOException...
+            };
+        }
     }
 }
 ```
@@ -78,56 +120,57 @@ public class CSVInput implements Input<JSONObject>
 
 Convirgance also allows developers to extend its output interface for supporting additional file formats. By implementing the `Output` interface, you can define custom writers to generate files in new formats.
 
-### Example: CSVOutput Implementation
+### Example: PropertiesOutput Implementation
 
 ```java
 /**
- * An implementation of the Output interface to handle CSV file writing.
+ * This is used to write out JSONObjects to a .properties files.
  */
-public class CSVOutput implements Output<JSONObject>
+public class PropertiesOutput implements Output
 {
-    @Override
-    public void write(String filePath, JSONObject data) throws IOException
-    {
-        JSONObject firstRow;
-        JSONObject row;
-        String line;
-        String headers;
-        JSONArray rows;
+    //  @Override
+    //  public OutputCursor write(Target target)...
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath)))
-        {
-            rows = data.getJSONArray("rows");
+    //  @Override
+    //  public String getContentType()...
 
-            // Write headers
-            if (rows.length() > 0)
-            {
-                firstRow = rows.getJSONObject(0);
-                headers = String.join(",", firstRow.keySet());
-                writer.write(headers);
-                writer.newLine();
-            }
+   private class PropertiesOutputCursorWriter implements OutputCursor
+   {
+       private final Target target;
+       private PrintWriter out;
 
-            // Write data rows
-            for (int i = 0; i < rows.length(); i++)
-            {
-                row = rows.getJSONObject(i);
+       public PropertiesOutputCursorWriter(Target target)
+       {
+           this.target = target;
+           this.out = new PrintWriter(target.getOutputStream(), false);
+       }
 
-                line = row.keySet().stream()
-                    .map(key -> row.optString(key, ""))
-                    .collect(Collectors.joining(","));
+       // Keep in mind this example is lossy, any values with new lines would not be read properly.
+       @Override
+       public void write(JSONObject record)
+       {
+           Object value;
 
-                writer.write(line);
-                writer.newLine();
-            }
-        }
-    }
+           for (String key : record.keySet())
+           {
+               value = record.get(key);
+
+               out.print(key);
+               out.print("=");
+               out.print(value.toString().replace("\n", ""));
+               out.print("\n");
+           }
+       }
+
+       //  @Override
+       //  public void close()...
+   }
 }
 ```
 
 ### Steps to Add Support for Other Output Formats
 
-1. **Implement the Output Interface**: Create a class implementing `Output<T>`, where `T` is the input type for writing data (e.g., `JSONObject`).
+1. **Implement the Output Interface**: Create a class implementing `Output`.
 2. **Handle File Writing Logic**: Write the logic to convert the input data structure into the desired file format.
 
 ### Best Practices
@@ -136,99 +179,100 @@ public class CSVOutput implements Output<JSONObject>
 - Validate input data to match format-specific requirements.
 - Optimize performance for writing large files by using buffered output streams.
 
+### Scenarios
+
+#### Reading properties values from a Database
+
+##### DB Data
+
+| blending_mode | accuracy | model         |
+| ------------- | -------- | ------------- |
+| lighten       | 0.75     | photoshop-cs6 |
+| darken        | 0.82     | gimp-2.10     |
+| difference    | 0.79     | krita-5.0     |
+
+##### Pulling the first record into the local `properties` file
+
+```java
+byte[] bytes;
+
+PropertiesInput input = new PropertiesInput();
+PropertiesOutput output = new PropertiesOutput();
+ByteArraySource byteSource;
+
+FileTarget target = new FileTarget(new File("./user.properties"));
+
+DBMS dbms = new DBMS(source);
+Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
+
+Iterable<JSONObject> results = dbms.query(query);
+output.write(target, results);
+```
+
+#### File Contents
+
+```sh
+blending_mode.0=lighten
+accuracy.0=0.75
+model.0=photoshop-cs6
+```
+
+You can find an example covering inserting data [here](./database-operations.md#transactions-inserting-and-querying-data)
+
 ## Format-Specific Examples
 
 ### Delimited Files
 
 ```java
-import com.convirgance.Convirgance;
+Iterable<JSONObject> results =  new JSONArray("[{\"name\":\"John\"}]");
 
-public class Demo
-{
-    private static DataSource source;
+// Notice that our source data is missing fields, these will be supplemented and assigned to null.
+String[] fields = new String[]{"name", "Device Count", "Dependents"};
 
-    public static void main(String[] args)
-    {
-        DBMS database = new DBMS(source);
-        Iterable<JSONObject> results;
-        String[] fields;
+// This will delimit the content with '?' using only the provided headers.
+DelimitedOutput input = new DelimitedOutput(fields, "?");
+ByteArrayTarget target = new ByteArrayTarget();
 
-        // This will delimit the content with '?' using only the provided headers
-        DelimitedOutput input = new DelimitedOutput(fields, "?");
-        ByteArrayTarget target = new ByteArrayTarget();
-
-        results = database.query(new Query("select * from CUSTOMER"));
-        fields = new String[]{"Names", "Device Count", "Dependents"};
-
-        // Write out the results with only the three fields.
-        output.write(target, audience);
-    }
-}
+// Write out the results with only the three fields.
+output.write(target, audience);
 ```
 
 ### JSON
 
 ```java
-import com.convirgance.Convirgance;
+// filename being the path to some json file
+source = new FileSource(new File(filename));
+input = new JSONInput().read(source);
 
-public class Demo
-{
-    private static DataSource source;
+ByteArrayTarget target = new ByteArrayTarget();
 
-    public static void main(String[] args)
-    {
-        source = new FileSource(new File(filename));
-        input = new JSONInput().read(source);
-
-        ByteArrayTarget target = new ByteArrayTarget();
-
-        // Write out the results with only the three fields.
-        output.write(target, audience);
-    }
-}
+output.write(target, audience);
 ```
 
 ### CSV
 
 ```java
-import com.convirgance.Convirgance;
+ByteArrayTarget target = new ByteArrayTarget();
+CSVOutput output = new CSVOutput();
 
-public class Demo
+try(OutputCursor cursor = output.write(target))
 {
-    public static void main(String[] args)
-    {
-        ByteArrayTarget target = new ByteArrayTarget();
-        CSVOutput output = new CSVOutput();
-
-        try(OutputCursor cursor = output.write(target))
-        {
-            cursor.write(new JSONArray("[{\"name\":\"John\",\"quote\":\"His favorite quote is \\\"Hello World\\\"\"},{\"name\":\"Alice\",\"quote\":\"She said \\\"Hi\\\"\"}]"));
-        }
-    }
+    cursor.write(new JSONArray("[{\"name\":\"John\"}]"));
+    cursor.close();
 }
 ```
 
 ### JBIN
 
 ```java
-import com.convirgance.Convirgance;
+Iterable<JSONObject> results =  new JSONArray("[{\"name\":\"John\"}]");
+ByteArrayTarget target = new ByteArrayTarget();
 
-public class Demo
+JBINOutput output = new JBINOutput();
+
+try(OutputCursor cursor = output.write(target))
 {
-    private static DataSource source;
-
-    public static void main(String[] args)
-    {
-        DBMS database = new DBMS(source);
-        Iterable<JSONObject> results = database.query(new Query("select * from CUSTOMER"));
-        ByteArrayTarget target = new ByteArrayTarget();
-        JBINInput input = new JBINInput();
-        JBINOutput output = new JBINOutput();
-
-        try(OutputCursor cursor = output.write(target))
-        {
-            cursor.write(results);
-        }
-    }
+    cursor.write(results.iterator());
+    cursor.close();
 }
 ```
