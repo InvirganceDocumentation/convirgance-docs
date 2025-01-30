@@ -166,15 +166,11 @@ public class PropertiesOutput implements Output
 
 #### Reading properties values from a Database
 
-##### DB Data
+##### Pseudo Database data
 
 | blending_mode | accuracy | model         |
 | ------------- | -------- | ------------- |
 | lighten       | 0.75     | photoshop-cs6 |
-| darken        | 0.82     | gimp-2.10     |
-| difference    | 0.79     | krita-5.0     |
-
-##### Pulling the first record into the local `properties` file
 
 ```java
 byte[] bytes;
@@ -191,17 +187,15 @@ Query query = new Query("select blending_mode, accuracy, model from SETTINGS lim
 
 Iterable<JSONObject> results = dbms.query(query);
 output.write(target, results);
+
+/*
+# user.properties would contain the following info (based on the data stored in the database)
+
+blending_mode=lighten
+accuracy=0.75
+model=photoshop-cs6
+*/
 ```
-
-#### File Contents
-
-```sh
-blending_mode.0=lighten
-accuracy.0=0.75
-model.0=photoshop-cs6
-```
-
-Want to learn more about inserting data? Documentation covering that is found [here](./database-operations.md#inserting-data)
 
 ## More File Examples
 
@@ -213,24 +207,28 @@ Delimited files provide a way to organize data seperated by a specific character
 
 ```java
 JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
-
 String[] fields = new String[]{"name", "devices"};
 
+// 'qdc' file type being question mark delimited values.
+File file = new File("./test.qdv");
+FileTarget target = new FileTarget(file);
+
 // This will delimit the content with '?' using only the provided headers.
-DelimitedOutput output = new DelimitedOutput(fields, "?");
-ByteArrayTarget target = new ByteArrayTarget();
+DelimitedOutput output = new DelimitedOutput(fields, '?');
 
 // Write out the results with only the three fields.
 output.write(target, results);
 
 /*
 The files output would look something like:
-
+  name?devices
   John?3
 */
 ```
 
 ### JSON
+
+#### Reading
 
 The below examples reads in from some example file and prints out the `toString()` representation of the record.
 
@@ -247,15 +245,37 @@ for(JSONObject record : input){
 */
 ```
 
+#### Writing
+
+```java
+DBMS database = new DBMS(source);
+Query query = new Query("SELECT * FROM customer");
+
+Iterable<JSONObject> results = database.query(query);
+
+File file = new File("./test.json");
+FileTarget target = new FileTarget(file);
+
+JSONOutput out = new JSONOutput();
+out.write(target, results);
+
+/*
+  {"name": "John", "devices": 3},
+  {"name": "Bob", "devices": 1},
+*/
+```
+
 ### CSV
 
 Writing out to CSV from JSON is pretty simple, fields names are converted into headers and any values found matching the field names are added below.
 
 ```java
 JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
-ByteArrayTarget target = new ByteArrayTarget();
-CSVOutput output = new CSVOutput();
 
+File file = new File("./test.csv");
+FileTarget target = new FileTarget(file);
+
+CSVOutput output = new CSVOutput();
 try(OutputCursor cursor = output.write(target))
 {
     cursor.write(example);
