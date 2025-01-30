@@ -15,23 +15,41 @@ Traditional ORMs force you to map your database to Java objects, adding complexi
 
 Here's how simple it is to query a database and transform the results:
 
+### Database to CSV
+
 ```java
 // Query your database
 DBMS database = new DBMS(source);
-Query query = new Query("select * from CUSTOMER");
+Query query = new Query("select name, devices, pets from CUSTOMER");
 Iterable<JSONObject> results = database.query(query);
 
-for(JSONObject record : results.iterator())
-{
-  System.out.println(record.toString(4));
-}
+File file = new File("./example.csv");
+FileTarget target = new FileTarget(file);
 
 // Output to CSV
 CSVOutput output = new CSVOutput();
 output.write(target, results);
+
+/*
+Contents of 'examples.csv'
+
+name, devices, pets
+John, 3, 1
+Bob, 1, 2
+Kyle, 1, 10
+*/
 ```
 
+### Filtering Database results
+
 ```java
+DBMS database = new DBMS(source);
+Query query = new Query("SELECT * FROM \"orders\" o\n"
+                + "JOIN order_line l ON l.order_id = o.order_id "
+                + "order by o.order_id, l.line_id");
+
+Iterable<JSONObject> results = dbms.query(query);
+
 /*
   The contents of `results`
   {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}

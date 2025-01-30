@@ -9,7 +9,7 @@
   - [Getting Started with Convirgance](getting-started.md#getting-started-with-convirgance)
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
-  - [Inputs - Outputs](getting-started.md#outputs)
+  - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
   - [Community and Support](getting-started.md#community-and-support)
 
 - [Database Operations](database-operations.md)

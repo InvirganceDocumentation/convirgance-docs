@@ -68,9 +68,9 @@ Output file would look like:
 */
 ```
 
-## Outputs
+## Inputs and Outputs
 
-After transforming your data, Convirgance supports various output options. You can export your results as:
+After transforming your data, Convirgance supports various input and output options you can also implement support for other file-types by using our [interfaces](/file-formats?id=example-properties-file).
 
 ### Delimited Files:
 
@@ -133,7 +133,7 @@ new CSVOutput(wanted).write(target, results);
 
 ### JBIN:
 
-JBIN a Convirgance file type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
+JBIN a Convirgance file-type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
 
 ## Community and Support
 
