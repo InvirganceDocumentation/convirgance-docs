@@ -41,15 +41,23 @@ for (JSONObject record : results)
 }
 ```
 
-## Inserting Data
+## Transaction Operations
 
-### Example
+The `TransactionOperation` represents operations such as updates, inserts or deleting. Multiple operations can be acted at once, being executed sequentially. However if an error occurs during one of the operations, all changes will be rolled back.
+
+### Atomic Operations
+
+Atomic operations follow the principle of atomicity - making changes as small, indivisible units. This approach provides precise control and better error handling. This concept is used throughout the Convirgance DBMS, allowing changes to be rollback if required.
+
+### Inserting Data
+
+#### Example
 
 In this example we insert a single `JSONObject`. You can see the Convirgance named bindings in use through the `template` string.
 
 ```java
 String template = "INSERT INTO customer VALUES (:id, :name, :email)";
-String example = String example = "{ \"id\": 1, \"name\": \"John\", \"email\": \"john@email.com\" }";
+String example = "{ \"id\": 1, \"name\": \"John\", \"email\": \"john@email.com\" }";
 
 JSONObject customer = new JSONObject(example);
 
@@ -62,15 +70,28 @@ dbms.update(operation);
 
 ### BatchOperation
 
-The `BatchOperation` provides a simple way to insert a large amount of objects.
+The `BatchOperation` provides a simple way to insert/modify a large amount of objects.
 
 ```java
 String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
 
-List<JSONObject> records = List.of(
-    new JSONObject().put("id", 1).put("name", "Alice").put("age", 30),
-    new JSONObject().put("id", 2).put("name", "Bob").put("age", 25)
-);
+
+/*
+  The contents of 'jsonFile',
+
+  {
+    id: 1,
+    name: "Bob",
+    age: 55
+  },
+  {
+    id: 2,
+    name: "Potato",
+    age: 35
+  },
+*/
+FileSource example = new FileSource(jsonFile);
+List<JSONObject> records = JSONInput().read(example);
 
 DBMS database = new DBMS(source);
 Query query = new Query(template);
@@ -81,15 +102,20 @@ batch.setCommit(50);
 database.execute(batch);
 ```
 
-## Transactions: Inserts and Queries
+### Transactions: Inserts and Queries
 
-### Example
+#### Example
 
-Below is a example with pseudo methods, showcasing that `TransactionOperation` executes queries sequentially. Any number of Queries can be provided if at any point an issue occurs all changes are rolled back.
+Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially.
 
 ```java
+// This will run first
 Query truncate = createTruncateStatement();
+
+// Second: Resequence the DB
 Query resequence = createResetSequenceStatement();
+
+// Third: Seed data is inserted
 Query data = createDefaultDataInsert();
 
 transaction = new TransactionOperation(truncate, resequence, batch);
@@ -97,7 +123,7 @@ transaction = new TransactionOperation(truncate, resequence, batch);
 
 ### Bulk Insert and Query
 
-Here is an example utilizing `TransactionOperation`.
+Here is an example utilizing `TransactionOperation` along with `BatchOperation`.
 
 ```java
 DBMS dbms = new DBMS(source);
