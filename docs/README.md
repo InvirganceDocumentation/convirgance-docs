@@ -11,7 +11,7 @@ Traditional ORMs force you to map your database to Java objects, adding complexi
 - **Format Freedom**: Read from a database, output to CSV, or transform JSON - it's all the same to Convirgance
 - **SQL-Like Operations**: Use familiar concepts like WHERE clauses and GROUP BY, even on non-SQL data sources
 
-## Quick Example
+## Simple Example
 
 Here's how simple it is to query a database and transform the results:
 
@@ -73,47 +73,33 @@ The transformer would return the following. In comparison to what the database r
 
 Ready to dive in? Here's what you need to know:
 
-1. [Getting Started Guide](getting-started.md) - Installation and your first Convirgance application
+1. [Getting Started Guide](getting-started.md) - Installation and examples
 2. [Database Operations](database-operations.md) - Working with databases efficiently
 3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
 4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
 5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
 
-## Core Concepts
+## Core Concepts and Goals
 
 ### Database Operations
 
-Handle database interactions with confidence. Atomic operations ensure your transactions succeed or fail cleanly, while batch processing keeps things fast.
+Handle database interactions with confidence. Atomic operations ensure your transactions succeed or fail cleanly, while batch processing keeps things fast. Streamlining any interaction that you make with any database, all without the overhead from your typical ORM.
 
-### Filters
+### Data Flexibility
+
+Using our pluggable transformers and filters you can manipulate your data in whatever way is needed. Further more our library will handle all your file type needs, JSON, CSV, Delimimted. And, if support doesn't exist we have you covered with our easily extendible interfaces.
+
+#### Filters
 
 Apply SQL-like conditions to any data source. Combine filters with AND/OR operations just like you would in a WHERE clause.
 
-### Transformations
+#### Transformations
 
 Build data pipelines that clean and reshape your data. Convert types, group records, or compute new fields - all without loading everything into memory.
 
-### File Formats
+#### File Formats
 
 Work with data in any format. Read from CSV, transform in memory, write to JSON - all using the same consistent API.
-
-## Installation
-
-Using Maven add the following to your `pom` file:
-
-```xml
-<dependency>
-    <groupId>com.invirgance</groupId>
-    <artifactId>convirgance</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
-Or use the CLI:
-
-```sh
-mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
-```
 
 ## Community and Support
 

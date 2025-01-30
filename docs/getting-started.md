@@ -14,11 +14,19 @@ Convirgance is a modern, streamlined approach to database access. Unlike traditi
 
 ## Installation
 
-To get started, you need to install Convirgance. Here's how:
+Using Maven add the following to your `pom` file:
 
-### Using Maven:
+```xml
+<dependency>
+    <groupId>com.invirgance</groupId>
+    <artifactId>convirgance</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
-```bash
+Or use the CLI:
+
+```sh
 mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 ```
 

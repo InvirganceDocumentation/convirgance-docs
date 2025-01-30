@@ -1,9 +1,8 @@
 - [Introduction](/)
 
   - [Why Convirgance?](/#why-convirgance)
-  - [Quick Example](/#quick-example)
-  - [Core Concepts](/#core-concepts)
-  - [Installation](/#installation)
+  - [Simple Example](/#simple-example)
+  - [Core Concepts and Goals](/#core-concepts-and-goals)
 
 - [Getting Started](getting-started.md)
 
@@ -29,13 +28,6 @@
   - [Interface Examples](filtering-data.md#interface-examples)
   - [Best Practices](filtering-data.md#best-practices)
 
-- [File Formats](file-formats.md#file-formats)
-
-  - [Supported Formats](file-formats.md#supported-formats)
-  - [Extending the Input Interface](file-formats.md#the-input-interface)
-  - [Example: A Custom Properties File](file-formats.md#example-properties-file)
-  - [More File Examples](file-formats.md#more-file-examples)
-
 - [Transforming Data](transforming-data.md)
 
   - [Core Interfaces and Classes](transforming-data.md#core-interfaces-and-classes)
@@ -46,4 +38,11 @@
   - [UnsortedGroupByTransformer](transforming-data.md#unsortedgroupbytransformer)
   - [Best Practices](transforming-data.md#best-practices)
 
-- [Contact](contact.md)
+- [File Formats](file-formats.md#file-formats)
+
+  - [Supported Formats](file-formats.md#supported-formats)
+  - [Extending the Input Interface](file-formats.md#the-input-interface)
+  - [Example: A Custom Properties File](file-formats.md#example-properties-file)
+  - [More File Examples](file-formats.md#more-file-examples)
+
+- [Community and Support](contact.md)
