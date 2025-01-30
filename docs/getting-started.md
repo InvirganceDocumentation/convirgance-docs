@@ -24,14 +24,15 @@ mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 
 ## Quick Start
 
-Here's a basic example of using Convirgance to query a database:
+Here's a basic example of using Convirgance to query a database and filter the results:
 
 ```java
 // Here are the filters we want to apply to our data.
 GreaterThanFilter devices = new GreaterThanFilter("devices", 1);
 LessThanFilter pets = new LessThanFilter("pets", 3);
 
-File file = new File("./test.csv");
+// `pdc' stands for pipe delimited values.
+File file = new File("./example.pdv");
 FileTarget target = new FileTarget(file);
 
 DelimitedOutput output = new DelimitedOutput();
@@ -73,6 +74,8 @@ After transforming your data, Convirgance supports various output options. You c
 
 ### Delimited Files:
 
+When working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
+
 ```java
 DataSource source;
 
@@ -80,15 +83,18 @@ DBMS dbms = new DBMS(source);
 Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
 
 // Assuming results contains these three fields.
-DelimitedOutput input = new DelimitedOutput(new String[]{"Names", "Device Count", "Dependents"});
+DelimitedOutput input = new DelimitedOutput(new String[]{"names", "devices", "pets"});
 
-ByteArrayTarget target = new ByteArrayTarget();
+File file = new File("./example.pdv");
+FileTarget target = new FileTarget(file);
 
 // Write out the results with only the three fields.
 output.write(target, audience);
 ```
 
 ### JSON Files:
+
+JSONObjects are created based on the coloum names returned from the database query.
 
 ```java
 DataSource source;
@@ -97,33 +103,37 @@ DBMS dbms = new DBMS(source);
 Query query = new Query("select * from CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
-ByteArrayTarget target = new ByteArrayTarget();
 
-// Writes out all of the results on the fly.
+File file = new File("./example.json");
+FileTarget target = new FileTarget(file);
+
 new JSONOutput().write(out, array);
 ```
 
 ### CSV:
 
-CSV known as comma seperated values. When writing, JSONObject keys will be used as the header names, the same idea applies when reading in a CSV file.
+CSV known as comma seperated values. When writing, the JSON keys will be used as the header names, the same idea applies when reading in a CSV file.
 
 ```java
 DataSource source;
 
 DBMS dbms = new DBMS(source);
-Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
-ByteArrayTarget target = new ByteArrayTarget();
+Query query = new Query("select * from CUSTOMER");
 
-// The headers we would like to be included in the CSV.
+Iterable<JSONObject> results = dbms.query(query);
+
+File file = new File("./example.csv");
+FileTarget target = new FileTarget(file);
+
+// The values to include in the CSV.
 String wanted = new String[]{"CUSTOMER_ID"};
 
-// Writes out all of the results on the fly.
 new CSVOutput(wanted).write(target, results);
 ```
 
 ### JBIN:
 
-JBIN a Convirgance file type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios
+JBIN a Convirgance file type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
 
 ## Community and Support
 
