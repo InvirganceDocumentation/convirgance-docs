@@ -39,7 +39,7 @@ Results would look like something similiar to this, not very useful. But it look
 Iterable<JSONObject> customerData = sorter.transform(results)
 
 /*
-Using the transformer would return the following. Much more concise, and notably a much smaller footprint
+The transformer would return the following. In comparison to what the database returned this output is much more concise. Also notice that the duplicate fields were removed.
   {
     "RECIPIENT": "bob",
     "TOTAL": 54.12,
