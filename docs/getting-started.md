@@ -10,7 +10,7 @@ Convirgance is a modern, streamlined approach to database access. Unlike traditi
 
 - **Simplified DB interaction**: streamlined way to interact with your database without the overhead of an ORM
 - **Flexibility**: pluggable transformations, filters, and outputs
-- **Portability**: Output your data to multiple formats such as CSV, JSON or JBIN
+- **Portability**: Output/transform your data to multiple formats such as CSV, JSON or JBIN, or use our interfaces and add support for your own!
 
 ## Installation
 
@@ -131,5 +131,22 @@ public class Demo {
 
 Have questions? Feel free to reach out through:
 
-- [GitHub Repository](https://github.com/)
-- [Twitter](https://X.com/)
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+ <img src="./images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
+ <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center; font-size:24px; width: 24px; height: 24px">𝕏</span>
+  <a href="https://x.com/Invirgance">@invirgance</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center; font-size:18px;width: 24px; height: 24px">💌</span>
+  <a href="mailto:info@invirgance.com">info@invirgance.com</a>
+</div>
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">🌐</span>
+  <a href="https://invirgance.com">invirgance.com</a>
+</div>

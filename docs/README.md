@@ -34,7 +34,41 @@ output.write(target, results);
 <!-- TODO transform example -->
 
 ```java
-// transform example
+/*
+  The contents of `results`
+  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
+  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
+*/
+String[] fields = new String[]
+{
+    "ORDER_ID", "RECIPIENT", "TOTAL", "ITEMS"
+};
+SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
+Iterable<JSONObject> customerData = sorter.transform(results)
+
+/*
+Using the transformer would return the following. Much more concise, and notably a much smaller footprint
+  {
+    "RECIPIENT": "bob",
+    "TOTAL": 54.12,
+    "ORDER_ID": 1,
+    "ITEMS": 3,
+    "lines": [
+      {
+        "LINE_ID": 1,
+        "PRODUCT": "Fish tank",
+        "PRICE": 30,
+        "QUANTITY": 1
+      },
+      {
+        "LINE_ID": 2,
+        "PRODUCT": "Fish food",
+        "PRICE": 4,
+        "QUANTITY": 3
+      }
+    ]
+  }
+*/
 ```
 
 ## Getting Started
