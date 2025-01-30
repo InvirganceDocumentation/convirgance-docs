@@ -6,12 +6,6 @@ Welcome to the Convirgance documentation! This section will guide you through th
 
 Convirgance is a modern, streamlined approach to database access. Unlike traditional ORM frameworks that map your database into Java objects, Convirgance gives you direct SQL control while returning results as a stream of `Map` objects. These objects can be manipulated, filtered, and transformed using common operations, making it an excellent drop in tool for querying and managing data.
 
-## Goals
-
-- **Simplified DB interaction**: streamlined way to interact with your database without the overhead of an ORM
-- **Flexibility**: pluggable transformations, filters, and outputs
-- **Portability**: Output/transform your data to multiple formats such as CSV, JSON or JBIN, or use our interfaces and add support for your own!
-
 ## Installation
 
 Using Maven add the following to your `pom` file:
