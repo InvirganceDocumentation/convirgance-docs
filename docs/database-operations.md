@@ -49,6 +49,12 @@ The `TransactionOperation` represents operations such as updates, inserts or del
 
 Atomic operations follow the principle of atomicity - making changes as small, indivisible units. This approach provides precise control and better error handling. This concept is used throughout the Convirgance DBMS, allowing changes to be rolled-back if an issue occurs. An interface is available [here](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/AtomicOperation.html) if needed.
 
+### Query Operation
+
+At a high level, `QueryOperation` serves as a transaction wrapper around Query. Its main role is to ensure database operations are executed atomically (as a single unit), making them safer and more reliable.
+
+Can you guess what class `QueryOperation` implements? (Check the documentation link at the bottom for the answer)
+
 ### Inserting Data
 
 #### Example
