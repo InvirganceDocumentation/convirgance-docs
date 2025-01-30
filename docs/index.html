@@ -26,7 +26,13 @@
 				color: var(--theme-accent-color);
 				margin-left: 10px;
 			}
-
+			/* Word wrapping for code blocks */
+			pre > code > span {
+				overflow-wrap: break-word;
+				white-space: pre-wrap !important;
+				word-wrap: break-word !important;
+				display: inline-block !important;
+			}
 			.search {
 				border-bottom: 1px solid var(--theme-accent-color) !important;
 				margin-inline: 1rem;
