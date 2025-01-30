@@ -50,9 +50,9 @@ Iterable<JSONObject> customerData = sorter.transform(results)
 Using the transformer would return the following. Much more concise, and notably a much smaller footprint
   {
     "RECIPIENT": "bob",
-    "TOTAL": 54.12,
+    "TOTAL": 42,
     "ORDER_ID": 1,
-    "ITEMS": 3,
+    "ITEMS": 2,
     "lines": [
       {
         "LINE_ID": 1,
