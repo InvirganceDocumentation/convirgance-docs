@@ -76,14 +76,16 @@ dbms.update(operation);
 
 ### BatchOperation
 
-The `BatchOperation` provides a simple way to insert/modify a large amount of objects.
+`BatchOperation` is like `QueryOperation` but designed for efficiently executing the same query multiple times with different values. Here we see it in use to bind the values from a file containing multiple JSONObjects.
 
 ```java
 String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
 
+DBMS database = new DBMS(source);
+Query query = new Query(template);
 
 /*
-  The contents of 'jsonFile'.
+  The contents of 'jsonFile'. Notice that the field names match with VALUES
 
   {
     id: 1,
@@ -99,8 +101,6 @@ String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age
 FileSource example = new FileSource(jsonFile);
 Iterable<JSONObject> records = JSONInput().read(example);
 
-DBMS database = new DBMS(source);
-Query query = new Query(template);
 
 BatchOperation batch = new BatchOperation(query, records);
 
@@ -141,7 +141,7 @@ TransactionOperation transaction;
 QueryOperation truncate = new QueryOperation(reset);
 
 // Reading in JSONObjects from a file 'source'.
-InputCursor<JSONObject> items = new JSONInput().read(file);
+Iterable<JSONObject> items = new JSONInput().read(file);
 BatchOperation batch = new BatchOperation(query, items);
 
 transaction = new TransactionOperation(truncate, batch);
@@ -151,9 +151,9 @@ dbms.update(transaction);
 ## Best Practices
 
 - Use `TransactionOperation` for multiple operations and to ensure atomicity incase issues arise.
-- Leverage `BatchOperation` for large-scale data processing to optimize performance.
-  - Using interval commits to avoid overflowing the transaction buffer
-  - Utilize named bindings as they ensure the correct JSONObject values will be used.
+- Leverage `BatchOperation` for large-scale operations to optimize performance.
+- Using interval commits to avoid overflowing the transaction buffer
+- Utilize named bindings as they ensure the correct JSONObject values will be used.
 
 ## Further Reading
 
