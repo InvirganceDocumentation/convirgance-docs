@@ -99,7 +99,7 @@ Work with data in any format. Read from CSV, transform in memory, write to JSON 
 
 ## Installation
 
-Using Maven:
+Using Maven add the following to your `pom` file:
 
 ```xml
 <dependency>
@@ -109,12 +109,31 @@ Using Maven:
 </dependency>
 ```
 
+Or use the CLI:
+
+```sh
+mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
+```
+
 ## Community and Support
 
 We're here to help:
 
-- [GitHub Issues](https://github.com/InvirganceOpenSource/convirgance/issues) - Report bugs or request features
-- [Contact](contact.md) - Get in touch with the team
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+ <img src="/images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
+ <div>
+     <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
+     <span>- Report bugs or request features</span>
+ </div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📑</span>
+  <div>
+    <a href="/#/contact.md">Contact</a>
+    <span>- Get in touch with the team</span>
+  </div>
+</div>
 
 ## License
 

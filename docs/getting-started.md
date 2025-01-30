@@ -19,7 +19,7 @@ To get started, you need to install Convirgance. Here's how:
 ### Using Maven:
 
 ```bash
-mvn install $PLACEHOLDER_CORDINATES$
+mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 ```
 
 ## Quick Start
