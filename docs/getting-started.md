@@ -1,8 +1,8 @@
 # Getting Started with Convirgance
 
-Welcome to the Convirgance documentation! In this section we'll go over getting started, first installing and then covering a few simple examples. As you read through the documentation,
+Welcome to the Convirgance documentation! In this section we'll go over getting started, first installing and then covering a few simple examples.
 
-I encourage you to build along and explore how different parts of the library interact with eachother. It may seem daunting at first which is only because its new. Convirgance is crazy simple just give it a shot.
+As you read through the documentation, I encourage you to build along and explore how different parts of the library interact with eachother. It may seem daunting at first which is only because its new. Convirgance is crazy simple just give it a shot.
 
 ## Installation
 

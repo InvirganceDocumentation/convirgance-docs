@@ -6,11 +6,10 @@
 
 - [Getting Started](getting-started.md)
 
-  - [What is Convirgance?](getting-started.md#what-is-convirgance)
-  - [Goals](getting-started.md#goals)
+  - [Getting Started with Convirgance](getting-started.md#getting-started-with-convirgance)
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
-  - [Outputs](getting-started.md#outputs)
+  - [Inputs - Outputs](getting-started.md#outputs)
   - [Community and Support](getting-started.md#community-and-support)
 
 - [Database Operations](database-operations.md)
