@@ -9,8 +9,6 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
 		<link rel="stylesheet" href="css/vue.css" />
-		<link rel="stylesheet" href="css/sidebar.min.css" />
-		<link rel="stylesheet" href="css/sidebar-folder.min.css" />
 		<style>
 			body {
 				font-family: Helvetica, Calibri, Arial, sans-serif;
@@ -20,17 +18,29 @@
 				--theme-accent-bright: #fefefe;
 				--theme-accent-dark: #e9e9e9;
 				--theme-accent-color: #028afe;
+				--theme-color: #006dca;
+				--theme-sidebar-sub-item: #262a2f;
 			}
 
 			.sidebar {
 				color: var(--theme-accent-color);
+				margin-left: 10px;
 			}
 
 			.search {
 				border-bottom: 1px solid var(--theme-accent-color) !important;
 				margin-inline: 1rem;
 			}
-
+			.sidebar-nav > ul > li > p > a {
+				font-weight: 600 !important;
+			}
+			.sidebar ul li.active > a {
+				color: var(--theme-color, #42b983) !important;
+			}
+			.sidebar ul li a {
+				font-weight: 500 !important;
+				color: var(--theme-sidebar-sub-item) !important;
+			}
 			.sidebar-nav > ul,
 			.sidebar-nav > ul > * > a,
 			.sidebar-nav > ul > li > p > a,
@@ -47,16 +57,11 @@
 		<script>
 			window.$docsify = {
 				name: "Convirgance",
-				repo: "",
+				repo: "https://github.com/InvirganceOpenSource/convirgance",
 				loadSidebar: true,
 				sidebarDisplayLevel: 1,
 				subMaxLevel: 0,
 				auto2top: true,
-				collapse: {
-					showCollapseButton: true,
-					buttonText: "▼",
-					autoCollapse: false,
-				},
 				search: {
 					maxAge: 86400000,
 					paths: "auto",
@@ -70,6 +75,5 @@
 		<script src="js/search.min.js"></script>
 		<script src="js/prism-java.min.js"></script>
 		<script src="js/prism-bash.min.js"></script>
-		<script src="js/sidebar-collapse.min.js"></script>
 	</body>
 </html>
