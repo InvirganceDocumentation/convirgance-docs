@@ -279,7 +279,6 @@ CSVOutput output = new CSVOutput();
 try(OutputCursor cursor = output.write(target))
 {
     cursor.write(example);
-    cursor.close();
 }
 
 /*

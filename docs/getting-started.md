@@ -1,10 +1,8 @@
 # Getting Started with Convirgance
 
-Welcome to the Convirgance documentation! This section will guide you through the basics.
+Welcome to the Convirgance documentation! In this section we'll go over getting started, first installing and then covering a few simple examples. As you read through the documentation,
 
-## What is Convirgance?
-
-Convirgance is a modern, streamlined approach to database access. Unlike traditional ORM frameworks that map your database into Java objects, Convirgance gives you direct SQL control while returning results as a stream of `Map` objects. These objects can be manipulated, filtered, and transformed using common operations, making it an excellent drop in tool for querying and managing data.
+I encourage you to build along and explore how different parts of the library interact with eachother. It may seem daunting at first which is only because its new. Convirgance is crazy simple just give it a shot.
 
 ## Installation
 
@@ -29,37 +27,45 @@ mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 Here's a basic example of using Convirgance to query a database:
 
 ```java
-import com.convirgance.Convirgance;
+// Here are the filters we want to apply to our data.
+GreaterThanFilter devices = new GreaterThanFilter("devices", 1);
+LessThanFilter pets = new LessThanFilter("pets", 3);
 
-public class Demo
-{
-    private static DataSource source;
+File file = new File("./test.csv");
+FileTarget target = new FileTarget(file);
 
-    public static void main(String[] args)
-    {
-        DBMS database = new DBMS(source);
-        CoerceStringsTransformer parser = new CoerceStringsTransformer();
+DelimitedOutput output = new DelimitedOutput();
 
-        DelimitedInput input = new DelimitedInput();
-        DelimitedOutput output = new DelimitedOutput();
-        ByteArrayTarget target = new ByteArrayTarget();
+/*
+Here is the database, keep in mind you could also use input from other places too.
 
-        Iterable<JSONObject> rows = database.query(new Query("select * from CUSTOMER"));
-        GreaterThanFilter devices = new GreaterThanFilter("Devices", 10);
-        LessThanFilter zip = new LessThanFilter("ZIP", 20000);
+ex: (DelimimtedInput(), JSONInput()...)
+Iterable<JSONObject> rows = JSONInput().read(someFile);
+*/
+DBMS database = new DBMS(source);
+Query example = new Query("select pets, name, devices, account_type from CUSTOMER");
+Iterable<JSONObject> rows = database.query(example);
 
-        // Used to convert Zip Codes stored as a string into their actual type (int).
-        Iterable<JSONObject> parsed = parser.transform(rows);
-        Iterable<JSONObject> filtered = zip.transform(parsed);
-        Iterable<JSONObject> result = devices.transform(filtered);
+/*
+Lets say pet count was a varchar(string) instead of an integer, we can use the following transformer to coerce the data so the filter works correctly.
+*/
+CoerceStringsTransformer parser = new CoerceStringsTransformer();
 
-        // Execute the query and write the results
-        output.write(target, result);
-    }
-}
+Iterable<JSONObject> parsed = parser.transform(rows);
+Iterable<JSONObject> filtered = pets.transform(parsed);
+Iterable<JSONObject> result = devices.transform(filtered);
+
+output.write(target, result);
+
+/*
+Output file would look like:
+
+  name, devices, account_type, pets,
+  John, 3, gold, 0
+  Bob, 1, bronze, 1
+  Jane, 2, gold, 2
+*/
 ```
-
-This code will query the database for all active users, filtering the results to customers with more than 10 smart devices, additionally the CoerceTransformer converts data into their actual types. Then writes out the results to the Target.
 
 ## Outputs
 
@@ -68,87 +74,73 @@ After transforming your data, Convirgance supports various output options. You c
 ### Delimited Files:
 
 ```java
-import com.convirgance.Convirgance;
+DataSource source;
 
-public class Demo {
-    private static DataSource source;
+DBMS dbms = new DBMS(source);
+Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
 
-    public static void main(String[] args) {
-        DBMS dbms = new DBMS(source);
-        Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
+// Assuming results contains these three fields.
+DelimitedOutput input = new DelimitedOutput(new String[]{"Names", "Device Count", "Dependents"});
 
-        // Assuming results contains these three fields.
-        DelimitedOutput input = new DelimitedOutput(new String[]{"Names", "Device Count", "Dependents"});
+ByteArrayTarget target = new ByteArrayTarget();
 
-        ByteArrayTarget target = new ByteArrayTarget();
-
-        // Write out the results with only the three fields.
-        output.write(target, audience);
-    }
-}
+// Write out the results with only the three fields.
+output.write(target, audience);
 ```
 
 ### JSON Files:
 
 ```java
-import com.convirgance.Convirgance;
+DataSource source;
 
-public class Demo {
-    private static DataSource source;
+DBMS dbms = new DBMS(source);
+Query query = new Query("select * from CUSTOMER");
 
-    public static void main(String[] args) {
-        DBMS dbms = new DBMS(source);
-        Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
-        ByteArrayTarget target = new ByteArrayTarget();
+Iterable<JSONObject> results = dbms.query(query);
+ByteArrayTarget target = new ByteArrayTarget();
 
-        // Writes out all of the results on the fly.
-        new JSONOutput().write(out, array);
-    }
-}
+// Writes out all of the results on the fly.
+new JSONOutput().write(out, array);
 ```
 
 ### CSV:
 
+CSV known as comma seperated values. When writing, JSONObject keys will be used as the header names, the same idea applies when reading in a CSV file.
+
 ```java
-import com.convirgance.Convirgance;
+DataSource source;
 
-public class Demo {
-    private static DataSource source;
+DBMS dbms = new DBMS(source);
+Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
+ByteArrayTarget target = new ByteArrayTarget();
 
-    public static void main(String[] args) {
-        DBMS dbms = new DBMS(source);
-        Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
-        ByteArrayTarget target = new ByteArrayTarget();
+// The headers we would like to be included in the CSV.
+String wanted = new String[]{"CUSTOMER_ID"};
 
-        // The headers we would like to be included in the CSV.
-        String wanted = new String[]{"CUSTOMER_ID"};
-
-        // Writes out all of the results on the fly.
-        new CSVOutput(wanted).write(target, results);
-    }
-}
+// Writes out all of the results on the fly.
+new CSVOutput(wanted).write(target, results);
 ```
+
+### JBIN:
+
+JBIN a Convirgance file type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios
 
 ## Community and Support
 
-Have questions? Feel free to reach out through:
+We're here to help:
 
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
- <img src="./images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
- <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
+ <img src="/images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
+ <div>
+     <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
+     <span>- Report bugs or request features</span>
+ </div>
 </div>
 
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center; font-size:24px; width: 24px; height: 24px">𝕏</span>
-  <a href="https://x.com/Invirgance">@invirgance</a>
-</div>
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center; font-size:18px;width: 24px; height: 24px">💌</span>
-  <a href="mailto:info@invirgance.com">info@invirgance.com</a>
-</div>
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">🌐</span>
-  <a href="https://invirgance.com">invirgance.com</a>
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📑</span>
+  <div>
+    <a href="/#/contact.md">Contact</a>
+    <span>- Get in touch with the team</span>
+  </div>
 </div>
