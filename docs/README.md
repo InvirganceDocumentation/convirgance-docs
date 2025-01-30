@@ -6,10 +6,10 @@ Convirgance is a modern, streamlined approach to database access. Unlike traditi
 
 Traditional ORMs force you to map your database to Java objects, adding complexity and overhead. Convirgance takes a different approach:
 
-- **Direct SQL Control**: Write the SQL you want, get back the data you need
-- **Stream Processing**: Handle large datasets efficiently without loading everything into memory
-- **Format Freedom**: Read from a database, output to CSV, or transform JSON - it's all the same to Convirgance
-- **SQL-Like Operations**: Use familiar concepts like WHERE clauses and GROUP BY, even on non-SQL data sources
+- **Direct SQL Control**: Write the SQL you want, get back the data you need.
+- **Stream Processing**: Handle large datasets efficiently without loading everything into memory.
+- **Format Freedom**: Read from a database, output to CSV, or transform JSON - it's all the same to Convirgance.
+- **SQL-Like Operations**: Our filters and transformers provide concepts like WHERE clauses and GROUP BY, allowing you to work with data in a familiar way.
 
 ## Simple Example
 

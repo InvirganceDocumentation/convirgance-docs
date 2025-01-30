@@ -80,16 +80,17 @@ When working with delimited files you can select which keys to keep, and if need
 DataSource source;
 
 DBMS dbms = new DBMS(source);
-Iterable<JSONObject> results = dbms.query(new Query("select * from CUSTOMER"));
+Query query = new Query("select * from CUSTOMER");
+Iterable<JSONObject> results = dbms.query(query);
 
-// Assuming results contains these three fields.
-DelimitedOutput input = new DelimitedOutput(new String[]{"names", "devices", "pets"});
+// Notice that the query is using *, we can narrow down the output by setting the headers to use.
+String wanted = new String[]{"names", "devices", "pets"};
+DelimitedOutput output = new DelimitedOutput(wanted);
 
 File file = new File("./example.pdv");
 FileTarget target = new FileTarget(file);
 
-// Write out the results with only the three fields.
-output.write(target, audience);
+output.write(target, results);
 ```
 
 ### JSON Files:
@@ -107,7 +108,7 @@ Iterable<JSONObject> results = dbms.query(query);
 File file = new File("./example.json");
 FileTarget target = new FileTarget(file);
 
-new JSONOutput().write(out, array);
+new JSONOutput().write(target, results);
 ```
 
 ### CSV:
@@ -126,7 +127,7 @@ File file = new File("./example.csv");
 FileTarget target = new FileTarget(file);
 
 // The values to include in the CSV.
-String wanted = new String[]{"CUSTOMER_ID"};
+String wanted = new String[]{"name","devices"};
 
 new CSVOutput(wanted).write(target, results);
 ```
@@ -134,6 +135,20 @@ new CSVOutput(wanted).write(target, results);
 ### JBIN:
 
 JBIN a Convirgance file-type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
+
+```java
+DataSource source;
+
+DBMS dbms = new DBMS(source);
+Query query = new Query("select * from CUSTOMER");
+
+Iterable<JSONObject> results = dbms.query(query);
+
+File file = new File("./example.csv");
+FileTarget target = new FileTarget(file);
+
+new JBINOutput().write(target, results);
+```
 
 ## Community and Support
 
