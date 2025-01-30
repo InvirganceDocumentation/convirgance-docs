@@ -8,7 +8,7 @@ The Convirgance DBMS streamlines database operations by abstracting complex impl
 
 ### Parameter Binding.
 
-Parameter binding in Convirgance is a secure method for incorporating values into SQL queries using named parameters. Each parameter is prefixed with a colon (:) in the SQL template and matched with corresponding values in a JSONObject. Using named parameters keeps query logic flexible by avoiding the traditional `?` approach. Additionally inputs are sanitized during the binding process.
+Parameter binding in Convirgance uses named parameters (prefixed with :) to securely integrate values into SQL queries. Values are bound using a `JSONObject`, eliminating the need to count and align traditional ? placeholders. For example, `:userId` in your query would match with the `userId` field in your binding object.
 
 ```java
 DBMS dbms = new DBMS(source);
@@ -31,7 +31,7 @@ Iterable<JSONObject> results = dbms.query(query);
 Here we simply retreive all the customers and print out their information.
 
 ```java
-Query query = new Query("SELECT * FROM CUSTOMER");
+Query query = new Query("SELECT * FROM customer");
 DBMS database = new DBMS(source);
 Iterable<JSONObject> results = database.query(query);
 
@@ -47,7 +47,7 @@ The `TransactionOperation` represents operations such as updates, inserts or del
 
 ### Atomic Operations
 
-Atomic operations follow the principle of atomicity - making changes as small, indivisible units. This approach provides precise control and better error handling. This concept is used throughout the Convirgance DBMS, allowing changes to be rollback if required.
+Atomic operations follow the principle of atomicity - making changes as small, indivisible units. This approach provides precise control and better error handling. This concept is used throughout the Convirgance DBMS, allowing changes to be rolled-back if an issue occurs. An interface is available [here](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/AtomicOperation.html) if needed.
 
 ### Inserting Data
 
@@ -77,7 +77,7 @@ String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age
 
 
 /*
-  The contents of 'jsonFile',
+  The contents of 'jsonFile'.
 
   {
     id: 1,
@@ -91,13 +91,12 @@ String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age
   },
 */
 FileSource example = new FileSource(jsonFile);
-List<JSONObject> records = JSONInput().read(example);
+Iterable<JSONObject> records = JSONInput().read(example);
 
 DBMS database = new DBMS(source);
 Query query = new Query(template);
 
 BatchOperation batch = new BatchOperation(query, records);
-batch.setCommit(50);
 
 database.execute(batch);
 ```
@@ -106,16 +105,16 @@ database.execute(batch);
 
 #### Example
 
-Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially.
+Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially. If an error occured during one of these operations the database would be rolled back to its previous state.
 
 ```java
-// This will run first
+// First: Get the query to truncate/drop the table
 Query truncate = createTruncateStatement();
 
-// Second: Resequence the DB
+// Second: Get resequence statement
 Query resequence = createResetSequenceStatement();
 
-// Third: Seed data is inserted
+// Third: Get the bulk query to insert seed data.
 Query data = createDefaultDataInsert();
 
 transaction = new TransactionOperation(truncate, resequence, batch);
@@ -130,13 +129,13 @@ DBMS dbms = new DBMS(source);
 
 // Creates the insert statement for JSONObjects.
 Query query = getInsertQuery();
-Query reset = new Query("TRUNCATE table SETTINGS");
+Query reset = new Query("TRUNCATE table customers");
 
 TransactionOperation transaction;
 QueryOperation truncate = new QueryOperation(reset);
 
 // Reading in JSONObjects from a file 'source'.
-InputCursor<JSONObject> items = input.read(file);
+InputCursor<JSONObject> items = new JSONInput().read(file);
 BatchOperation batch = new BatchOperation(query, items);
 
 transaction = new TransactionOperation(truncate, batch);
@@ -145,10 +144,10 @@ dbms.update(transaction);
 
 ## Best Practices
 
-- Use `TransactionOperation` for critical workflows that involve multiple steps to ensure consistency.
+- Use `TransactionOperation` for multiple operations and to ensure atomicity incase issues arise.
 - Leverage `BatchOperation` for large-scale data processing to optimize performance.
   - Using interval commits to avoid overflowing the transaction buffer
-- Always validate query parameters to prevent SQL injection and ensure data integrity.
+  - Utilize named bindings as they ensure the correct JSONObject values will be used.
 
 ## Further Reading
 
