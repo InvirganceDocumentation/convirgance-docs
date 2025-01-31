@@ -93,8 +93,6 @@ After transforming your data, Convirgance supports various input and output opti
 When working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
 
 ```java
-DataSource source;
-
 DBMS dbms = new DBMS(source);
 Query query = new Query("select * from CUSTOMER");
 Iterable<JSONObject> results = dbms.query(query);
@@ -114,10 +112,8 @@ output.write(target, results);
 JSONObjects are created based on the coloum names returned from the database query.
 
 ```java
-DataSource source;
-
 DBMS dbms = new DBMS(source);
-Query query = new Query("select * from CUSTOMER");
+Query query = new Query("select name, pets, devices from CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
 
@@ -125,17 +121,20 @@ File file = new File("./example.json");
 FileTarget target = new FileTarget(file);
 
 new JSONOutput().write(target, results);
+/*
+Contents of example.json:
+
+  {name: "John", pets: "2", devices: 2}
+*/
 ```
 
 ### CSV:
 
-CSV known as comma seperated values. When writing, the JSON keys will be used as the header names, the same idea applies when reading in a CSV file.
+CSV known as comma seperated values. When writing, the header names can be provided, otherwise the JSON keys will be used. This same idea applies when reading in a CSV file.
 
 ```java
-DataSource source;
-
 DBMS dbms = new DBMS(source);
-Query query = new Query("select * from CUSTOMER");
+Query query = new Query("select name, pets, devices from CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
 
@@ -143,9 +142,15 @@ File file = new File("./example.csv");
 FileTarget target = new FileTarget(file);
 
 // The values to include in the CSV.
-String wanted = new String[]{"name","devices"};
+String wanted = new String[]{"name","devices","house"};
 
 new CSVOutput(wanted).write(target, results);
+/*
+Contents of example.csv:
+
+  name, devices, house
+  John, 2,
+*/
 ```
 
 ### JBIN:
@@ -153,8 +158,6 @@ new CSVOutput(wanted).write(target, results);
 JBIN a Convirgance file-type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
 
 ```java
-DataSource source;
-
 DBMS dbms = new DBMS(source);
 Query query = new Query("select * from CUSTOMER");
 
