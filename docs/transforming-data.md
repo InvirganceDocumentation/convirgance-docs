@@ -6,9 +6,9 @@ Transformations let you modify your data as it flows through your application. T
 
 | Name                       | Description                                                                                                  |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| CoerceStringsTransformer   | Transforms objects into their actual counterparts, evaluating key values into their real data type.          |
+| CoerceStringsTransformer   | Transforms JSONObjects into their actual counterparts, evaluating key values into their real data type.      |
 | IdentityTransformer        | A Interface used when creating transformers.                                                                 |
-| InsertKeyTransformer       | For replacing existing key:value pairs.                                                                      |
+| InsertKeyTransformer       | For replacing or inserting key:value pairs in JSONObjects.                                                   |
 | SortedGroupByTransformer   | Used when working with data thats already sorted, grouping similar values on a provided JSON field criteria. |
 | Transformer                | The heart of the transformer library, implement this when creating your own.                                 |
 | UnsortedGroupByTransformer | The opposite of SortedGroupBy, works on unsorted data and returns the sorted + grouped version.              |

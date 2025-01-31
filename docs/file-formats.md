@@ -13,18 +13,16 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 | JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
 | JBIN           | Binary JSON format                             | Read/Write | `.jbin`        |
 
-Each format supports full read and write operations with configurable parsing options.
-
 ## Reading and Writing
 
-Below are some short examples covering reading and writing with different outputs, they all follow the same pattern.
+Below are some short examples covering reading and writing with different outputs.
 
 ### Delimited Files
 
 Delimited files provide a way to organize data seperated by a specific character.
 
 ```java
-JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
+JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3, \"pets\":1}]");
 
 // 'qdc' file type being question mark delimited values.
 File file = new File("./test.qdv");
@@ -121,12 +119,7 @@ JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
 ByteArrayTarget target = new ByteArrayTarget();
 
 JBINOutput output = new JBINOutput();
-
-try(OutputCursor cursor = output.write(target))
-{
-    cursor.write(results.iterator());
-    cursor.close();
-}
+output.write(target, results)
 ```
 
 ## The Input/Output Interfaces
@@ -269,7 +262,7 @@ Database Data:
 | lighten       | 0.75     | photoshop-cs6 |
 
 ```java
-File example = new File("./user.properties")
+File example = new File("./user.properties");
 FileTarget target = new FileTarget(example);
 
 DBMS dbms = new DBMS(source);
