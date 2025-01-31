@@ -21,34 +21,17 @@ Convirgance provides an extensible input interface to allow you to integrate sup
 
 ### Best Practices
 
-- Ensure proper escaping of special characters (e.g., commas, quotes) in CSV files.
-- Validate input data to match format-specific requirements.
-- Optimize performance for writing large files by using buffered output streams.
+- Ensure you're following the specifications of the file, created by [IETF](https://www.ietf.org/).
 - Ensure robust error handling to deal with malformed files.
 - Optimize performance for large files by using streaming approaches where applicable.
 
 ### Example: Properties File
 
-#### Example Input
+Lets go over adding support for the `.properties` file-type.
 
-Here is the data for our example properties file.
+#### PropertiesInput Implementation
 
-```sh
-# Example 'pet_type.properties' file
-dog=true
-cat=false
-```
-
-#### Example Output
-
-Example output from the `PropertiesInput`'s read as it processes the stream of the example file, printing out each record. Further clarification, the example implementation reads the example files `stream` into an `Iterable` of `JSONObject`s, a for-each loop is used to print each `JSONObject`.
-
-```json
-{"dog":"true"}
-{"cat":"false"}
-```
-
-### Example: PropertiesInput Implementation
+Here is the basic implementation of `Input` for our `.properties` file.
 
 ```java
 // Reads the data from a .properties file and returns a stream of JSONObjects.
@@ -114,7 +97,9 @@ public class PropertiesInput implements Input<JSONObject>
 }
 ```
 
-### Example: PropertiesOutput Implementation
+#### PropertiesOutput Implementation
+
+Here is the basic implementation of `Output` for our `.properties` file.
 
 ```java
 /**
@@ -139,7 +124,7 @@ public class PropertiesOutput implements Output
            this.out = new PrintWriter(target.getOutputStream(), false);
        }
 
-       // Keep in mind this example is lossy, any values with new lines would not be read properly.
+       // Note: this example is lossy, any values with new lines would not be read properly.
        @Override
        public void write(JSONObject record)
        {
@@ -166,7 +151,9 @@ public class PropertiesOutput implements Output
 
 #### Reading properties values from a Database
 
-##### Pseudo Database data
+In the following example we are going to use our new `.properties` implementation to write the results of a query to a file.
+
+Database Data:
 
 | blending_mode | accuracy | model         |
 | ------------- | -------- | ------------- |
@@ -197,9 +184,9 @@ model=photoshop-cs6
 */
 ```
 
-## More File Examples
+## Reading and Writing
 
-The following examples are for files with native support.
+Below are some short examples covering reading and writing with different outputs, they all follow the same pattern.
 
 ### Delimited Files
 
@@ -207,13 +194,13 @@ Delimited files provide a way to organize data seperated by a specific character
 
 ```java
 JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
-String[] fields = new String[]{"name", "devices"};
 
 // 'qdc' file type being question mark delimited values.
 File file = new File("./test.qdv");
 FileTarget target = new FileTarget(file);
 
 // This will delimit the content with '?' using only the provided headers.
+String[] fields = new String[]{"name", "devices"};
 DelimitedOutput output = new DelimitedOutput(fields, '?');
 
 // Write out the results with only the three fields.

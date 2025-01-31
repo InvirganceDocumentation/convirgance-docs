@@ -40,8 +40,9 @@
 - [File Formats](file-formats.md#file-formats)
 
   - [Supported Formats](file-formats.md#supported-formats)
-  - [Extending the Input Interface](file-formats.md#the-input-interface)
+
   - [Example: A Custom Properties File](file-formats.md#example-properties-file)
-  - [More File Examples](file-formats.md#more-file-examples)
+  - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
+  - [Reading and Writing](file-formats.md#reading-and-writing)
 
 - [Community and Support](contact.md)
