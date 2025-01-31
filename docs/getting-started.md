@@ -26,27 +26,43 @@ mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 
 Here's a basic example of using Convirgance to query a database and filter the results:
 
+Here are the filters we want to apply to our data.
+
 ```java
-// Here are the filters we want to apply to our data.
 GreaterThanFilter devices = new GreaterThanFilter("devices", 1);
 LessThanFilter pets = new LessThanFilter("pets", 3);
+```
 
+Next we setup the target for our data to be written to.
+
+```java
 // `pdc' stands for pipe delimited values.
 File file = new File("./example.pdv");
 FileTarget target = new FileTarget(file);
+```
 
+Now we setup the output writer. Most writers can be configured quite a bit, take a peek at their docs if you get the chance.
+
+```java
 DelimitedOutput output = new DelimitedOutput();
+```
 
+Here is the database and the query collecting our results. But, keep in mind you could also use input from other places too.
+
+```java
 /*
-Here is the database, keep in mind you could also use input from other places too.
-
+Other possible inputs:
 ex: (DelimimtedInput(), JSONInput()...)
 Iterable<JSONObject> rows = JSONInput().read(someFile);
 */
 DBMS database = new DBMS(source);
 Query example = new Query("select pets, name, devices, account_type from CUSTOMER");
 Iterable<JSONObject> rows = database.query(example);
+```
 
+And now that we have our data we can filter, transform as needed.
+
+```java
 /*
 Lets say pet count was a varchar(string) instead of an integer, we can use the following transformer to coerce the data so the filter works correctly.
 */
@@ -72,7 +88,7 @@ Output file would look like:
 
 After transforming your data, Convirgance supports various input and output options you can also implement support for other file-types by using our [interfaces](/file-formats?id=example-properties-file).
 
-### Delimited Files:
+### Delimited:
 
 When working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
 
@@ -93,7 +109,7 @@ FileTarget target = new FileTarget(file);
 output.write(target, results);
 ```
 
-### JSON Files:
+### JSON:
 
 JSONObjects are created based on the coloum names returned from the database query.
 
