@@ -30,11 +30,8 @@
 - [Transforming Data](transforming-data.md)
 
   - [Core Interfaces and Classes](transforming-data.md#core-interfaces-and-classes)
-  - [Transformer Interface](transforming-data.md#transformer-interface)
-  - [CoerceStringsTransformer](transforming-data.md#coercestringstrransformer)
-  - [InsertKeyTransformer](transforming-data.md#insertkeytransformer)
-  - [SortedGroupByTransformer](transforming-data.md#sortedgroupbytransformer)
-  - [UnsortedGroupByTransformer](transforming-data.md#unsortedgroupbytransformer)
+  - [Transformers](transforming-data.md#transformers)
+  - [Examples](transforming-data.md#examples)
   - [Best Practices](transforming-data.md#best-practices)
 
 - [File Formats](file-formats.md#file-formats)

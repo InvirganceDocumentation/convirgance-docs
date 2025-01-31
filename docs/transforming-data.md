@@ -2,6 +2,8 @@
 
 Transformations let you modify your data as it flows through your application. Think of them as a pipeline where each step can clean, enrich, or reshape your data. Common uses include converting data types (like turning strings into numbers), grouping related records together (similar to SQL GROUP BY), or adding computed fields. This allows you to adapt data from one format or structure to another without loading everything into memory at once.
 
+## Transformers
+
 | Name                       | Description                                                                                                  |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | CoerceStringsTransformer   | Transforms objects into their actual counterparts, evaluating key values into their real data type.          |
@@ -11,9 +13,13 @@ Transformations let you modify your data as it flows through your application. T
 | Transformer                | The heart of the transformer library, implement this when creating your own.                                 |
 | UnsortedGroupByTransformer | The opposite of SortedGroupBy, works on unsorted data and returns the sorted + grouped version.              |
 
-### Usage Example
+### Examples
 
-The following example showcases joining two table, using the `SortedGroupByTransformer` to group the data into a more compact from.
+Below are two examples, one goes over the `SorterGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
+
+#### SorterGroupByTransfromer Example
+
+The following example showcases joining two tables, and using the `SortedGroupByTransformer` to group the data into a more compact from.
 
 ```java
 String[] fields = new String[]
@@ -67,6 +73,35 @@ The transformer would return the following. In comparison to what the database r
     ]
   }
 */
+```
+
+#### Interface Example
+
+You can create anonymous classes using the `Transform` interface to quickly create your own transformers.
+
+```java
+Transformer transformer = new Transformer() {
+    @Override
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
+        return new Iterator<JSONObject>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public JSONObject next() {
+                JSONObject obj = iterator.next();
+                // Example transformation: Add timestamp
+                obj.put("timestamp", System.currentTimeMillis());
+                return obj;
+            }
+        };
+    }
+};
+
+List<JSONObject> data = Arrays.asList(new JSONObject(), new JSONObject());
+Iterable<JSONObject> transformed = transformer.transform(data);
 ```
 
 ## Best Practices
