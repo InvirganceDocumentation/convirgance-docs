@@ -1,6 +1,6 @@
 # Filters
 
-Filters provide SQL-like operations for working with your data stream. You can use familiar concepts like equals, greater than, less than, and combine them with AND/OR operations - just like you would in a SQL WHERE clause. This gives you the power of SQL filtering even when working with non-SQL data sources. For example, you can easily filter records where age > 18 AND status = 'active', or find all users who are either admins OR moderators.
+Filters provide SQL-like operations for working with data streams. You can use familiar concepts like equals, greater than, less than, and combine them with AND/OR operations - just like you would in a SQL WHERE clause. This gives you the power of SQL filtering even when working with non-SQL data sources. For example, you can easily filter records where age > 18 AND status = 'active', or find all users who are either admins OR moderators.
 
 ## Types of Filters
 
@@ -31,11 +31,11 @@ JSONObject record = new JSONObject("{\"age\": 5}");
 return new LessThanFilter(key, value).test(record);
 ```
 
-### Interface Examples
+## Interface Examples
 
 ### Filter
 
-The `Filter` interface extends `Transformer`, allowing filters to work within transformation pipelines.
+The `Filter` interface extends `Transformer`, allowing you to quickly create filters to use on groups of `JSONObjects`.
 
 ```java
 File file = new File("./clientData.json");
@@ -103,4 +103,7 @@ for(JSONObject oldRecord : old)
 
 ## Further Reading
 
-- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/filter/package-summary.html)
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
+  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/filter/package-summary.html">Java Documentation: Filters</a>
+</div>

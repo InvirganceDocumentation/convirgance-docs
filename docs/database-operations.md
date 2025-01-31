@@ -24,7 +24,22 @@ Query query = new Query(template, bindings);
 Iterable<JSONObject> results = dbms.query(query);
 ```
 
+You can also setup a config like this to bind a large amount of records.
+
+```java
+String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
+
+DBMS database = new DBMS(source);
+Query query = new Query(template);
+
+Iterable<JSONObject> records = JSONInput().read(someExampleFile);
+
+BatchOperation batch = new BatchOperation(query, records);
+```
+
 ## Querying Data
+
+Querying data is pretty straight forward, you create your SQL query and execute it with the `DBMS` like below. And a Iterable of `JSONObject`s will be returned containing the results.
 
 ### Example
 
@@ -43,7 +58,7 @@ for (JSONObject record : results)
 
 ## Transaction Operations
 
-The `TransactionOperation` represents operations such as updates, inserts or deleting. Multiple operations can be acted at once, being executed sequentially. However if an error occurs during one of the operations, all changes will be rolled back.
+The `TransactionOperation` represents operations such as updates, inserts or deleting. Multiple operations can be queued and then executed sequentially. However if an error occurs during one of the operations, all changes will be rolled back.
 
 ### Atomic Operations
 
@@ -111,7 +126,7 @@ database.execute(batch);
 
 #### Example
 
-Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially. If an error occured during one of these operations the database would be rolled back to its previous state.
+Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially. If an error occured during one of these operations the database would be rolled back to its previous state before the `TransactionOperation` ran.
 
 ```java
 // First: Get the query to truncate/drop the table
