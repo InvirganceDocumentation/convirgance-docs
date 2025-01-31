@@ -290,7 +290,7 @@ model=photoshop-cs6
 ### Best Practices
 
 - Ensure you're following the specifications of the file, created by [IETF](https://www.ietf.org/).
-- Ensure robust error handling to deal with malformed files.
+- Robust error handling to deal with malformed files.
 - Optimize performance for large files by using streaming approaches where applicable.
 
 ## Further Reading
