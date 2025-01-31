@@ -143,7 +143,7 @@ transaction = new TransactionOperation(truncate, resequence, batch);
 
 ### Bulk Insert and Query
 
-Here is an example utilizing `TransactionOperation` along with `BatchOperation`.
+Here is an example utilizing `TransactionOperation` along with `BatchOperation`. If an error occurs during the bulk insert or while truncating the operation will cancel and the database will rollback to its previous state.
 
 ```java
 DBMS dbms = new DBMS(source);
