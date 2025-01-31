@@ -4,11 +4,11 @@ Database operations provide a unified way to work with your database while maint
 
 ## The DBMS
 
-The Convirgance DBMS streamlines database operations by abstracting complex implementation details into a simple, robust interface. By handling the heavy lifting of connection management and transaction safety, developers can focus on their core application logic by simply providing a data `source` and using the straightforward `query` and `update` operations.
+The Convirgance DBMS streamlines database operations by abstracting complex implementation details into a simple, robust interface. By handling the heavy lifting of connection management and transaction safety, developers can focus on their core application logic by simply providing a `DataSource` and using the straightforward `query` and `update` operations.
 
-### Parameter Binding.
+## Parameter Binding
 
-Parameter binding in Convirgance uses named parameters (prefixed with :) to securely integrate values into SQL queries. Values are bound using a `JSONObject`, eliminating the need to count and align traditional ? placeholders. For example, `:userId` in your query would match with the `userId` field in your binding object.
+Parameter binding in Convirgance uses named parameters (prefixed with `:`) to securely integrate values into SQL queries. Values are bound using a `JSONObject`, eliminating the need to count and align traditional ? placeholders. For example, `:userId` in your query would match with the `userId` field in your binding object.
 
 ```java
 DBMS dbms = new DBMS(source);
