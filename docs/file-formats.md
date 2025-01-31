@@ -160,19 +160,14 @@ Database Data:
 | lighten       | 0.75     | photoshop-cs6 |
 
 ```java
-byte[] bytes;
-
-PropertiesInput input = new PropertiesInput();
-PropertiesOutput output = new PropertiesOutput();
-ByteArraySource byteSource;
 File example = new File("./user.properties")
-
 FileTarget target = new FileTarget(example);
 
 DBMS dbms = new DBMS(source);
 Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
-
 Iterable<JSONObject> results = dbms.query(query);
+
+PropertiesOutput output = new PropertiesOutput();
 output.write(target, results);
 
 /*
