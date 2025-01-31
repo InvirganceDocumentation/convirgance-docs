@@ -13,9 +13,11 @@ Traditional ORMs force you to map your database to Java objects, adding complexi
 
 ## Simple Example
 
-Here's how simple it is to query a database and transform the results:
+Here are a few examples showcasing the simplicity convirgance offers:
 
 ### Database to CSV
+
+In this example we are taking the query `results` and writing out the contents to a CSV. All of that in only 7 LoC (lines of code)!
 
 ```java
 // Query your database
@@ -41,6 +43,8 @@ Kyle, 1, 10
 ```
 
 ### Filtering Database results
+
+Deduplicating the results from a join query between two tables.
 
 ```java
 DBMS database = new DBMS(source);
@@ -99,13 +103,13 @@ Ready to dive in? Here's what you need to know:
 
 ## Core Concepts and Goals
 
-### Database Operations
+#### Database Operations
 
 Handle database interactions with confidence. Atomic operations ensure your transactions succeed or fail cleanly, while batch processing keeps things fast. Streamlining any interaction that you make with any database, all without the overhead from your typical ORM.
 
-### Data Flexibility
+#### Formats
 
-Using our pluggable transformers and filters you can manipulate your data in whatever way is needed. Further more our library will handle all your file type needs, JSON, CSV, Delimimted. And, if support doesn't exist we have you covered with our easily extendible interfaces.
+Convirgance will handle reading and writing from, JSON, JBIN, CSV, Delimited (Pipe, Comma, ...). And, if support doesn't exist we have you covered with our easily extendible I/O interfaces.
 
 #### Filters
 
@@ -114,10 +118,6 @@ Apply SQL-like conditions to any data source. Combine filters with AND/OR operat
 #### Transformations
 
 Build data pipelines that clean and reshape your data. Convert types, group records, or compute new fields - all without loading everything into memory.
-
-#### File Formats
-
-Work with data in any format. Read from CSV, transform in memory, write to JSON - all using the same consistent API.
 
 ## Community and Support
 
