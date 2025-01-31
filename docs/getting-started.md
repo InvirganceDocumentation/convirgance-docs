@@ -128,9 +128,25 @@ Contents of example.json:
 */
 ```
 
+And here is an example inserting all the JSON records from a file back into the database. You can see named binds and `BatchOperation` in use here, you will learn more about these in later chapters.
+
+```java
+DBMS database = new DBMS(source);
+
+String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
+Query query = new Query(template);
+
+FileSource example = new FileSource(jsonFile);
+Iterable<JSONObject> records = JSONInput().read(example);
+
+BatchOperation batch = new BatchOperation(query, records);
+
+database.execute(batch);
+```
+
 ### CSV:
 
-CSV known as comma seperated values. When writing, the header names can be provided, otherwise the JSON keys will be used. This same idea applies when reading in a CSV file.
+CSV known as comma seperated values. When writing, the header names can be provided, otherwise the JSON keys will be used. The same idea applies when reading in a CSV file.
 
 ```java
 DBMS dbms = new DBMS(source);
