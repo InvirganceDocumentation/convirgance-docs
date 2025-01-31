@@ -308,4 +308,7 @@ try(OutputCursor cursor = output.write(target))
 
 ## Further Reading
 
-- [Java Documentation](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/source/package-summary.html)
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
+  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/source/package-summary.html">Java Documentation: File Formats</a>
+</div>
