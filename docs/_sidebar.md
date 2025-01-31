@@ -3,6 +3,8 @@
   - [Why Convirgance?](/#why-convirgance)
   - [Simple Example](/#simple-example)
   - [Core Concepts and Goals](/#core-concepts-and-goals)
+  - [Community and Support](/#community-and-support)
+  - [License](/#license)
 
 - [Getting Started](getting-started.md)
 
@@ -10,7 +12,6 @@
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
   - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
-  - [Community and Support](getting-started.md#community-and-support)
 
 - [Database Operations](database-operations.md)
 
@@ -37,9 +38,9 @@
 - [File Formats](file-formats.md#file-formats)
 
   - [Supported Formats](file-formats.md#supported-formats)
-
+  - [Reading and Writing](file-formats.md#reading-and-writing)
   - [Example: A Custom Properties File](file-formats.md#example-properties-file)
   - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
-  - [Reading and Writing](file-formats.md#reading-and-writing)
+  - [Best Practices](file-formats.md#best-practices)
 
 - [Community and Support](contact.md)

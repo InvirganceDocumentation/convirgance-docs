@@ -15,170 +15,6 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 Each format supports full read and write operations with configurable parsing options.
 
-## The Input/Output Interfaces
-
-Convirgance provides an extensible input interface to allow you to integrate support for new data formats by defining custom readers and writers.
-
-### Best Practices
-
-- Ensure you're following the specifications of the file, created by [IETF](https://www.ietf.org/).
-- Ensure robust error handling to deal with malformed files.
-- Optimize performance for large files by using streaming approaches where applicable.
-
-### Example: Properties File
-
-Lets go over adding support for the `.properties` file-type.
-
-#### PropertiesInput Implementation
-
-Here is the basic implementation of `Input` for our `.properties` file.
-
-```java
-// Reads the data from a .properties file and returns a stream of JSONObjects.
-public class PropertiesInput implements Input<JSONObject>
-{
-    @Override
-    public InputCursor<JSONObject> read(Source source)
-    {
-        return new PropertiesInputCursor(source);
-    }
-
-    private class PropertiesInputCursor implements InputCursor<JSONObject>
-    {
-        BufferedReader reader;
-
-        // public PropertiesInputCursor(Source source)...
-
-        @Override
-        public CloseableIterator<JSONObject> iterator()
-        {
-            return new CloseableIterator<JSONObject>(){
-                String nextLine;
-
-                {
-                    try
-                    {
-                        nextLine = reader.readLine();
-                    }
-                    catch (IOException ex)
-                    {
-                        throw new RuntimeException(ex);
-                    }
-                }
-
-                // @Override
-                // public boolean hasNext()...
-
-                @Override
-                public JSONObject next()
-                {
-                    String[] property = nextLine.split("=", 2);
-                    JSONObject obj = new JSONObject();
-
-                    try
-                    {
-                        nextLine = reader.readLine();
-                    }
-                    catch (IOException ex)
-                    {
-                        throw new RuntimeException(ex);
-                    }
-
-
-                    obj.put(property[0], property[1]);
-                    return obj;
-                }
-
-                // @Override
-                // public void close() throws IOException...
-            };
-        }
-    }
-}
-```
-
-#### PropertiesOutput Implementation
-
-Here is the basic implementation of `Output` for our `.properties` file.
-
-```java
-/**
- * This is used to write out JSONObjects to a .properties files.
- */
-public class PropertiesOutput implements Output
-{
-    //  @Override
-    //  public OutputCursor write(Target target)...
-
-    //  @Override
-    //  public String getContentType()...
-
-   private class PropertiesOutputCursorWriter implements OutputCursor
-   {
-       private final Target target;
-       private PrintWriter out;
-
-       public PropertiesOutputCursorWriter(Target target)
-       {
-           this.target = target;
-           this.out = new PrintWriter(target.getOutputStream(), false);
-       }
-
-       // Note: this example is lossy, any values with new lines would not be read properly.
-       @Override
-       public void write(JSONObject record)
-       {
-           Object value;
-
-           for (String key : record.keySet())
-           {
-               value = record.get(key);
-
-               out.print(key);
-               out.print("=");
-               out.print(value.toString().replace("\n", ""));
-               out.print("\n");
-           }
-       }
-
-       //  @Override
-       //  public void close()...
-   }
-}
-```
-
-### Using the Properties Implementation
-
-#### Reading properties values from a Database
-
-In the following example we are going to use our new `.properties` implementation to write the results of a query to a file.
-
-Database Data:
-
-| blending_mode | accuracy | model         |
-| ------------- | -------- | ------------- |
-| lighten       | 0.75     | photoshop-cs6 |
-
-```java
-File example = new File("./user.properties")
-FileTarget target = new FileTarget(example);
-
-DBMS dbms = new DBMS(source);
-Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
-Iterable<JSONObject> results = dbms.query(query);
-
-PropertiesOutput output = new PropertiesOutput();
-output.write(target, results);
-
-/*
-# user.properties would contain the following info (based on the data stored in the database)
-
-blending_mode=lighten
-accuracy=0.75
-model=photoshop-cs6
-*/
-```
-
 ## Reading and Writing
 
 Below are some short examples covering reading and writing with different outputs, they all follow the same pattern.
@@ -249,19 +85,24 @@ out.write(target, results);
 
 ### CSV
 
-Writing out to CSV from JSON is pretty simple, fields names are converted into headers and any values found matching the field names are added below.
+Writing out a CSV from JSON is pretty simple, fields names are converted into headers and any values found matching the field names are included.
 
 ```java
-JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
+File file = new File("./example.json");
+/*
+example.json contents:
 
-File file = new File("./test.csv");
-FileTarget target = new FileTarget(file);
+  {name: "John", devices: 3}
+*/
+
+FileSource source = new FileSource(file);
+Iterable<JSONObject> input = new JSONInput().read(source);
+
+File csv = new File("./test.csv");
+FileTarget target = new FileTarget(csv);
 
 CSVOutput output = new CSVOutput();
-try(OutputCursor cursor = output.write(target))
-{
-    cursor.write(example);
-}
+output.write(target,input)
 
 /*
 Output would look like:
@@ -287,6 +128,170 @@ try(OutputCursor cursor = output.write(target))
     cursor.close();
 }
 ```
+
+## The Input/Output Interfaces
+
+Convirgance provides an extensible input/output interface to allow you to integrate support for new data formats by defining custom readers and writers.
+
+### Example: Properties File
+
+Lets go over adding support for the `.properties` file-type.
+
+#### PropertiesInput Implementation
+
+Here is the basic implementation of `Input` for our `.properties` file.
+
+```java
+// An `Input` to handle reading in a source containing the stream for some .properties file
+Input<JSONObject> input = new Input<JSONObject>()
+{
+    @Override
+    public InputCursor<JSONObject> read(Source source)
+    {
+        return new InputCursor<JSONObject>()
+        {
+            private final BufferedReader reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
+
+            @Override
+            public CloseableIterator<JSONObject> iterator()
+            {
+                return new CloseableIterator<JSONObject>()
+                {
+                    String nextLine;
+
+                    {
+                        try
+                        {
+                            nextLine = reader.readLine();
+                        }
+                        catch (IOException ex)
+                        {
+                            throw new RuntimeException(ex);
+                        }
+                    }
+
+                    @Override
+                    public boolean hasNext()
+                    {
+                        return nextLine != null;
+                    }
+
+                    @Override
+                    public JSONObject next()
+                    {
+                        String[] property = nextLine.split("=", 2);
+                        JSONObject obj = new JSONObject();
+
+                        try
+                        {
+                            nextLine = reader.readLine();
+                        }
+                        catch (IOException ex)
+                        {
+                            throw new RuntimeException(ex);
+                        }
+
+                        obj.put(property[0], property[1]);
+                        return obj;
+                    }
+
+                    @Override
+                    public void close() throws IOException
+                    {
+                        reader.close();
+                    }
+                };
+            }
+        };
+    }
+};
+```
+
+#### PropertiesOutput Implementation
+
+Here is the basic implementation of `Output` for our `.properties` file.
+
+```java
+/**
+ * This is used to write out JSONObjects to a .properties files.
+ */
+Output propertiesOutput = new Output()
+{
+    @Override
+    public OutputCursor write(Target target)
+    {
+        return new OutputCursor()
+        {
+            private final PrintWriter writer = new PrintWriter(target.getOutputStream(), false);
+
+            @Override
+            public void write(JSONObject record)
+            {
+                Object value;
+
+                for (String key : record.keySet())
+                {
+                    value = record.get(key);
+
+                    writer.print(key);
+                    writer.print("=");
+                    writer.print(value.toString().replace("\n", ""));
+                    writer.print("\n");
+                }
+            }
+
+            @Override
+            public void close()
+            {
+                writer.close();
+            }
+        };
+    }
+
+    @Override
+    public String getContentType()
+    {
+        return "text/properties";
+    }
+};
+```
+
+### Using the Properties Implementation
+
+#### Reading properties values from a Database
+
+In the following example we are going to use our new `.properties` implementation to write the results of a query to a file.
+
+Database Data:
+
+| blending_mode | accuracy | model         |
+| ------------- | -------- | ------------- |
+| lighten       | 0.75     | photoshop-cs6 |
+
+```java
+File example = new File("./user.properties")
+FileTarget target = new FileTarget(example);
+
+DBMS dbms = new DBMS(source);
+Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
+Iterable<JSONObject> results = dbms.query(query);
+
+propertiesOutput.write(target, results);
+
+/*
+# user.properties would contain the following info (based on the data stored in the database)
+
+blending_mode=lighten
+accuracy=0.75
+model=photoshop-cs6
+*/
+```
+
+### Best Practices
+
+- Ensure you're following the specifications of the file, created by [IETF](https://www.ietf.org/).
+- Ensure robust error handling to deal with malformed files.
+- Optimize performance for large files by using streaming approaches where applicable.
 
 ## Further Reading
 
