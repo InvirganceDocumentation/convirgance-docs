@@ -1,4 +1,4 @@
-- [Introduction](/)
+- [Introduction](/#Convirgance)
 
   - [Why Convirgance?](/#why-convirgance)
   - [Simple Example](/#simple-example)
@@ -6,14 +6,14 @@
   - [Community and Support](/#community-and-support)
   - [License](/#license)
 
-- [Getting Started](getting-started.md)
+- [Getting Started](getting-started.md#getting-started-with-convirgance)
 
   - [Getting Started with Convirgance](getting-started.md#getting-started-with-convirgance)
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
   - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
 
-- [Database Operations](database-operations.md)
+- [Database Operations](database-operations.md#database-operations)
 
   - [The DBMS](database-operations.md#the-dbms)
   - [Querying Data](database-operations.md#querying-data)
@@ -28,7 +28,7 @@
   - [Interface Examples](filtering-data.md#interface-examples)
   - [Best Practices](filtering-data.md#best-practices)
 
-- [Transforming Data](transforming-data.md)
+- [Transforming Data](transforming-data.md#data-transformations)
 
   - [Core Interfaces and Classes](transforming-data.md#core-interfaces-and-classes)
   - [Transformers](transforming-data.md#transformers)
