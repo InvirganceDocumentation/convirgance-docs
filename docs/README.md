@@ -1,15 +1,30 @@
 # Convirgance
 
-Convirgance is a modern, streamlined approach to database access. Unlike traditional ORM frameworks that map your database into Java objects, Convirgance gives you direct SQL control while returning results as a stream of `Map` objects. These objects can be manipulated, filtered, and transformed using common operations, making it an excellent drop in tool for querying and managing data.
+Convirgance is a modern, streamlined approach to database access. Unlike traditional 
+ORM frameworks that map your database into Java objects, Convirgance gives you direct 
+control over your SQL queries, returning results as a stream of `Map` objects.  
+
+
+Not only does this reduce coding by as much as 60%, the stream of data can
+be transformed, filtered, and manipulated before being serialized to nearly
+any data format. Web Services, ETL, configuration databases, OLAP, and many other
+use cases can be completed in minutes rather than hours or even days.
 
 ## Why Convirgance?
 
 Traditional ORMs force you to map your database to Java objects, adding complexity and overhead. Convirgance takes a different approach:
 
-- **Direct SQL Control**: Write the SQL you want, get back the data you need.
-- **Stream Processing**: Handle large datasets efficiently without loading everything into memory.
-- **Format Freedom**: Read from a database, output to CSV, or transform JSON - it's all the same to Convirgance.
-- **SQL-Like Operations**: Our filters and transformers provide concepts like WHERE clauses and GROUP BY, allowing you to work with data in a familiar way.
+- **Direct SQL Queries**: No need to write Data Access Objects. Write or generate the SQL you want to get back the data you need.
+- **Stream Processing**: Handle large datasets in small memory footprints without GC pauses, cache thrashing, or memory pressure.
+- **Format Freedom**: Read from a database, output to CSV, or transform JSON - streams can be read from any format and written to any format.
+- **SQL-Like Operations**: Filters and transformers provide advanced concepts like WHERE-clause and GROUP BY features, allowing powerful manipulation of data.
+- **High Performance**: SQL queries produce better query plans, data streams have lower latency, and CPU cache utilization is higher.
+
+## Documentation
+
+📑 High Level Documentation: https://docs.invirgance.com/convirgance/
+
+📚 JavaDocs: https://docs.invirgance.com/javadocs/convirgance/
 
 ## Simple Example
 
@@ -17,7 +32,7 @@ Here are a few examples showcasing the simplicity convirgance offers:
 
 ### Database to CSV
 
-In this example we are taking the query `results` and writing out the contents to a CSV. All of that in only 7 LoC (lines of code)!
+In this example we are taking the query `results` and writing out the contents to a CSV in only a few lines of code.
 
 ```java
 // Query your database
@@ -25,22 +40,23 @@ DBMS database = new DBMS(source);
 Query query = new Query("select name, devices, pets from CUSTOMER");
 Iterable<JSONObject> results = database.query(query);
 
-File file = new File("./example.csv");
+File file = new File("example.csv");
 FileTarget target = new FileTarget(file);
 
-// Output to CSV
-CSVOutput output = new CSVOutput();
-output.write(target, results);
-
-/*
-Contents of 'examples.csv'
-
-name, devices, pets
-John, 3, 1
-Bob, 1, 2
-Kyle, 1, 10
-*/
+// Write the stream to a CSV file
+new CSVOutput().write(target, results);
 ```
+
+The resulting `example.csv` file can be opened in a program like Excel to see
+the exported data:
+
+| name | devices | pets |
+|------|---------|------|
+| John | 3       | 1    |
+| Bob  | 1       | 2    |
+| Kyle | 1       | 10   |
+| ...  | ...     | ...  |
+
 
 ### Filtering Database results
 
@@ -118,13 +134,6 @@ We're here to help:
   <div>
     <a href="./#/contact.md">Contact</a>
     <span>- Get in touch with the team</span>
-  </div>
-</div>
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <div>
-    <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/package-summary.html">Java Documentation</a>
-    <span>- Have a look behind the scenes</span>
   </div>
 </div>
 
