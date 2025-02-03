@@ -1,7 +1,8 @@
 - [Introduction](/#Convirgance)
 
   - [Why Convirgance?](/#why-convirgance)
-  - [Simple Example](/#simple-example)
+  - [Documentation](/#documentation)
+  - [Examples](/#simple-example)
   - [Core Concepts and Goals](/#core-concepts-and-goals)
   - [Community and Support](/#community-and-support)
   - [License](/#license)
