@@ -1,10 +1,26 @@
 
-# Core Concepts and Goals
+# Core Concepts
+
+Today's systems collect more logging, handle more transations, report on more 
+analytics, and define more complex relationships than ever before. This growth in
+data sizes strains the classic model of object mapping to its breaking point. 
+
+Convirgance embraces modern data by building upon unix streams. Bytes are 
+translated into records which can be easily transformed and serialized back 
+into a unix stream of bytes once again.
 
 ## Records
 
+The core unit of data in Convirgance is a record. Records are represented by
+`JSONObject`, an implementation of the Java Collections `Map`. The implementation 
+is designed to easily parse and print to JSON making debugging incredibly easy
+and complex test cases a breeze. 
+
+Data is stored in `JSONObject` in key/value pairs. This aligns with both the 
+JSON specification and the requirements of the `Map` interface.
 
 ## Streams
+
 
 
 ## Transformations
