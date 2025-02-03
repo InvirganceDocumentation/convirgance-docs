@@ -3,7 +3,6 @@
   - [Why Convirgance?](/#why-convirgance)
   - [Documentation](/#documentation)
   - [Examples](/#simple-example)
-  - [Core Concepts and Goals](/#core-concepts-and-goals)
   - [Community and Support](/#community-and-support)
   - [License](/#license)
 
@@ -13,6 +12,14 @@
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
   - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
+
+
+- [Core Concepts](concepts.md#core-concepts-and-goals)
+
+  - [Records](concepts.md#records)
+  - [Streams](concepts.md#streams)
+  - [Transformations](concepts.md#transformations)
+  - [Filters](concepts.md#filters)
 
 - [Database Operations](database-operations.md#database-operations)
 

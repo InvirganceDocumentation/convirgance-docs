@@ -117,24 +117,6 @@ Ready to dive in? Here's what you need to know:
 4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
 5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
 
-## Core Concepts and Goals
-
-#### Database Operations
-
-Handle database interactions with confidence. Atomic operations ensure your transactions succeed or fail cleanly, while batch processing keeps things fast. Streamlining any interaction that you make with any database, all without the overhead from your typical ORM.
-
-#### Formats
-
-Convirgance will handle reading and writing from, JSON, JBIN, CSV, Delimited (Pipe, Comma, ...). And, if support doesn't exist we have you covered with our easily extendible I/O interfaces.
-
-#### Filters
-
-Apply SQL-like conditions to any data source. Combine filters with AND/OR operations just like you would in a WHERE clause.
-
-#### Transformations
-
-Build data pipelines that clean and reshape your data. Convert types, group records, or compute new fields - all without loading everything into memory.
-
 ## Community and Support
 
 We're here to help:
