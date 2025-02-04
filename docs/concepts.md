@@ -96,7 +96,7 @@ Convirgance supports many of the types of [filters](filtering-data.md) you would
 expect in a SQL engine. Including equals, greater than, less than, etc. Filters
 based on boolean logic can be combined to create and/or/not logic.
 
-`Filter` also implements the `java.util.Predicate` class to be compatible with
+`Filter` also implements the `java.util.Predicate` interface to be compatible with
 Java functional programming techniques. Implementing a filter is accomplished
 in a very similar manner and can be done with either a class, anonymous inner
 class, or lambda arrow funtion. For example:
