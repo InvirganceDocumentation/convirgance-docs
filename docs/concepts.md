@@ -5,9 +5,9 @@ Today's systems collect more logging, handle more transations, report on more
 analytics, and define more complex relationships than ever before. This growth in
 data sizes strains the classic model of object mapping to its breaking point. 
 
-Convirgance embraces modern data by building upon unix streams. Bytes are 
-translated into records which can be easily transformed and serialized back 
-into a unix stream of bytes once again.
+Convirgance embraces modern data by building upon unix streams to implement a
+Data Flow pattern. Bytes are translated into records which can be easily 
+transformed and then serialized back into a unix stream of bytes once processed.
 
 ## Records
 
