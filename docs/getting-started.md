@@ -52,7 +52,7 @@ String wanted = new String[]{"names", "devices", "pets"};
 // Here we supply the headers we want, along with the character to delimit with.
 DelimitedOutput output = new DelimitedOutput(wanted, '?');
 
-File file = new File("example.qdv");
+File file = new File("example.txt");
 FileTarget target = new FileTarget(file);
 
 output.write(target, results);
@@ -99,7 +99,7 @@ database.execute(batch);
 
 ### CSV:
 
-CSV known as comma seperated values. When writing, the header names can be provided, otherwise the JSON keys will be used. The same idea applies when reading in a CSV file.
+The CSV format known as comma seperated values are handled by CSVInput/Output. When writing, the header names can be provided, otherwise the JSON keys will be used. The same idea applies when reading in a CSV file.
 
 ```java
 DBMS dbms = new DBMS(source);
