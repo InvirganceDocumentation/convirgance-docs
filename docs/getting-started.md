@@ -54,15 +54,15 @@ For broader compatibility, a CSV export might be needed for spreadsheet applicat
 ```java
 FileTarget target = new FileTarget("example.csv");
 
-String wanted = new String[]{ "name", "devices", "house" };
+String wanted = new String[]{ "name", "devices", "pets" };
 new CSVOutput(wanted).write(target, results);
 ```
 
 Which results in:
 
-| name | devices | house |
-| ---- | ------- | ----- |
-| John | 2       |       |
+| name | devices | pets |
+| ---- | ------- | ---- |
+| John | 2       | 2    |
 
 Later, when users submit updates, you need to process incoming JSON records and batch-insert them into the database. Using named binds and batch operations, you can efficiently handle multiple records at once:
 
