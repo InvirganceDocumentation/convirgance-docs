@@ -58,8 +58,31 @@ fit into memory, Convirgance can handle an unlimited number of records.
 
 ## Transformations
 
-Build data pipelines that clean and reshape your data. Convert types, group records, or compute new fields - all without loading everything into memory.
+The basic pattern of transformations in Convirgance are to pass an `Iterable` in
+and get a new `Iterable` out. e.g.
 
+```java
+FileSource json = new FileSource("data.json");
+Iterable<JSONObject> stream = new JSONInput().read(json);
+
+// Transform the stream by parsing string values into numbers and booleans
+iterable = new CoerceStringsTransformer().transform(iterable);
+```
+
+Each tranformation places a processing step on records as they pass through the
+stream. Critically, there is only one record in the stream at a time. That record
+steps through each transformation and then is released once all operations have
+been completed on it.
+
+This approach is important because it minimizes memory usage, aligns data with
+the young GC collector, and maximizes the use of the CPUs L1 and L2 caches. For
+data requiring a large number of operations, performance can improve by orders
+of magnitude.  
+
+It should be noted that the `Iterable` in / `Iterable` out approach means that
+transformers can manipuate the data in any manner they choose. They can perform
+simply updates to a record as it goes by, thus leaving the record count intact.
+Or they group data, aggregate data, or even filter data out of the stream. 
 
 ## Filters
 
