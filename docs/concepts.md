@@ -17,7 +17,7 @@ The core unit of data in Convirgance is a record. Records are represented by
 The implementation is designed to easily parse and print to JSON making debugging 
 incredibly easy and complex test cases a breeze. 
 
-Data is stored in `JSONObject` in key/value pairs. This aligns with both the 
+Data is stored in `JSONObject` as key/value pairs. This aligns with both the 
 JSON specification and the requirements of the `Map` interface.
 
 Implementing the `Map` interface additionally makes each record compatible with
@@ -27,8 +27,9 @@ native JSTL syntax on a `JSONObject` when rendering.
 ## Streams
 
 Java enhances the idea of unix streams (represented by `InputStream` and 
-`OutputStream`) with the concept of `Iterator`. An iterator is a stream of data types
-a level above a byte stream. Each entry is a Java object of some sort. 
+`OutputStream`) with the concept of `Iterator`. An iterator is a stream of data 
+types a level above a byte stream. Each entry is a Java `Object`, the type of 
+which is specified using a generic. 
 
 Convirgance hooks into this feature of the langauge by implementing its streams
 of records as `Iterator<JSONObject>`. 
@@ -52,10 +53,10 @@ for(JSONObject record : stream)
 }
 ```
 
-A critical point to understand about iterating streams is that they do not
-load the data into memory. The data is transformed into records as it is read
-from the underlying byte stream. Which means that as long as the record itself can
-fit into memory, Convirgance can handle an unlimited number of records.
+A critical point about iterating over streams is that they do not
+load the full data set into memory. The data is transformed into records as it is read
+from the underlying byte stream. As long as each record can
+fit into memory <u>Convirgance can handle an unlimited number of records</u>.
 
 ## Transformations
 
@@ -80,10 +81,10 @@ the young GC collector, and maximizes the use of the CPUs L1 and L2 caches. For
 data requiring a large number of operations, performance can improve by orders
 of magnitude.  
 
-It should be noted that the `Iterable` in / `Iterable` out approach means that
-transformers can manipuate the data in any manner they choose. They can perform
-simply updates to a record as it goes by, thus leaving the record count intact.
-Or they group data, aggregate data, or even filter data out of the stream. 
+Note that the `Iterable` in/out approach implies that transformers can manipuate 
+the data in any manner they choose. Transformers can directly update each record
+resulting in one record in and one record out. Or transformers can group data, aggregate 
+data, expand the number of records, or even filter data out of the stream. 
 
 ## Filters
 
