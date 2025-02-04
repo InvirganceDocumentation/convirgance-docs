@@ -18,64 +18,19 @@ Add the following dependency to your Maven `pom.xml` file:
 
 ## Quick Start
 
-Here's a basic example of using Convirgance to query a database and filter the results:
-
-Here are the filters we want to apply to our data.
+To start, here is a example of querying some database and writing out the resulting data in JSON format:
 
 ```java
-GreaterThanFilter devices = new GreaterThanFilter("devices", 1);
-LessThanFilter pets = new LessThanFilter("pets", 3);
-```
-
-Next we setup the target for our data to be written to.
-
-```java
-// `pdc' stands for pipe delimited values.
-File file = new File("./example.pdv");
-FileTarget target = new FileTarget(file);
-```
-
-Now we setup the output writer. Most writers can be configured quite a bit, take a peek at their docs if you get the chance.
-
-```java
-DelimitedOutput output = new DelimitedOutput();
-```
-
-Here is the database and the query collecting our results. But, keep in mind you could also use input from other places too.
-
-```java
-/*
-Other possible inputs:
-ex: (DelimimtedInput(), JSONInput()...)
-Iterable<JSONObject> rows = JSONInput().read(someFile);
-*/
+// Query the database
 DBMS database = new DBMS(source);
-Query example = new Query("select pets, name, devices, account_type from CUSTOMER");
-Iterable<JSONObject> rows = database.query(example);
-```
+Query query = new Query("select name, devices, pets from CUSTOMER");
+Iterable<JSONObject> results = database.query(query);
 
-And now that we have our data we can filter, transform as needed.
+// Specify the target file
+FileTarget target = new FileTarget("example.json");
 
-```java
-/*
-Lets say pet count was a varchar(string) instead of an integer, we can use the following transformer to coerce the data so the filter works correctly.
-*/
-CoerceStringsTransformer parser = new CoerceStringsTransformer();
-
-Iterable<JSONObject> parsed = parser.transform(rows);
-Iterable<JSONObject> filtered = pets.transform(parsed);
-Iterable<JSONObject> result = devices.transform(filtered);
-
-output.write(target, result);
-
-/*
-Output file would look like:
-
-  name, devices, account_type, pets,
-  John, 3, gold, 0
-  Bob, 1, bronze, 1
-  Jane, 2, gold, 2
-*/
+// Write the stream to a JSON file
+new JSONOutput().write(target, results);
 ```
 
 ## Inputs and Outputs
@@ -84,18 +39,20 @@ After transforming your data, Convirgance supports various input and output opti
 
 ### Delimited:
 
-When working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
+Lets reuse the previous JSON file we created from the last example. We will take the current JSON records and turn them into a delimited format. You should note that when working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
 
 ```java
-DBMS dbms = new DBMS(source);
-Query query = new Query("select * from CUSTOMER");
-Iterable<JSONObject> results = dbms.query(query);
+// Reading in the JSON file from the previous example
+FileSource example = new FileSource("example.json");
+Iterable<JSONObject> records = JSONInput().read(example);
 
 // Notice that the query is using *, we can narrow down the output by setting the headers to use.
 String wanted = new String[]{"names", "devices", "pets"};
-DelimitedOutput output = new DelimitedOutput(wanted);
 
-File file = new File("./example.pdv");
+// Here we supply the headers we want, along with the character to delimit with.
+DelimitedOutput output = new DelimitedOutput(wanted, '?');
+
+File file = new File("example.qdv");
 FileTarget target = new FileTarget(file);
 
 output.write(target, results);
@@ -111,15 +68,17 @@ Query query = new Query("select name, pets, devices from CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
 
-File file = new File("./example.json");
+File file = new File("example.json");
 FileTarget target = new FileTarget(file);
 
 new JSONOutput().write(target, results);
-/*
-Contents of example.json:
 
-  {name: "John", pets: "2", devices: 2}
-*/
+```
+
+The contents of `example.json` would look like below:
+
+```json
+{ "name": "John", "pets": "2", "devices": 2 }
 ```
 
 And here is an example inserting all the JSON records from a file back into the database. You can see named binds and `BatchOperation` in use here, you will learn more about these in later chapters.
@@ -148,36 +107,21 @@ Query query = new Query("select name, pets, devices from CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
 
-File file = new File("./example.csv");
+File file = new File("example.csv");
 FileTarget target = new FileTarget(file);
 
 // The values to include in the CSV.
 String wanted = new String[]{"name","devices","house"};
 
 new CSVOutput(wanted).write(target, results);
-/*
-Contents of example.csv:
-
-  name, devices, house
-  John, 2,
-*/
 ```
 
-### JBIN:
+Here is what the exported data of `example.csv` would look like:
 
-JBIN a Convirgance file-type, is used to convert JSON into a binary encoded format. Useful for high-throughput scenarios.
-
-```java
-DBMS dbms = new DBMS(source);
-Query query = new Query("select * from CUSTOMER");
-
-Iterable<JSONObject> results = dbms.query(query);
-
-File file = new File("./example.csv");
-FileTarget target = new FileTarget(file);
-
-new JBINOutput().write(target, results);
-```
+| name | devices | House |
+| ---- | ------- | ----- |
+| John | 2       |       |
+| ...  | ...     | ...   |
 
 ## Quick Links
 
@@ -188,7 +132,6 @@ Ready to dive deeper? Here's what you need to know:
 3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
 4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
 5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
-
 
 ## Community and Support
 
