@@ -179,6 +179,17 @@ FileTarget target = new FileTarget(file);
 new JBINOutput().write(target, results);
 ```
 
+## Quick Links
+
+Ready to dive deeper? Here's what you need to know:
+
+1. [Core Concepts](core-concepts.md) - The concepts underpinning Convirgance architecture
+2. [Database Operations](database-operations.md) - Working with databases efficiently
+3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
+4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
+5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
+
+
 ## Community and Support
 
 We're here to help:
