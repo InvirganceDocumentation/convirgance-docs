@@ -2,7 +2,7 @@
 
   - [Why Convirgance?](/#why-convirgance)
   - [Documentation](/#documentation)
-  - [Examples](/#simple-example)
+  - [Example](/#example)
   - [Community and Support](/#community-and-support)
   - [License](/#license)
 

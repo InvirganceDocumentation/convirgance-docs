@@ -26,28 +26,28 @@ Traditional ORMs force you to map your database to Java objects, adding complexi
 
 📚 JavaDocs: https://docs.invirgance.com/javadocs/convirgance/
 
-## Simple Example
+## Example
 
-Here are a few examples showcasing the simplicity convirgance offers:
+Here is an example demonstrating the simplicity of the
+Convirgance approach.
 
-### Database to CSV
-
-In this example we are taking the query `results` and writing out the contents to a CSV in only a few lines of code.
+In the few lines of code below we are querying the `CUSTOMER` table 
+in the database and writing the results to a CSV file.
 
 ```java
-// Query your database
+// Query the database
 DBMS database = new DBMS(source);
 Query query = new Query("select name, devices, pets from CUSTOMER");
 Iterable<JSONObject> results = database.query(query);
 
-File file = new File("example.csv");
-FileTarget target = new FileTarget(file);
+// Specify the target file
+FileTarget target = new FileTarget("example.csv");
 
 // Write the stream to a CSV file
 new CSVOutput().write(target, results);
 ```
 
-The resulting `example.csv` file can be opened in a program like Excel to see
+The resulting `example.csv` file can be opened in a program like Excel to view
 the exported data:
 
 | name | devices | pets |
@@ -57,54 +57,11 @@ the exported data:
 | Kyle | 1       | 10   |
 | ...  | ...     | ...  |
 
-
-### Filtering Database results
-
-Deduplicating the results from a join query between two tables.
+Output formats can be easily swapped. For example, we can replace the last
+line to output JSON instead:
 
 ```java
-DBMS database = new DBMS(source);
-Query query = new Query("SELECT * FROM \"orders\" o\n"
-                + "JOIN order_line l ON l.order_id = o.order_id "
-                + "order by o.order_id, l.line_id");
-
-Iterable<JSONObject> results = dbms.query(query);
-
-/*
-  The contents of `results`
-  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
-  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
-*/
-String[] fields = new String[]
-{
-    "ORDER_ID", "RECIPIENT", "TOTAL", "ITEMS"
-};
-SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
-Iterable<JSONObject> customerData = sorter.transform(results)
-
-/*
-The transformer would return the following. In comparison to what the database returned this output is much more concise. Also notice that the duplicate fields were removed.
-  {
-    "RECIPIENT": "bob",
-    "TOTAL": 42,
-    "ORDER_ID": 1,
-    "ITEMS": 2,
-    "lines": [
-      {
-        "LINE_ID": 1,
-        "PRODUCT": "Fish tank",
-        "PRICE": 30,
-        "QUANTITY": 1
-      },
-      {
-        "LINE_ID": 2,
-        "PRODUCT": "Fish food",
-        "PRICE": 4,
-        "QUANTITY": 3
-      }
-    ]
-  }
-*/
+new JSONOutput().write(new FileTarget("example.json", results);
 ```
 
 ## Getting Started
