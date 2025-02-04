@@ -6,7 +6,7 @@ As you read through the documentation, I encourage you to build along and explor
 
 ## Installation
 
-Using Maven add the following to your `pom` file:
+Add the following dependency to your Maven `pom.xml` file:
 
 ```xml
 <dependency>
@@ -14,12 +14,6 @@ Using Maven add the following to your `pom` file:
     <artifactId>convirgance</artifactId>
     <version>1.0.0</version>
 </dependency>
-```
-
-Or use the CLI:
-
-```sh
-mvn dependency:get -Dartifact=com.invirgance:convirgance:1.0.0
 ```
 
 ## Quick Start
