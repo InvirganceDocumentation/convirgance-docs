@@ -159,13 +159,3 @@ Convirgance ships with support for numerous formats such as JSON, CSV,
 tab-delimited, pipe-delimited, and even binary encodings. Additional formats
 can be plugged in using the `Input` and `Output` concepts thereby making 
 Convirgance  a universal data processing platform.
-
-## Database Operations
-
-Handle database interactions with confidence. Atomic operations ensure your transactions succeed or fail cleanly, while batch processing keeps things fast. Streamlining any interaction that you make with any database, all without the overhead from your typical ORM.
-
-## Data Formats
-
-Convirgance will handle reading and writing from, JSON, JBIN, CSV, Delimited (Pipe, Comma, ...). And, if support doesn't exist we have you covered with our easily extendible I/O interfaces.
-
-
