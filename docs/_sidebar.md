@@ -20,6 +20,8 @@
   - [Streams](concepts.md#streams)
   - [Transformations](concepts.md#transformations)
   - [Filters](concepts.md#filters)
+  - [Source and Target](concepts.md#source-and-target)
+  - [Input and Output](concepts.md#input-and-output)
 
 - [Database Operations](database-operations.md#database-operations)
 

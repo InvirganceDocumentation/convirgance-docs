@@ -5,9 +5,10 @@ Today's systems collect more logging, handle more transations, report on more
 analytics, and define more complex relationships than ever before. This growth in
 data sizes strains the classic model of object mapping to its breaking point. 
 
-Convirgance embraces modern data by building upon unix streams to implement a
-Data Flow pattern. Bytes are translated into records which can be easily 
-transformed and then serialized back into a unix stream of bytes once processed.
+Convirgance embraces modern data by building upon byte-by-byte streams (also 
+known as unix streams) to implement a Data Flow pattern. Bytes are translated 
+into records which can be easily transformed and then serialized back into a 
+unix stream of bytes once processed.
 
 ## Records
 
@@ -143,6 +144,20 @@ back to a resource. While it has the same support for reuse and detecting if
 the stream has already been reused, engineers need to be aware that reuse may
 result in data being overwritten. e.g. Writing to a `FileTarget` multiple
 times will result in the file being overwritten.
+
+## Input and Output
+
+The process of converting the underlying stream of bytes into a stream of records
+is handled by implementations of the `Input` interface. The `Input` implementation 
+reads from a provided `Source` to return an `Iterable<JSONObject>` stream.
+
+`Output` provides the inverse concept, converting an `Iterable<JSONObject>` stream 
+into a serialized byte stream that is written to the provided `Target`.
+
+Convirgance ships with support for numerous formats such as JSON, CSV, 
+tab-delimited, pipe-delimited, and even binary encodings. Additional formats
+can be plugged in using the `Input` and `Output` concepts thereby making 
+Convirgance  a universal data processing platform.
 
 ## Database Operations
 
