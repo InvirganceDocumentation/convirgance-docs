@@ -39,7 +39,7 @@ After transforming your data, Convirgance supports various input and output opti
 
 ### Delimited:
 
-Lets reuse the previous JSON file we created from the last example. We will take the current JSON records and turn them into a delimited format. You should note that when working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
+Lets reuse the JSON file we created in the last example. We will take the current JSON records and turn them into a delimited format. You should note that when working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
 
 ```java
 // Reading in the JSON file from the previous example
