@@ -41,8 +41,8 @@ by using `Iterable<JSONObject>` as its primary interface for setting up streams.
 Thus it becomes easy to use features like the enhanced `for` loop:
 
 ```java
-FileSource json = new FileSource("data.json");
-Iterable<JSONObject> stream = new JSONInput().read(json);
+FileSource file = new FileSource("data.json");
+Iterable<JSONObject> stream = new JSONInput().read(file);
 
 for(JSONObject record : stream)
 {
@@ -58,12 +58,12 @@ fit into memory, Convirgance can handle an unlimited number of records.
 
 ## Transformations
 
-The basic pattern of transformations in Convirgance are to pass an `Iterable` in
-and get a new `Iterable` out. e.g.
+The basic pattern of transformations in Convirgance is to pass an `Iterable` into 
+a transformer and get a new `Iterable` back out. For example:
 
 ```java
-FileSource json = new FileSource("data.json");
-Iterable<JSONObject> stream = new JSONInput().read(json);
+FileSource file = new FileSource("data.csv");
+Iterable<JSONObject> stream = new CSVInput().read(file);
 
 // Transform the stream by parsing string values into numbers and booleans
 iterable = new CoerceStringsTransformer().transform(iterable);
