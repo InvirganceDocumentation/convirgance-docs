@@ -18,110 +18,67 @@ Add the following dependency to your Maven `pom.xml` file:
 
 ## Quick Start
 
-To start, here is a example of querying some database and writing out the resulting data in JSON format:
+Imagine you’re working on a web service that manages customer records. First, you need to display customer data in a structured format, so you query the database and output the results as JSON.
 
 ```java
-// Query the database
-DBMS database = new DBMS(source);
-Query query = new Query("select name, devices, pets from CUSTOMER");
-Iterable<JSONObject> results = database.query(query);
+DBMS dbms = new DBMS(source);
+Query query = new Query("SELECT name, pets, devices FROM CUSTOMER");
 
-// Specify the target file
+Iterable<JSONObject> results = dbms.query(query);
 FileTarget target = new FileTarget("example.json");
 
-// Write the stream to a JSON file
 new JSONOutput().write(target, results);
 ```
 
-## Inputs and Outputs
+This generates a JSON file like:
 
-After transforming your data, Convirgance supports various input and output options you can also implement support for other file-types by using our [interfaces](/file-formats?id=example-properties-file).
+```json
+{ "name": "John", "pets": 2, "devices": 2 }
+```
 
-### Delimited:
-
-Lets reuse the JSON file we created in the last example. We will take the current JSON records and turn them into a delimited format. You should note that when working with delimited files you can select which keys to keep, and if needed set the character to delimit with.
+Now, suppose a business user needs the same data in a structured report but prefers a delimited format. You can transform the JSON data into a custom delimited text file by specifying which fields to include and the delimiter character:
 
 ```java
-// Reading in the JSON file from the previous example
 FileSource example = new FileSource("example.json");
 Iterable<JSONObject> records = JSONInput().read(example);
 
-// Notice that the query is using *, we can narrow down the output by setting the headers to use.
-String wanted = new String[]{"names", "devices", "pets"};
-
-// Here we supply the headers we want, along with the character to delimit with.
+String wanted = new String[]{"name", "devices", "pets"};
 DelimitedOutput output = new DelimitedOutput(wanted, '?');
 
-File file = new File("example.txt");
-FileTarget target = new FileTarget(file);
-
-output.write(target, results);
+FileTarget target = new FileTarget("example.txt");
+output.write(target, records);
 ```
 
-### JSON:
-
-JSONObjects are created based on the coloum names returned from the database query.
+For broader compatibility, a CSV export might be needed for spreadsheet applications. You can generate a CSV version with headers:
 
 ```java
-DBMS dbms = new DBMS(source);
-Query query = new Query("select name, pets, devices from CUSTOMER");
+FileTarget target = new FileTarget("example.csv");
 
-Iterable<JSONObject> results = dbms.query(query);
-
-File file = new File("example.json");
-FileTarget target = new FileTarget(file);
-
-new JSONOutput().write(target, results);
-
-```
-
-The contents of `example.json` would look like below:
-
-```json
-{ "name": "John", "pets": "2", "devices": 2 }
-```
-
-And here is an example inserting all the JSON records from a file back into the database. You can see named binds and `BatchOperation` in use here, you will learn more about these in later chapters.
-
-```java
-DBMS database = new DBMS(source);
-
-String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
-Query query = new Query(template);
-
-FileSource example = new FileSource(jsonFile);
-Iterable<JSONObject> records = JSONInput().read(example);
-
-BatchOperation batch = new BatchOperation(query, records);
-
-database.execute(batch);
-```
-
-### CSV:
-
-The CSV format known as comma seperated values are handled by CSVInput/Output. When writing, the header names can be provided, otherwise the JSON keys will be used. The same idea applies when reading in a CSV file.
-
-```java
-DBMS dbms = new DBMS(source);
-Query query = new Query("select name, pets, devices from CUSTOMER");
-
-Iterable<JSONObject> results = dbms.query(query);
-
-File file = new File("example.csv");
-FileTarget target = new FileTarget(file);
-
-// The values to include in the CSV.
 String wanted = new String[]{ "name", "devices", "house" };
-
 new CSVOutput(wanted).write(target, results);
 ```
 
-Here is what the exported data of `example.csv` would look like:
+Which results in:
 
 | name | devices | house |
 | ---- | ------- | ----- |
 | John | 2       |       |
-| ...  | ...     | ...   |
+
+Later, when users submit updates, you need to process incoming JSON records and batch-insert them into the database. Using named binds and batch operations, you can efficiently handle multiple records at once:
+
+```java
+DBMS database = new DBMS(source);
+String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
+Query query = new Query(template);
+
+FileSource example = new FileSource("updates.json");
+Iterable<JSONObject> records = JSONInput().read(example);
+
+BatchOperation batch = new BatchOperation(query, records);
+database.execute(batch);
+```
+
+We can see by example, Convirgance can be used to seamlessly handle data as required, producing JSON for web consumption, exporting to delimited formats for reporting, and re-importing updates for database synchronization.
 
 ## Quick Links
 
