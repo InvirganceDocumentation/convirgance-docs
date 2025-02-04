@@ -122,6 +122,27 @@ Filter or = new OrFilter(bob, rob);
 Filter not = new NotFilter(or);
 ```
 
+## Source and Target
+
+While `InputStream` and `OutputStream` are fantasic representations of unix
+streams, they share a problem with `Iterator`. As soon as they exist, the stream
+is active. 
+
+This means they play poorly with the use of `Iterable`. Not only can the pipeline 
+of transformations be pre-planned, but `Iterable` instances can be reused 
+throughout the code. Such reuse means that a "planned" analog is required.
+
+`Source` objects represent a plan to access the `InputStream` for a file, url,
+byte buffer, and numerous other sources. Implementations attempt to reopen a
+stream fresh whenever possible. When not possible, a clear error is thrown that
+the stream is unavailable. APIs on `Source` can be interrogated to know if it
+is reusable and if it has already been used.
+
+`Target` is the companion for `OutputStream`. It represents a plan to write data
+back to a resource. While it has the same support for reuse and detecting if
+the stream has already been reused, engineers need to be aware that reuse may
+result in data being overwritten. e.g. Writing to a `FileTarget` multiple
+times will result in the file being overwritten.
 
 ## Database Operations
 
