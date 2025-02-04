@@ -1,9 +1,8 @@
 # Convirgance
 
-Convirgance is a modern, streamlined approach to database access. Unlike traditional 
-ORM frameworks that map your database into Java objects, Convirgance gives you direct 
-control over your SQL queries, returning results as a stream of `Map` objects.  
-
+Convirgance is a modern, streamlined approach to database access. Unlike traditional
+ORM frameworks that map your database into Java objects, Convirgance gives you direct
+control over your SQL queries, returning results as a stream of `Map` objects.
 
 Not only does this reduce coding by as much as 60%, the stream of data can
 be transformed, filtered, and manipulated before being serialized to nearly
@@ -31,7 +30,7 @@ Traditional ORMs force you to map your database to Java objects, adding complexi
 Here is an example demonstrating the simplicity of the
 Convirgance approach.
 
-In the few lines of code below we are querying the `CUSTOMER` table 
+In the few lines of code below we are querying the `CUSTOMER` table
 in the database and writing the results to a CSV file.
 
 ```java
@@ -51,7 +50,7 @@ The resulting `example.csv` file can be opened in a program like Excel to view
 the exported data:
 
 | name | devices | pets |
-|------|---------|------|
+| ---- | ------- | ---- |
 | John | 3       | 1    |
 | Bob  | 1       | 2    |
 | Kyle | 1       | 10   |
@@ -61,7 +60,7 @@ Output formats can be easily swapped. For example, we can replace the last
 line to output JSON instead:
 
 ```java
-new JSONOutput().write(new FileTarget("example.json", results);
+new JSONOutput().write(new FileTarget("example.json", results));
 ```
 
 ## Community and Support
