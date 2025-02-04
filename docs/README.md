@@ -64,16 +64,6 @@ line to output JSON instead:
 new JSONOutput().write(new FileTarget("example.json", results);
 ```
 
-## Getting Started
-
-Ready to dive in? Here's what you need to know:
-
-1. [Getting Started Guide](getting-started.md) - Installation and examples
-2. [Database Operations](database-operations.md) - Working with databases efficiently
-3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
-4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
-5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
-
 ## Community and Support
 
 We're here to help:
