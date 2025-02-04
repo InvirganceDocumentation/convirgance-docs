@@ -86,7 +86,42 @@ Or they group data, aggregate data, or even filter data out of the stream.
 
 ## Filters
 
-Apply SQL-like conditions to any data source. Combine filters with AND/OR operations just like you would in a WHERE clause.
+Filters are an extension to transformers that specifically reject records
+based upon a "predicate". A predicate is a condition that must be met for the
+record to be kept. 
+
+Convirgance supports many of the types of [filters](filtering-data.md) you would 
+expect in a SQL engine. Including equals, greater than, less than, etc. Filters
+based on boolean logic can be combined to create and/or/not logic.
+
+`Filter` also implements the `java.util.Predicate` class to be compatible with
+Java functional programming techniques. Implementing a filter is accomplished
+in a very similar manner and can be done with either a class, anonymous inner
+class, or lambda arrow funtion. For example:
+
+```java
+// Find Bob
+Filter bob = new Filter() {
+    public boolean test(JSONObject record)
+    {
+        String name = record.getString("name");
+
+        return (name != null && name.contains("Bob"));
+    }
+};
+
+// Find Rob
+Filter rob = (JSONObject record) -> {
+    return !record.isNull("name") && record.getString("name").contains("Rob");
+};
+
+// Find Bob or Rob
+Filter or = new OrFilter(bob, rob);
+
+// Find everyone except Bob and Rob
+Filter not = new NotFilter(or);
+```
+
 
 ## Database Operations
 
