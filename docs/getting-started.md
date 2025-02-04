@@ -22,7 +22,7 @@ Imagine you’re working on a web service that manages customer records. First, 
 
 ```java
 DBMS dbms = new DBMS(source);
-Query query = new Query("SELECT name, pets, devices FROM CUSTOMER");
+Query query = new Query("SELECT name, devices, pets FROM CUSTOMER");
 
 Iterable<JSONObject> results = dbms.query(query);
 FileTarget target = new FileTarget("example.json");
@@ -33,7 +33,7 @@ new JSONOutput().write(target, results);
 This generates a JSON file like:
 
 ```json
-{ "name": "John", "pets": 2, "devices": 2 }
+{ "name": "John", "devices": 2, "pets": 2 }
 ```
 
 Now, suppose a business user needs the same data in a structured report but prefers a delimited format. You can transform the JSON data into a custom delimited text file by specifying which fields to include and the delimiter character:
@@ -42,7 +42,7 @@ Now, suppose a business user needs the same data in a structured report but pref
 FileSource example = new FileSource("example.json");
 Iterable<JSONObject> records = JSONInput().read(example);
 
-String wanted = new String[]{"name", "devices", "pets"};
+String wanted = new String[]{ "name", "devices", "pets" };
 DelimitedOutput output = new DelimitedOutput(wanted, '?');
 
 FileTarget target = new FileTarget("example.txt");
