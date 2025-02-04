@@ -68,16 +68,16 @@ FileSource file = new FileSource("data.csv");
 Iterable<JSONObject> stream = new CSVInput().read(file);
 
 // Transform the stream by parsing string values into numbers and booleans
-iterable = new CoerceStringsTransformer().transform(iterable);
+stream = new CoerceStringsTransformer().transform(stream);
 ```
 
-Each tranformation places a processing step on records as they pass through the
+Each transformation places a processing step on records as they pass through the
 stream. Critically, there is only one record in the stream at a time. That record
 steps through each transformation and then is released once all operations have
 been completed on it.
 
 This approach is important because it minimizes memory usage, aligns data with
-the young GC collector, and maximizes the use of the CPUs L1 and L2 caches. For
+the Young GC, and maximizes the use of the CPUs L1 and L2 caches. For
 data requiring a large number of operations, performance can improve by orders
 of magnitude.  
 
@@ -126,13 +126,16 @@ Filter not = new NotFilter(or);
 
 ## Source and Target
 
-While `InputStream` and `OutputStream` are fantasic representations of unix
-streams, they share a problem with `Iterator`. As soon as they exist, the stream
-is active. 
+While `InputStream` and `OutputStream` are fantasic standard representations of
+unix streams, they have the same problem as the `Iterator` in that the streams
+are active as soon as they exist. 
 
-This means they play poorly with the use of `Iterable`. Not only can the pipeline 
-of transformations be pre-planned, but `Iterable` instances can be reused 
-throughout the code. Such reuse means that a "planned" analog is required.
+This means these standard library classes play poorly with the use of 
+`Iterable` that allows the pipeline 
+of transformations to be pre-planned and `Iterable` instances to be reused 
+throughout the code. To provide this compatibility, Convirgance introduces 
+`Source` and `Target` classes  analagous to `InputStream` and `OutputStream` 
+respectively.
 
 `Source` objects represent a plan to access the `InputStream` for a file, url,
 byte buffer, and numerous other sources. Implementations attempt to reopen a
@@ -157,5 +160,5 @@ into a serialized byte stream that is written to the provided `Target`.
 
 Convirgance ships with support for numerous formats such as JSON, CSV, 
 tab-delimited, pipe-delimited, and even binary encodings. Additional formats
-can be plugged in using the `Input` and `Output` concepts thereby making 
+can be plugged in using the `Input` and `Output` concepts, thereby making 
 Convirgance  a universal data processing platform.
