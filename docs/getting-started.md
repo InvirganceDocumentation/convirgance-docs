@@ -111,14 +111,14 @@ File file = new File("example.csv");
 FileTarget target = new FileTarget(file);
 
 // The values to include in the CSV.
-String wanted = new String[]{"name","devices","house"};
+String wanted = new String[]{ "name", "devices", "house" };
 
 new CSVOutput(wanted).write(target, results);
 ```
 
 Here is what the exported data of `example.csv` would look like:
 
-| name | devices | House |
+| name | devices | house |
 | ---- | ------- | ----- |
 | John | 2       |       |
 | ...  | ...     | ...   |
