@@ -48,7 +48,7 @@ for(JSONObject record : stream)
 {
     // Pretty prints each record as JSON
     System.out.println(record.toString(4));
-
+}
 ```
 
 A critical point to understand about iterating streams is that they do not
