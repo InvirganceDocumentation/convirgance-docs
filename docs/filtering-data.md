@@ -38,8 +38,7 @@ return new GreaterThanFilter(key, value).test(record);
 The `Filter` interface extends `Transformer`, allowing you to quickly create filters to use on groups of `JSONObjects`.
 
 ```java
-File file = new File("./clientData.json");
-FileSource source = new FileSource(file);
+FileSource source = new FileSource("clientData.json");
 Iterator<JSONObject> records = new JSONInput().read(source);
 
 String key = "name";
@@ -57,9 +56,9 @@ Filter nameFilter = new Filter()
 Iterator<JSONObject> filtered = nameFilter.transform(records);
 ```
 
-### Comparative
+### Comparative Filtering
 
-The below example uses a customer `ComparatorFilter` to collect JSONObjects that are considered 'old'.
+The below example uses a custom `ComparatorFilter` to collect JSONObjects that are considered 'old'.
 
 ```java
 DBMS database = new DBMS(source);
@@ -98,8 +97,8 @@ for(JSONObject oldRecord : old)
 ## Best Practices
 
 - Combine filters with `AndFilter` and `OrFilter` to define complex filtering criteria.
-- Use `NotFilter` to exclude records based on specific conditions.
-- When working with numeric or comparable fields, leverage `ComparatorFilter` subclasses like `GreaterThanFilter` for concise evaluations.
+- Use `NotFilter` to filter records using the falsy evaluation of other `Filter`(s).
+- When working with numeric or comparable fields, leverage `CoerceStringsTransformer` to make sure the records values are the correct data-type.
 
 ## Further Reading
 
