@@ -13,6 +13,10 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 | JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
 | JBIN           | Binary JSON format                             | Read/Write | `.bin`,`.jbin` |
 
+## Input and Output
+
+The `Input` and `Output` interfaces are used to read/write from an `Iterable` stream to a `Object` implementing `Source` or `Target` respectively.
+
 ## Example: Global Supply Chain Integration
 
 Global Logistics Corp needs to integrate data from multiple suppliers, warehouses, and shipping partners. Each partner provides data in different formats, requiring a **flexible** system that can **read and write** with a **variety** of **file-sources**.
@@ -39,7 +43,7 @@ product|quantity
 Laptop|300
 ```
 
-And here is warehouse_status.json the converted file:
+And here is the converted file, `warehouse_status.json`
 
 ```json
 { "product": "Laptop", "quantity": 300 }
