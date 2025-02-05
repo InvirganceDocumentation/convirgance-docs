@@ -1,14 +1,13 @@
 # Database Operations
 
-Convirgance provides a unified method of working with SQL database management 
-systems (DBMS) while maintaining both 
-[ACID compliance](https://en.wikipedia.org/wiki/ACID)
-and industry-leading performance. 
+Convirgance provides a unified method of working with SQL database management
+systems (DBMS) while maintaining both [ACID compliance](https://en.wikipedia.org/wiki/ACID)
+and industry-leading performance.
 
-Rather than dealing with low-level JDBC code, you can work with intuitive 
-concepts like atomic operations (where everything either succeeds or fails together), 
-batch processing for better performance, and simple querying that returns 
-easy-to-use JSON objects. This gives you the control of direct SQL with 
+Rather than dealing with low-level JDBC code, you can work with intuitive
+concepts like atomic operations (where everything either succeeds or fails together),
+batch processing for better performance, and simple querying that returns
+easy-to-use JSON objects. This gives you the control of direct SQL with
 the safety of managed transactions.
 
 ## Database Connections
@@ -21,14 +20,13 @@ done, the `DataSource` becomes a source for obtaining connections.
 Most modern systems provide a method of configuring `DataSource` objects for use
 by the application. Common approaches include:
 
- - JNDI registration in Application Servers (Glassfish, Tomcat, JBoss, etc.)
- - Spring Boot [Data Access](https://docs.spring.io/spring-boot/how-to/data-access.html)
- - Connection Pool configuration (e.g. [Apache DBCP](https://commons.apache.org/proper/commons-dbcp/)
- - Manual initialization of database-specific `DataSource` implementation
+- JNDI registration in Application Servers (Glassfish, Tomcat, JBoss, etc.)
+- Spring Boot [Data Access](https://docs.spring.io/spring-boot/how-to/data-access.html)
+- Connection Pool configuration (e.g. [Apache DBCP](https://commons.apache.org/proper/commons-dbcp/))
+- Manual initialization of database-specific `DataSource` implementation
 
-Consult the documentation for your server or framework for more on how 
+Consult the documentation for your server or framework for more on how
 to configure and obtain a `DataSource` instance.
-
 
 ## DBMS API
 
@@ -40,18 +38,19 @@ DataSource source = ...;
 DBMS dbms = new DBMS(source);
 ```
 
-Now we are ready to use the DBMS APIs for querying and for insert/updating data.
-
+Now we are ready to use the DBMS APIs for querying and inserting/updating data.
 
 ## Querying
 
 SQL queries in Convirgance are wrapped by the `Query` object. This object is
 responsible for parsing the SQL to detect dynamic bind variables, then allowing
-for values to be set.  
+the values to be set.
 
-The prepared `Query` is then passed to `DBMS` to obtain an `Iterable<JSONObject>`
-stream that is compatible with Convirgance's APIs. Here is an example of a 
-basic, unparameterized query:
+<!-- TODO The wording here seems odd, maybe 'allowing values to be bound later on'  -->
+
+The prepared `Query` is then passed to the `DBMS` to obtain an `Iterable<JSONObject>`
+stream that is compatible with Convirgance's APIs. Here is an example of a
+basic, un-parameterized query:
 
 ```java
 Query query = new Query("select * from CUSTOMER");
@@ -65,13 +64,13 @@ for(JSONObject record : dbms.query(query))
 
 ### Parameter Binding
 
-Parameter binding in Convirgance uses named parameters (prefixed with `:`) to 
+Convirgance uses named parameters (prefixed with `:`) to
 safely bind values into SQL queries. Values can be set directly on `Query` or
 bound in bulk using a `JSONObject`.
- 
-The use of named variables eliminates the need to count and align traditional 
-`?` placeholders. For example, `:userId` in your query would match with the 
-`userId` field in your binding object. Multple occurrances of `:userId` in the
+
+The use of named variables eliminates the need to count and align traditional
+`?` placeholders. For example, `:userId` in your query would match with the
+`userId` field in your binding object. Multiple occurrences of `:userId` in the
 SQL would all bind to the same value.
 
 ```java
