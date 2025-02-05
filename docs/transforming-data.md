@@ -131,6 +131,7 @@ Iterable<JSONObject> transformed = transformer.transform(data);
 
 ## Best Practices
 
+- Avoid `ArrayList` and other buffers in your transformer. Memory buffers can cause `OutOfMemoryError` exceptions that crash your program.
 - Use `CoerceStringsTransformer` to standardize data types before processing.
 - Leverage `SortedGroupByTransformer` for efficient grouping when working with pre-sorted data.
 - Apply `UnsortedGroupByTransformer` when sorting is not guaranteed but grouping is required.
