@@ -35,9 +35,9 @@ See also: [Core Concepts > Transformations](concepts.md#transformations)
 
 ### Examples
 
-Below are two examples, one goes over the `SortedGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
+Below are two examples, one goes over the `SortedGroupByTransformer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
 
-#### SortedGroupByTransfromer Example
+#### SortedGroupByTransformer Example
 
 The following example showcases joining two tables, and using the `SortedGroupByTransformer` to group the data into a more compact from.
 
@@ -63,7 +63,7 @@ And this is what the results from the query would look like.
 {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
 ```
 
-Now to sort this we use the `SortedGroupByTransfromer` on the results from the query. For unsorted data consider taking a look at [UnsortedGroupByTransfromer](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/UnsortedGroupByTransformer.html)
+Now to sort this we use the `SortedGroupByTransformer` on the results from the query. For unsorted data consider taking a look at [UnsortedGroupByTransformer](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/UnsortedGroupByTransformer.html)
 
 ```java
 Iterable<JSONObject> customerData = sorter.transform(results)
@@ -104,18 +104,18 @@ The transformer would return the following. In comparison to what the database r
 
 Transformers that need to update a record as it passes by can be easily created
 by implementing the `IdentityTransformer` interface. This interface produces
-one `JSONObject` for each `JSONObject` passed in. 
+one `JSONObject` for each `JSONObject` passed in.
 
 Here's an example of a transformer for inserting a timestamp:
 
 ```java
 Transformer transformer = new IdentityTransformer() {
-            
+
     @Override
     public JSONObject transform(JSONObject record) throws ConvirganceException
     {
         record.put("timestamp", System.currentTimeMillis());
-                
+
         return record;
     }
 };
@@ -138,7 +138,7 @@ public class DuplicationTransformer implements Transformer
     }
 
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) 
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator)
     {
         return new Iterator<JSONObject>() {
 
@@ -146,13 +146,13 @@ public class DuplicationTransformer implements Transformer
             private int counter;
 
             @Override
-            public boolean hasNext() 
+            public boolean hasNext()
             {
                 return (record != null || iterator.hasNext());
             }
 
             @Override
-            public JSONObject next() 
+            public JSONObject next()
             {
                 JSONObject result;
 

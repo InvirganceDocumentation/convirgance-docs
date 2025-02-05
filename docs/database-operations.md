@@ -103,7 +103,7 @@ JDBC connection to the database and asked to perform their updates.
 Some common implementations include:
 
 - `QueryOperation` - Wraps a `Query` object to run the query as a transaction
-- `BatchOperation` - Performas JDBC batch updates for bulk inserts and updates
+- `BatchOperation` - Performs JDBC batch updates for bulk inserts and updates
 - `TransactionOperation` - Allows bundling of numerous other operations into a single transaction
 
 ### Query Transactions
@@ -130,7 +130,7 @@ dbms.update(transaction);
 ### Bulk Inserts and Updates
 
 It is common to want to load numerous records into the database at once rather
-then exceuting invididual insert/udpates. `BatchOperation` can be configured
+then executing individual insert/updates. `BatchOperation` can be configured
 with a `Query` that will be used as a prepared statement for JDBC bulk inserts.
 The `BatchOperation` can then be fed an `Iterable<JSONObject>` stream that it
 will use as a source of records for the bulk insert/updates.
@@ -178,7 +178,7 @@ executed sequentially. If an error occurs in any of the batched operations,
 the changes from all operations will be rolled back.
 
 ```java
-Query delete = new Query("delete from CUSTOMER wher id = 5");
+Query delete = new Query("delete from CUSTOMER where id = 5");
 Query insert = new Query("insert into CUSTOMER values (5, 'Bubba', 0, 7)");
 
 // Setup a transaction to run delete and insert in order
