@@ -197,7 +197,7 @@ dbms.update(transaction);
 
 ## Sections
 
-##### [Previous: Core Concepts](./concepts?id=core-concepts-and-goals)
+##### [Previous: Core Concepts](./concepts?id=core-concepts)
 
 ##### [Next: Filtering Data](./filtering-data?id=filters)
 
