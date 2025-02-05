@@ -142,15 +142,13 @@ Input<JSONObject> input = new Input<JSONObject>()
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
-        return new InputCursor<JSONObject>()
-        {
+        return new InputCursor<JSONObject>() {
             private final BufferedReader reader = new BufferedReader(new InputStreamReader(source.getInputStream()));
 
             @Override
             public CloseableIterator<JSONObject> iterator()
             {
-                return new CloseableIterator<JSONObject>()
-                {
+                return new CloseableIterator<JSONObject>() {
                     String nextLine;
 
                     {
@@ -214,8 +212,7 @@ Output propertiesOutput = new Output()
     @Override
     public OutputCursor write(Target target)
     {
-        return new OutputCursor()
-        {
+        return new OutputCursor() {
             private final PrintWriter writer = new PrintWriter(target.getOutputStream(), false);
 
             @Override
