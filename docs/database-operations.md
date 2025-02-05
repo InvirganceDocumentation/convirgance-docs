@@ -92,108 +92,100 @@ for(JSONObject record : dbms.query(query))
 
 ## Transactions
 
-The `TransactionOperation` represents operations such as updates, inserts or deleting. Multiple operations can be queued and then executed sequentially. However if an error occurs during one of the operations, all changes will be rolled back.
+Database updates such as inserts, updates, and administrative calls to stored
+procedures are all handled in a transaction context. This ensures that the
+updates are applied with atomicity, consistency, isolation, and durability (ACID)
+to the limits provided by the database management system.
 
-### Atomic Operations
+The work that a needs to be accomplished in an update is captured by the 
+`AtomicOperation` interface. Implementations of the interface are given a
+JDBC connection to the database and asked to perform their updates.
 
-Atomic operations follow the principle of atomicity - making changes as small, indivisible units. This approach provides precise control and better error handling. This concept is used throughout the Convirgance DBMS, allowing changes to be rolled-back if an issue occurs. An interface is available [here](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/AtomicOperation.html) if needed.
+Some common implementations include:
 
-### Query Operation
+ - `QueryOperation` - Wraps a `Query` object to run the query as a transaction
+ - `BatchOperation` - Performas JDBC batch updates for bulk inserts and updates
+ - `TransactionOperation` - Allows bundling of numerous other operations into a single transaction
 
-At a high level, `QueryOperation` serves as a transaction wrapper around Query. Its main role is to ensure database operations are executed atomically (as a single unit), making them safer and more reliable.
+### Query Transactions
 
-Can you guess what class `QueryOperation` implements? (Check the documentation link at the bottom for the answer)
-
-### Inserting Data
-
-#### Example
-
-In this example we insert a single `JSONObject`. You can see the Convirgance named bindings in use through the `template` string.
+The most basic type of database update is a simple insert or update. 
+`QueryTransaction` supports this use case by wrapping a `Query` and running
+the query with all the features of `Query` including bind variables.
 
 ```java
-String template = "INSERT INTO customer VALUES (:id, :name, :email)";
-String example = "{ \"id\": 1, \"name\": \"John\", \"email\": \"john@email.com\" }";
-
-JSONObject customer = new JSONObject(example);
-
-DBMS dbms = new DBMS(source);
-Query insert = new Query(template, customer);
+String sql = "insert into CUSTOMER values (:id, :name, :devices, :pets)";
+Query insert = new Query(sql);
 QueryOperation operation = new QueryOperation(insert);
 
-dbms.update(operation);
+// Bind variables
+insert.setBinding("id", 5);
+insert.setBinding("name", "BubbaG");
+insert.setBinding("devices", 3);
+insert.setBinding("pets", 3);
+
+// Execute the insert
+dbms.update(transaction);
 ```
 
-### BatchOperation
+### Bulk Inserts and Updates
 
-`BatchOperation` is like `QueryOperation` but designed for efficiently executing the same query multiple times with different values. Here we see it in use to bind the values from a file containing multiple JSONObjects.
+It is common to want to load numerous records into the database at once rather 
+then exceuting invididual insert/udpates. `BatchOperation` can be configured
+with a `Query` that will be used as a prepared statement for JDBC bulk inserts.
+The `BatchOperation` can then be fed an `Iterable<JSONObject>` stream that it
+will use as a source of records for the bulk insert/updates.
 
-```java
-String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
+For example, let's say we have the following JSON data set that we wish to 
+bulk load:
 
-DBMS database = new DBMS(source);
-Query query = new Query(template);
-
-/*
-  The contents of 'jsonFile'. Notice that the field names match with VALUES
-
-  {
-    id: 1,
-    name: "Bob",
-    age: 55
-  },
-  {
-    id: 2,
-    name: "Potato",
-    age: 35
-  },
-*/
-FileSource example = new FileSource(jsonFile);
-Iterable<JSONObject> records = JSONInput().read(example);
-
-
-BatchOperation batch = new BatchOperation(query, records);
-
-database.execute(batch);
+```json
+{"id": 1, "name": "John",  "devices": 3, "pets": 1 }
+{"id": 2, "name": "Bob",   "devices": 1, "pets": 2 }
+{"id": 3, "name": "Kyle",  "devices": 1, "pets": 10}
+{"id": 4, "name": "Larry", "devices": 0, "pets": 0 }
+{"id": 5, "name": "Bubba", "devices": 3, "pets": 3 }
 ```
 
-### Transactions: Inserts and Queries
-
-#### Example
-
-Below is a example with pseudo methods, showcasing `TransactionOperation` executing queries sequentially. If an error occured during one of these operations the database would be rolled back to its previous state before the `TransactionOperation` ran.
+The following code will load this JSON data and insert it into the `CUSTOMER`
+table:
 
 ```java
-// First: Get the query to truncate/drop the table
-Query truncate = createTruncateStatement();
+// Obtain a stream of JSON data
+Iterable<JSONObject> stream = new JSONInput().read(new FileTarget("data.json"));
 
-// Second: Get resequence statement
-Query resequence = createResetSequenceStatement();
+// Setup our query for each insert
+String sql = "insert into CUSTOMER values (:id, :name, :devices, :pets)";
+Query insert = new Query(sql);
 
-// Third: Get the bulk query to insert seed data.
-Query data = createDefaultDataInsert();
+// Execute the bulk load
+dbms.update(new BatchOperation(insert, stream));
 
-transaction = new TransactionOperation(truncate, resequence, batch);
 ```
 
-### Bulk Insert and Query
+Note how the bind keys in the SQL match the key names in the JSON. This
+allows `BatchOperation` to bind each record to the query as it streams the 
+data for load.
 
-Here is an example utilizing `TransactionOperation` along with `BatchOperation`. If an error occurs during the bulk insert or while truncating the operation will cancel and the database will rollback to its previous state.
+*Warning: `BatchOperation` can lead to partial commits if the number of records 
+loaded exceeds the auto commit limit. The auto commit limit exists to 
+prevent the database transaction log from filling up and failing the load. This
+limit defaults to 1,000 records and can be adjusted to support database tuning.*
+
+### Batched Transaction
+
+The `TransactionOperation` allows multiple operations to be queued and then 
+executed sequentially. If an error occurs in any of the batched operations,
+the changes from all operations will be rolled back.
 
 ```java
-DBMS dbms = new DBMS(source);
+Query delete = new Query("delete from CUSTOMER wher id = 5");
+Query insert = new Query("insert into CUSTOMER values (5, 'Bubba', 0, 7)");
 
-// Creates the insert statement for JSONObjects.
-Query query = getInsertQuery();
-Query reset = new Query("TRUNCATE table customers");
+// Setup a transaction to run delete and insert in order
+TransactionOperation transaction = new TransactionOperation(delete, insert);
 
-TransactionOperation transaction;
-QueryOperation truncate = new QueryOperation(reset);
-
-// Reading in JSONObjects from a file 'source'.
-Iterable<JSONObject> items = new JSONInput().read(file);
-BatchOperation batch = new BatchOperation(query, items);
-
-transaction = new TransactionOperation(truncate, batch);
+// Execute the transaction
 dbms.update(transaction);
 ```
 
