@@ -1,23 +1,22 @@
-
 # Core Concepts
 
-Today's systems collect more logging, handle more transations, report on more 
+Today's systems collect more logging, handle more transations, report on more
 analytics, and define more complex relationships than ever before. This growth in
-data sizes strains the classic model of object mapping to its breaking point. 
+data sizes strains the classic model of object mapping to its breaking point.
 
-Convirgance embraces modern data by building upon byte-by-byte streams (also 
-known as unix streams) to implement a Data Flow pattern. Bytes are translated 
-into records which can be easily transformed and then serialized back into a 
+Convirgance embraces modern data by building upon byte-by-byte streams (also
+known as unix streams) to implement a Data Flow pattern. Bytes are translated
+into records which can be easily transformed and then serialized back into a
 unix stream of bytes once processed.
 
 ## Records
 
 The core unit of data in Convirgance is a record. Records are represented by
 `JSONObject` which is an implementation of the Java Collections `Map` interface.
-The implementation is designed to easily parse and print to JSON making debugging 
-incredibly easy and complex test cases a breeze. 
+The implementation is designed to easily parse and print to JSON making debugging
+incredibly easy and complex test cases a breeze.
 
-Data is stored in `JSONObject` as key/value pairs. This aligns with both the 
+Data is stored in `JSONObject` as key/value pairs. This aligns with both the
 JSON specification and the requirements of the `Map` interface.
 
 Implementing the `Map` interface additionally makes each record compatible with
@@ -26,13 +25,13 @@ native JSTL syntax on a `JSONObject` when rendering.
 
 ## Streams
 
-Java enhances the idea of unix streams (represented by `InputStream` and 
-`OutputStream`) with the concept of `Iterator`. An iterator is a stream of data 
-types a level above a byte stream. Each entry is a Java `Object`, the type of 
-which is specified using a generic. 
+Java enhances the idea of unix streams (represented by `InputStream` and
+`OutputStream`) with the concept of `Iterator`. An iterator is a stream of data
+types a level above a byte stream. Each entry is a Java `Object`, the type of
+which is specified using a generic.
 
 Convirgance hooks into this feature of the langauge by implementing its streams
-of records as `Iterator<JSONObject>`. 
+of records as `Iterator<JSONObject>`.
 
 The only issue with Iterators in Java is that they don't have full language
 support. The `Iterator` object is already in process of streaming the data by
@@ -60,7 +59,7 @@ fit into memory <u>Convirgance can handle an unlimited number of records</u>.
 
 ## Transformations
 
-The basic pattern of transformations in Convirgance is to pass an `Iterable` into 
+The basic pattern of transformations in Convirgance is to pass an `Iterable` into
 a transformer and get a new `Iterable` back out. For example:
 
 ```java
@@ -79,20 +78,22 @@ been completed on it.
 This approach is important because it minimizes memory usage, aligns data with
 the Young GC, and maximizes the use of the CPUs L1 and L2 caches. For
 data requiring a large number of operations, performance can improve by orders
-of magnitude.  
+of magnitude.
 
-Note that the `Iterable` in/out approach implies that transformers can manipuate 
+Note that the `Iterable` in/out approach implies that transformers can manipulate
 the data in any manner they choose. Transformers can directly update each record
-resulting in one record in and one record out. Or transformers can group data, aggregate 
-data, expand the number of records, or even filter data out of the stream. 
+resulting in one record in and one record out. Additionally transformers can group and aggregate
+data, expand the number of records, or reduce the number of records by filtering data out of the stream.
+
+<!-- TODO Wording could be better here, it feels like I'm tripping over 'expand the number of records'  -->
 
 ## Filters
 
 Filters are an extension to transformers that specifically reject records
 based upon a "predicate". A predicate is a condition that must be met for the
-record to be kept. 
+record to be kept.
 
-Convirgance supports many of the types of [filters](filtering-data.md) you would 
+Convirgance supports many of the types of [filters](filtering-data.md) you would
 expect in a SQL engine. Including equals, greater than, less than, etc. Filters
 based on boolean logic can be combined to create and/or/not logic.
 
@@ -128,13 +129,13 @@ Filter not = new NotFilter(or);
 
 While `InputStream` and `OutputStream` are fantasic standard representations of
 unix streams, they have the same problem as the `Iterator` in that the streams
-are active as soon as they exist. 
+are active as soon as they exist.
 
-This means these standard library classes play poorly with the use of 
-`Iterable` that allows the pipeline 
-of transformations to be pre-planned and `Iterable` instances to be reused 
-throughout the code. To provide this compatibility, Convirgance introduces 
-`Source` and `Target` classes  analagous to `InputStream` and `OutputStream` 
+This means these standard library classes play poorly with the use of
+`Iterable` that allows the pipeline
+of transformations to be pre-planned and `Iterable` instances to be reused
+throughout the code. To provide this compatibility, Convirgance introduces
+`Source` and `Target` classes analagous to `InputStream` and `OutputStream`
 respectively.
 
 `Source` objects represent a plan to access the `InputStream` for a file, url,
@@ -152,13 +153,13 @@ times will result in the file being overwritten.
 ## Input and Output
 
 The process of converting the underlying stream of bytes into a stream of records
-is handled by implementations of the `Input` interface. The `Input` implementation 
+is handled by implementations of the `Input` interface. The `Input` implementation
 reads from a provided `Source` to return an `Iterable<JSONObject>` stream.
 
-`Output` provides the inverse concept, converting an `Iterable<JSONObject>` stream 
+`Output` provides the inverse concept, converting an `Iterable<JSONObject>` stream
 into a serialized byte stream that is written to the provided `Target`.
 
-Convirgance ships with support for numerous formats such as JSON, CSV, 
+Convirgance ships with support for numerous formats such as JSON, CSV,
 tab-delimited, pipe-delimited, and even binary encodings. Additional formats
-can be plugged in using the `Input` and `Output` concepts, thereby making 
-Convirgance  a universal data processing platform.
+can be plugged in using the `Input` and `Output` concepts, thereby making
+Convirgance a universal data processing platform.
