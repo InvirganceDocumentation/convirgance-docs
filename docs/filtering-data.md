@@ -19,16 +19,16 @@ Filters provide SQL-like operations for working with data streams. You can use f
 
 ## Examples
 
-### Basic Less than
+### Basic Greater Than
 
-The below filter returns true because the record value is above 18.
+The below filter returns true because the rider's height is above 122(cm).
 
 ```java
-String key = "age";
-String value = 18;
+String key = "height";
+int value = 122;
 
-JSONObject record = new JSONObject("{\"age\": 5}");
-return new LessThanFilter(key, value).test(record);
+JSONObject rider = new JSONObject("{\"height\": 152}");
+return new GreaterThanFilter(key, value).test(record);
 ```
 
 ## Interface Examples
@@ -57,7 +57,7 @@ Filter nameFilter = new Filter()
 Iterator<JSONObject> filtered = nameFilter.transform(records);
 ```
 
-### Comparitive
+### Comparative
 
 The below example uses a customer `ComparatorFilter` to collect JSONObjects that are considered 'old'.
 
