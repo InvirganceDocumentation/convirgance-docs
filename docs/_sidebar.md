@@ -12,7 +12,7 @@
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
 
-- [Core Concepts](concepts.md#core-concepts-and-goals)
+- [Core Concepts](concepts.md#core-concepts)
 
   - [Records](concepts.md#records)
   - [Streams](concepts.md#streams)
