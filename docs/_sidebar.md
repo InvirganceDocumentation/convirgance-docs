@@ -11,7 +11,6 @@
   - [Getting Started with Convirgance](getting-started.md#getting-started-with-convirgance)
   - [Installation](getting-started.md#installation)
   - [Quick Start](getting-started.md#quick-start)
-  - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
 
 - [Core Concepts](concepts.md#core-concepts-and-goals)
 
