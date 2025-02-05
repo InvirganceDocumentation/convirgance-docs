@@ -147,9 +147,9 @@ Input<JSONObject> input = new Input<JSONObject>()
                         {
                             nextLine = reader.readLine();
                         }
-                        catch (IOException ex)
+                        catch (IOException exception)
                         {
-                            throw new RuntimeException(ex);
+                            throw new ConvirganceException(exception);
                         }
                     }
 
@@ -169,9 +169,9 @@ Input<JSONObject> input = new Input<JSONObject>()
                         {
                             nextLine = reader.readLine();
                         }
-                        catch (IOException ex)
+                        catch (IOException exception)
                         {
-                            throw new RuntimeException(ex);
+                            throw new ConvirganceException(exception);
                         }
 
                         obj.put(property[0], property[1]);
