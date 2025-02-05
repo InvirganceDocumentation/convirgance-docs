@@ -4,123 +4,111 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 ## Supported Formats
 
-| Format         | Description                                    | Read/Write | Extensions     |
-| -------------- | ---------------------------------------------- | ---------- | -------------- |
-| CSV            | Comma-separated values for tabular data        | Read/Write | `.csv`         |
-| Pipe Delimited | Column data separated by pipes                 | Read/Write | `.psv`, `.txt` |
-| Tab Delimited  | Column data separated by tabs                  | Read/Write | `.tsv`, `.txt` |
-| Delimited      | Custom delimiter-separated data                | Read/Write | `.txt`         |
-| JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
-| JBIN           | Binary JSON format                             | Read/Write | `.jbin`        |
+| Format         | Description                                    | Read/Write | Extensions |
+| -------------- | ---------------------------------------------- | ---------- | ---------- |
+| CSV            | Comma-separated values for tabular data        | Read/Write | `.csv`     |
+| Pipe Delimited | Column data separated by pipes                 | Read/Write | `.txt`     |
+| Tab Delimited  | Column data separated by tabs                  | Read/Write | `.txt`     |
+| Delimited      | Custom delimiter-separated data                | Read/Write | `.txt`     |
+| JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`    |
+| JBIN           | Binary JSON format                             | Read/Write | `.jbin`    |
 
-## Reading and Writing
+## Example: Global Supply Chain Integration
 
-Below are some short examples covering reading and writing with different outputs.
+Global Logistics Corp needs to integrate data from multiple suppliers, warehouses, and shipping partners. Each partner provides data in different formats, requiring a **flexible** system that can **read and write** with a **variety** of **file-sources**.
 
-### Delimited Files
+### Scenario 1: Processing Supplier Inventory (Delimited Files)
 
-Delimited files provide a way to organize data seperated by a specific character.
+The company's European supplier sends inventory updates as pipe-delimited files. Here's how we process them:
 
 ```java
-JSONArray results = new JSONArray("[{\"name\":\"John\", \"devices\":3, \"pets\":1}]");
+JSONArray data = new JSONArray("[{\"product\":\"Laptop\", \"quantity\":300, \"location\":\"Warsaw\"}]");
 
-// 'qdc' file type being question mark delimited values.
-File file = new File("./test.qdv");
-FileTarget target = new FileTarget(file);
+String[] fields = new String[]{"product", "quantity"};
+DelimitedOutput output = new DelimitedOutput(fields);
 
-// This will delimit the content with '?' using only the provided headers.
-String[] fields = new String[]{"name", "devices"};
-DelimitedOutput output = new DelimitedOutput(fields, '?');
-
-// Write out the results with only the three fields.
-output.write(target, results);
-
-/*
-The files output would look something like:
-  name?devices
-  John?3
-*/
+FileTarget inventory = new FileTarget("eu_inventory.txt");
+output.write(inventory, data);
 ```
 
-### JSON
+This creates a file that looks like:
 
-#### Reading
+```
+product|quantity
+Laptop|300
+```
 
-The below examples reads in from some example file and prints out the `toString()` representation of the record.
+### Scenario 2: Warehouse Management (JSON)
+
+Our warehouse management system uses JSON for real-time updates. Here are a few implementation examples covering reading and writing JSON.
+
+#### Reading Warehouse Data
 
 ```java
-FileSource source = new FileSource(new File("./example.json"));
+FileSource source = new FileSource("warehouse_status.json");
 Iterable<JSONObject> input = new JSONInput().read(source);
 
-for(JSONObject record : input){
-  System.out.println(record);
+for(JSONObject warehouse : input){
+    System.out.println(warehouse);
 }
-
-/*
-  {"name": "John", "devices": 3}
-*/
 ```
 
-#### Writing
+Output shows:
+
+```json
+{ "location": "Chicago", "capacity": 3000, "utilization": 85 }
+```
+
+#### Writing Warehouse Data
+
+The warehouse management system provides an export function, its implementation might look like.
 
 ```java
 DBMS database = new DBMS(source);
-Query query = new Query("SELECT * FROM customer");
+Query status = new Query("SELECT * FROM warehouse_status");
+Iterable<JSONObject> results = database.query(status);
 
-Iterable<JSONObject> results = database.query(query);
-
-File file = new File("./test.json");
-FileTarget target = new FileTarget(file);
-
+FileTarget target = new FileTarget("status_update.json");
 JSONOutput out = new JSONOutput();
+
 out.write(target, results);
-
-/*
-  {"name": "John", "devices": 3},
-  {"name": "Bob", "devices": 1},
-*/
 ```
 
-### CSV
+### Scenario 3: Shipping Reports (CSV)
 
-Writing out a CSV from JSON is pretty simple, fields names are converted into headers and any values found matching the field names are included.
+For executive dashboards, we convert warehouse data to CSV format:
 
 ```java
-File file = new File("./example.json");
-/*
-example.json contents:
+FileSource warehouse = new FileSource("warehouse_data.json");
+Iterable<JSONObject> data = new JSONInput().read(warehouse);
 
-  {name: "John", devices: 3}
-*/
-
-FileSource source = new FileSource(file);
-Iterable<JSONObject> input = new JSONInput().read(source);
-
-File csv = new File("./test.csv");
-FileTarget target = new FileTarget(csv);
-
+FileTarget report = new FileTarget("shipping_report.csv");
 CSVOutput output = new CSVOutput();
-output.write(target,input)
 
-/*
-Output would look like:
-
-  name, devices
-  John, 3
-*/
+output.write(report, data);
 ```
 
-### JBIN
+This generates:
 
-`JBIN` is useful in high throughput situations. Here is an example of writing a `JSONObject` into `JBIN`.
+```csv
+location, capacity, utilization
+Chicago, 3000, 85
+```
+
+### Scenario 4: High-Performance Data Exchange (JBIN)
+
+For high-frequency updates between distribution centers, we use JBIN format:
 
 ```java
-JSONArray example = new JSONArray("[{\"name\":\"John\", \"devices\":3}]");
+FileSource warehouse = new FileSource("warehouse_data.json");
+Iterable<JSONObject> distribution = new JSONInput().read(warehouse);
 ByteArrayTarget target = new ByteArrayTarget();
-
 JBINOutput output = new JBINOutput();
-output.write(target, results)
+
+output.write(target, distribution);
 ```
+
+This approach has helped Global Logistics Corp **reduce data processing time** by `~60%` while **maintaining compatibility** with all their partners' systems.
 
 ## The Input/Output Interfaces
 
@@ -282,7 +270,7 @@ model=photoshop-cs6
 
 ### Best Practices
 
-- Ensure you're following the specifications of the file, created by [IETF](https://www.ietf.org/).
+- Ensure you're following the file-type specifications, created by [IETF](https://www.ietf.org/).
 - Robust error handling to deal with malformed files.
 - Optimize performance for large files by using streaming approaches where applicable.
 

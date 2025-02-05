@@ -46,7 +46,7 @@
 - [File Formats](file-formats.md#file-formats)
 
   - [Supported Formats](file-formats.md#supported-formats)
-  - [Reading and Writing](file-formats.md#reading-and-writing)
+  - [Example: Real World](file-formats.md#Example-Global-Supply-Chain-Integration)
   - [Example: A Custom Properties File](file-formats.md#example-properties-file)
   - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
   - [Best Practices](file-formats.md#best-practices)
