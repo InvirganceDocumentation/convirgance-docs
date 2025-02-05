@@ -35,9 +35,9 @@ See also: [Core Concepts > Transformations](concepts.md#transformations)
 
 ### Examples
 
-Below are two examples, one goes over the `SorterGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
+Below are two examples, one goes over the `SortedGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
 
-#### SorterGroupByTransfromer Example
+#### SortedGroupByTransfromer Example
 
 The following example showcases joining two tables, and using the `SortedGroupByTransformer` to group the data into a more compact from.
 
