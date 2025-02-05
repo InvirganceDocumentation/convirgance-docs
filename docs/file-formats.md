@@ -4,14 +4,14 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 
 ## Supported Formats
 
-| Format         | Description                                    | Read/Write | Extensions |
-| -------------- | ---------------------------------------------- | ---------- | ---------- |
-| CSV            | Comma-separated values for tabular data        | Read/Write | `.csv`     |
-| Pipe Delimited | Column data separated by pipes                 | Read/Write | `.txt`     |
-| Tab Delimited  | Column data separated by tabs                  | Read/Write | `.txt`     |
-| Delimited      | Custom delimiter-separated data                | Read/Write | `.txt`     |
-| JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`    |
-| JBIN           | Binary JSON format                             | Read/Write | `.jbin`    |
+| Format         | Description                                    | Read/Write | Extensions     |
+| -------------- | ---------------------------------------------- | ---------- | -------------- |
+| CSV            | Comma-separated values for tabular data        | Read/Write | `.csv`         |
+| Pipe Delimited | Column data separated by pipes                 | Read/Write | `.txt` ,`.psv` |
+| Tab Delimited  | Column data separated by tabs                  | Read/Write | `.txt` ,`.tsv` |
+| Delimited      | Custom delimiter-separated data                | Read/Write | `.txt`         |
+| JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
+| JBIN           | Binary JSON format                             | Read/Write | `.bin`,`.jbin` |
 
 ## Example: Global Supply Chain Integration
 
@@ -23,11 +23,11 @@ The company's European supplier sends inventory updates as pipe-delimited files.
 
 ```java
 JSONArray data = new JSONArray("[{\"product\":\"Laptop\", \"quantity\":300, \"location\":\"Warsaw\"}]");
-
 String[] fields = new String[]{"product", "quantity"};
-DelimitedOutput output = new DelimitedOutput(fields);
 
-FileTarget inventory = new FileTarget("eu_inventory.txt");
+DelimitedOutput output = new DelimitedOutput(fields);
+FileTarget inventory = new FileTarget("europe_inventory.txt");
+
 output.write(inventory, data);
 ```
 
@@ -48,7 +48,8 @@ Our warehouse management system uses JSON for real-time updates. Here are a few 
 FileSource source = new FileSource("warehouse_status.json");
 Iterable<JSONObject> input = new JSONInput().read(source);
 
-for(JSONObject warehouse : input){
+for(JSONObject warehouse : input)
+{
     System.out.println(warehouse);
 }
 ```
@@ -102,6 +103,7 @@ For high-frequency updates between distribution centers, we use JBIN format:
 ```java
 FileSource warehouse = new FileSource("warehouse_data.json");
 Iterable<JSONObject> distribution = new JSONInput().read(warehouse);
+
 ByteArrayTarget target = new ByteArrayTarget();
 JBINOutput output = new JBINOutput();
 
@@ -250,12 +252,11 @@ Database Data:
 | lighten       | 0.75     | photoshop-cs6 |
 
 ```java
-File example = new File("./user.properties");
-FileTarget target = new FileTarget(example);
-
 DBMS dbms = new DBMS(source);
 Query query = new Query("select blending_mode, accuracy, model from SETTINGS limit 1");
+
 Iterable<JSONObject> results = dbms.query(query);
+FileTarget target = new FileTarget("user.properties");
 
 propertiesOutput.write(target, results);
 
