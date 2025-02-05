@@ -25,10 +25,10 @@
 
 - [Database Operations](database-operations.md#database-operations)
 
-  - [The DBMS](database-operations.md#the-dbms)
-  - [Querying Data](database-operations.md#querying-data)
-  - [Inserting Data](database-operations.md#inserting-data)
-  - [Transactions: Inserts and Queries](database-operations.md#transactions-inserts-and-queries)
+  - [Database Connections](database-operations.md#database-connections)
+  - [DBMS API](database-operations.md#dbms-api)
+  - [Querying](database-operations.md#querying)
+  - [Transactions](database-operations.md#transactions)
   - [Best Practices](database-operations.md#best-practices)
 
 - [Filtering Data](filtering-data.md#filters)

@@ -1,62 +1,96 @@
 # Database Operations
 
-Database operations provide a unified way to work with your database while maintaining data consistency and performance. Rather than dealing with low-level JDBC code, you can work with intuitive concepts like atomic operations (where everything either succeeds or fails together), batch processing for better performance, and simple querying that returns easy-to-use JSON objects. This gives you the control of direct SQL with the safety of managed transactions.
+Convirgance provides a unified method of working with SQL database management 
+systems (DBMS) while maintaining both 
+[ACID compliance](https://en.wikipedia.org/wiki/ACID)
+and industry-leading performance. 
 
-## The DBMS
+Rather than dealing with low-level JDBC code, you can work with intuitive 
+concepts like atomic operations (where everything either succeeds or fails together), 
+batch processing for better performance, and simple querying that returns 
+easy-to-use JSON objects. This gives you the control of direct SQL with 
+the safety of managed transactions.
 
-The Convirgance DBMS streamlines database operations by abstracting complex implementation details into a simple, robust interface. By handling the heavy lifting of connection management and transaction safety, developers can focus on their core application logic by simply providing a `DataSource` and using the straightforward `query` and `update` operations.
+## Database Connections
 
-## Parameter Binding
+Database connectivity is dependent on the modern `javax.sql.DataSource` approach
+to database connections. Database-specific `DataSource` implementations can be
+initialized and configured with server information and credentials. Once this is
+done, the `DataSource` becomes a source for obtaining connections.
 
-Parameter binding in Convirgance uses named parameters (prefixed with `:`) to securely integrate values into SQL queries. Values are bound using a `JSONObject`, eliminating the need to count and align traditional ? placeholders. For example, `:userId` in your query would match with the `userId` field in your binding object.
+Most modern systems provide a method of configuring `DataSource` objects for use
+by the application. Common approaches include:
+
+ - JNDI registration in Application Servers (Glassfish, Tomcat, JBoss, etc.)
+ - Spring Boot [Data Access](https://docs.spring.io/spring-boot/how-to/data-access.html)
+ - Connection Pool configuration (e.g. [Apache DBCP](https://commons.apache.org/proper/commons-dbcp/)
+ - Manual initialization of database-specific `DataSource` implementation
+
+Consult the documentation for your server or framework for more on how 
+to configure and obtain a `DataSource` instance.
+
+
+## DBMS API
+
+Central to database access is the `DBMS` object. Simply pass your `DataSource`
+to the constructor and you are ready to work with the database.
 
 ```java
+DataSource source = ...;
 DBMS dbms = new DBMS(source);
-String template = "SELECT * FROM customer " +
-                 "WHERE DISCOUNT_CODE = :membershipType " +
-                 "AND STATE = :state";
-
-JSONObject bindings = new JSONObject();
-bindings.put("membershipType", "G");
-bindings.put("state", "CA");
-
-Query query = new Query(template, bindings);
-Iterable<JSONObject> results = dbms.query(query);
 ```
 
-You can also setup a config like this to bind a large amount of records.
+Now we are ready to use the DBMS APIs for querying and for insert/updating data.
+
+
+## Querying
+
+SQL queries in Convirgance are wrapped by the `Query` object. This object is
+responsible for parsing the SQL to detect dynamic bind variables, then allowing
+for values to be set.  
+
+The prepared `Query` is then passed to `DBMS` to obtain an `Iterable<JSONObject>`
+stream that is compatible with Convirgance's APIs. Here is an example of a 
+basic, unparameterized query:
 
 ```java
-String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age)";
+Query query = new Query("select * from CUSTOMER");
 
-DBMS database = new DBMS(source);
-Query query = new Query(template);
-
-Iterable<JSONObject> records = JSONInput().read(someExampleFile);
-
-BatchOperation batch = new BatchOperation(query, records);
-```
-
-## Querying Data
-
-Querying data is pretty straight forward, you create your SQL query and execute it with the `DBMS` like below. And a Iterable of `JSONObject`s will be returned containing the results.
-
-### Example
-
-Here we simply retreive all the customers and print out their information.
-
-```java
-Query query = new Query("SELECT * FROM customer");
-DBMS database = new DBMS(source);
-Iterable<JSONObject> results = database.query(query);
-
-for (JSONObject record : results)
+for(JSONObject record : dbms.query(query))
 {
-    System.out.println(record);
+    // Pretty print the database record
+    System.out.println(record.toString(4));
 }
 ```
 
-## Transaction Operations
+### Parameter Binding
+
+Parameter binding in Convirgance uses named parameters (prefixed with `:`) to 
+safely bind values into SQL queries. Values can be set directly on `Query` or
+bound in bulk using a `JSONObject`.
+ 
+The use of named variables eliminates the need to count and align traditional 
+`?` placeholders. For example, `:userId` in your query would match with the 
+`userId` field in your binding object. Multple occurrances of `:userId` in the
+SQL would all bind to the same value.
+
+```java
+Query query = new Query("SELECT * FROM customer " +
+                        "WHERE DISCOUNT_CODE = :membershipType " +
+                        "AND STATE = :state");
+
+// Set the bind variables
+query.setBinding("membershipType", "G");
+query.setBinding("state", "CA");
+
+for(JSONObject record : dbms.query(query))
+{
+    // Pretty print the database record
+    System.out.println(record.toString(4));
+}
+```
+
+## Transactions
 
 The `TransactionOperation` represents operations such as updates, inserts or deleting. Multiple operations can be queued and then executed sequentially. However if an error occurs during one of the operations, all changes will be rolled back.
 
