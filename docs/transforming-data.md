@@ -102,31 +102,77 @@ The transformer would return the following. In comparison to what the database r
 
 ## Custom Transformers
 
-You can create anonymous classes using the `Transform` interface to quickly create your own transformers.
+Transformers that need to update a record as it passes by can be easily created
+by implementing the `IdentityTransformer` interface. This interface produces
+one `JSONObject` for each `JSONObject` passed in. 
+
+Here's an example of a transformer for inserting a timestamp:
 
 ```java
-Transformer transformer = new Transformer() {
+Transformer transformer = new IdentityTransformer() {
+            
     @Override
-    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) {
+    public JSONObject transform(JSONObject record) throws ConvirganceException
+    {
+        record.put("timestamp", System.currentTimeMillis());
+                
+        return record;
+    }
+};
+```
+
+More complex transformers that change the number of records will have to implement
+the `Transformer` interface. The implementation is expected to take an
+`Iterator<JSONObject>` and return a new `Iterator<JSONObject>`.
+
+Here's an example of a transformer that duplicates records:
+
+```java
+public class DuplicationTransformer implements Transformer
+{
+    private int count;
+
+    public DuplicationTransformer(int count)
+    {
+        this.count = count;
+    }
+
+    @Override
+    public Iterator<JSONObject> transform(Iterator<JSONObject> iterator) 
+    {
         return new Iterator<JSONObject>() {
+
+            private JSONObject record;
+            private int counter;
+
             @Override
-            public boolean hasNext() {
-                return iterator.hasNext();
+            public boolean hasNext() 
+            {
+                return (record != null || iterator.hasNext());
             }
 
             @Override
-            public JSONObject next() {
-                JSONObject obj = iterator.next();
-                // Example transformation: Add timestamp
-                obj.put("timestamp", System.currentTimeMillis());
-                return obj;
+            public JSONObject next() 
+            {
+                JSONObject result;
+
+                if(record != null)
+                {
+                    result = new JSONObject(record);
+
+                    if(--counter < 1) record = null;
+
+                    return result;
+                }
+
+                record = iterator.next();
+                counter = count;
+
+                return new JSONObject(record);
             }
         };
     }
-};
-
-List<JSONObject> data = Arrays.asList(new JSONObject(), new JSONObject());
-Iterable<JSONObject> transformed = transformer.transform(data);
+}
 ```
 
 ## Best Practices
