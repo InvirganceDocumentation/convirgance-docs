@@ -110,7 +110,7 @@ JBINOutput output = new JBINOutput();
 output.write(target, distribution);
 ```
 
-This approach has helped Global Logistics Corp **reduce data processing time** by `~60%` while **maintaining compatibility** with all their partners' systems.
+This approach has helped Global Logistics Corp **reduce data processing time** by a measurable amount while also **maintaining compatibility** with all their partners' systems.
 
 ## The Input/Output Interfaces
 
