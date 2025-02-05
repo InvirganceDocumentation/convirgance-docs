@@ -96,19 +96,19 @@ procedures are all handled in a transaction context. This ensures that the
 updates are applied with atomicity, consistency, isolation, and durability (ACID)
 to the limits provided by the database management system.
 
-The work that a needs to be accomplished in an update is captured by the 
+The work that a needs to be accomplished in an update is captured by the
 `AtomicOperation` interface. Implementations of the interface are given a
 JDBC connection to the database and asked to perform their updates.
 
 Some common implementations include:
 
- - `QueryOperation` - Wraps a `Query` object to run the query as a transaction
- - `BatchOperation` - Performas JDBC batch updates for bulk inserts and updates
- - `TransactionOperation` - Allows bundling of numerous other operations into a single transaction
+- `QueryOperation` - Wraps a `Query` object to run the query as a transaction
+- `BatchOperation` - Performas JDBC batch updates for bulk inserts and updates
+- `TransactionOperation` - Allows bundling of numerous other operations into a single transaction
 
 ### Query Transactions
 
-The most basic type of database update is a simple insert or update. 
+The most basic type of database update is a simple insert or update.
 `QueryTransaction` supports this use case by wrapping a `Query` and running
 the query with all the features of `Query` including bind variables.
 
@@ -129,13 +129,13 @@ dbms.update(transaction);
 
 ### Bulk Inserts and Updates
 
-It is common to want to load numerous records into the database at once rather 
+It is common to want to load numerous records into the database at once rather
 then exceuting invididual insert/udpates. `BatchOperation` can be configured
 with a `Query` that will be used as a prepared statement for JDBC bulk inserts.
 The `BatchOperation` can then be fed an `Iterable<JSONObject>` stream that it
 will use as a source of records for the bulk insert/updates.
 
-For example, let's say we have the following JSON data set that we wish to 
+For example, let's say we have the following JSON data set that we wish to
 bulk load:
 
 ```json
@@ -163,17 +163,17 @@ dbms.update(new BatchOperation(insert, stream));
 ```
 
 Note how the bind keys in the SQL match the key names in the JSON. This
-allows `BatchOperation` to bind each record to the query as it streams the 
+allows `BatchOperation` to bind each record to the query as it streams the
 data for load.
 
-*Warning: `BatchOperation` can lead to partial commits if the number of records 
-loaded exceeds the auto commit limit. The auto commit limit exists to 
+_Warning: `BatchOperation` can lead to partial commits if the number of records
+loaded exceeds the auto commit limit. The auto commit limit exists to
 prevent the database transaction log from filling up and failing the load. This
-limit defaults to 1,000 records and can be adjusted to support database tuning.*
+limit defaults to 1,000 records and can be adjusted to support database tuning._
 
 ### Batched Transaction
 
-The `TransactionOperation` allows multiple operations to be queued and then 
+The `TransactionOperation` allows multiple operations to be queued and then
 executed sequentially. If an error occurs in any of the batched operations,
 the changes from all operations will be rolled back.
 
@@ -194,6 +194,12 @@ dbms.update(transaction);
 - Leverage `BatchOperation` for large-scale operations to optimize performance.
 - Using interval commits to avoid overflowing the transaction buffer
 - Utilize named bindings as they ensure the correct JSONObject values will be used.
+
+## Sections
+
+##### [Previous: Core Concepts](./concepts?id=core-concepts-and-goals)
+
+##### [Next: Filtering Data](./filtering-data?id=filters)
 
 ## Further Reading
 

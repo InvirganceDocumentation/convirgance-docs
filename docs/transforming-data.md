@@ -116,6 +116,12 @@ Iterable<JSONObject> transformed = transformer.transform(data);
 - Apply `UnsortedGroupByTransformer` when sorting is not guaranteed but grouping is required.
 - Combine transformers to build complex transformation pipelines.
 
+## Sections
+
+##### [Previous: Filtering Data](./filtering-data?id=filters)
+
+##### [Next: File Formats](./file-formats?id=file-formats)
+
 ## Further Reading
 
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
