@@ -42,6 +42,7 @@
   - [Transformers](transforming-data.md#transformers)
   - [Transformer Interface](transforming-data.md#transformer-interface)
   - [Examples](transforming-data.md#examples)
+  - [Custom Transformers](transforming-data.md#custom-transformers)
   - [Best Practices](transforming-data.md#best-practices)
 
 - [File Formats](file-formats.md#file-formats)
