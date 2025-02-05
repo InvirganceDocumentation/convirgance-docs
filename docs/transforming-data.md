@@ -1,4 +1,4 @@
-# Data Transformations
+# Transforming Data
 
 Transformations let you modify your data as it flows through your application. Think of them as a pipeline where each step can clean, enrich, or reshape your data. Common uses include converting data types (like turning strings into numbers), grouping related records together (similar to SQL GROUP BY), or adding computed fields. This allows you to adapt data from one format or structure to another without loading everything into memory at once.
 
@@ -28,51 +28,57 @@ String[] fields = new String[]
 };
 SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
 
-Query query = new Query("SELECT * FROM \"orders\" o\n"
-                + "JOIN order_line l ON l.order_id = o.order_id "
-                + "order by o.order_id, l.line_id");
+        Query query = new Query("SELECT * FROM purchases p " +
+                                "JOIN order_line l ON l.order_id = p.order_id " +
+                                "ORDER BY p.order_id, l.line_id");
 
 Iterable<JSONObject> results = dbms.query(query);
 
-/*
-Results would look like something similiar to this, not very useful. But it looks like the data is sorted.
+```
 
-  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1}
-  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3}
-  {"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
-*/
+And this is what the results from the query would look like.
 
+```json
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":1,"PRODUCT":"Fish tank","PRICE":30.00,"QUANTITY":1},
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":2,"PRODUCT":"Fish food","PRICE":4.00,"QUANTITY":3},
+{"ORDER_ID":1,"TOTAL":54.12,"ITEMS":3,"RECIPIENT":"bob","LINE_ID":3,"PRODUCT":"Fish filter","PRICE":12.12,"QUANTITY":1}
+```
+
+Now to sort this we use the `SortedGroupByTransfromer` on the results from the query. For unsorted data consider taking a look at [UnsortedGroupByTransfromer](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/UnsortedGroupByTransformer.html)
+
+```java
 Iterable<JSONObject> customerData = sorter.transform(results)
+```
 
-/*
 The transformer would return the following. In comparison to what the database returned this output is much more concise. Also notice that the duplicate fields were removed.
-  {
-    "RECIPIENT": "bob",
-    "TOTAL": 54.12,
-    "ORDER_ID": 1,
-    "ITEMS": 3,
-    "lines": [
-      {
-        "LINE_ID": 1,
-        "PRODUCT": "Fish tank",
-        "PRICE": 30,
-        "QUANTITY": 1
-      },
-      {
-        "LINE_ID": 2,
-        "PRODUCT": "Fish food",
-        "PRICE": 4,
-        "QUANTITY": 3
-      },
-      {
-        "LINE_ID": 3,
-        "PRODUCT": "Fish filter",
-        "PRICE": 12.12,
-        "QUANTITY": 1
-      }
-    ]
-  }
-*/
+
+```json
+{
+	"RECIPIENT": "bob",
+	"TOTAL": 54.12,
+	"ORDER_ID": 1,
+	"ITEMS": 3,
+	"lines": [
+		{
+			"LINE_ID": 1,
+			"PRODUCT": "Fish tank",
+			"PRICE": 30,
+			"QUANTITY": 1
+		},
+		{
+			"LINE_ID": 2,
+			"PRODUCT": "Fish food",
+			"PRICE": 4,
+			"QUANTITY": 3
+		},
+		{
+			"LINE_ID": 3,
+			"PRODUCT": "Fish filter",
+			"PRICE": 12.12,
+			"QUANTITY": 1
+		}
+	]
+}
 ```
 
 #### Interface Example

@@ -13,7 +13,6 @@
   - [Quick Start](getting-started.md#quick-start)
   - [Inputs - Outputs](getting-started.md#inputs-and-outputs)
 
-
 - [Core Concepts](concepts.md#core-concepts-and-goals)
 
   - [Records](concepts.md#records)
@@ -38,9 +37,8 @@
   - [Interface Examples](filtering-data.md#interface-examples)
   - [Best Practices](filtering-data.md#best-practices)
 
-- [Transforming Data](transforming-data.md#data-transformations)
+- [Transforming Data](transforming-data.md#transforming-data)
 
-  - [Core Interfaces and Classes](transforming-data.md#core-interfaces-and-classes)
   - [Transformers](transforming-data.md#transformers)
   - [Examples](transforming-data.md#examples)
   - [Best Practices](transforming-data.md#best-practices)
