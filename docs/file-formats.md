@@ -19,23 +19,30 @@ Global Logistics Corp needs to integrate data from multiple suppliers, warehouse
 
 ### Scenario 1: Processing Supplier Inventory (Delimited Files)
 
-The company's European supplier sends inventory updates as pipe-delimited files. Here's how we process them:
+The company's European supplier sends inventory updates as pipe-delimited files. Here's how we convert them into JSON to use with our Warehouse management system:
 
 ```java
-JSONArray data = new JSONArray("[{\"product\":\"Laptop\", \"quantity\":300, \"location\":\"Warsaw\"}]");
-String[] fields = new String[]{"product", "quantity"};
+FileSource source = new FileSource("europe_inventory.txt");
 
-DelimitedOutput output = new DelimitedOutput(fields);
-FileTarget inventory = new FileTarget("europe_inventory.txt");
+DelimitedInput input = new DelimitedInput();
+Iterable<JSONObject> records = input.read(source);
 
-output.write(inventory, data);
+JSONOutput output = new JSONOutput();
+FileTarget inventory = new FileTarget("warehouse_status.json");
+output.write(inventory, records);
 ```
 
-This creates a file that looks like:
+This input file looks like:
 
 ```
 product|quantity
 Laptop|300
+```
+
+And here is warehouse_status.json the converted file:
+
+```json
+{ "product": "Laptop", "quantity": 300 }
 ```
 
 ### Scenario 2: Warehouse Management (JSON)
