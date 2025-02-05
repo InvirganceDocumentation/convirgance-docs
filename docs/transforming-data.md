@@ -13,6 +13,26 @@ Transformations let you modify your data as it flows through your application. T
 | Transformer                | The heart of the transformer library, implement this when creating your own.                                 |
 | UnsortedGroupByTransformer | The opposite of SortedGroupBy, works on unsorted data and returns the sorted + grouped version.              |
 
+## Transformer Interface
+
+Transformers function by accepting an `Iterable<JSONObject>` source object and
+returning a replacement `Iterable<JSONObject>` with the transformation applied.
+This allows complex pipelines of transformations to manipulate the stream before
+writing the data to its final destination.
+
+```java
+Iterable<JSONObject> stream = ...;
+
+// Obtain transformed stream
+stream = transformer.transform(stream);
+
+// Transformations can be stacked
+stream = anotherTransformer.transform(stream);
+
+```
+
+See also: [Core Concepts > Transformations](concepts.md#transformations)
+
 ### Examples
 
 Below are two examples, one goes over the `SorterGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
@@ -80,7 +100,7 @@ The transformer would return the following. In comparison to what the database r
 }
 ```
 
-#### Interface Example
+## Custom Transformers
 
 You can create anonymous classes using the `Transform` interface to quickly create your own transformers.
 
