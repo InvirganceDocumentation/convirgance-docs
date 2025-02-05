@@ -86,3 +86,7 @@ We're here to help:
 ## License
 
 Convirgance is available under the MIT License. See [License](https://raw.githubusercontent.com/InvirganceOpenSource/convirgance/refs/heads/main/LICENSE.md) for more details.
+
+## Sections
+
+##### [Next: Getting Started](./getting-started?id=getting-started-with-convirgance)

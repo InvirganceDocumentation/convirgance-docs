@@ -281,6 +281,14 @@ model=photoshop-cs6
 - Robust error handling to deal with malformed files.
 - Optimize performance for large files by using streaming approaches where applicable.
 
+## Sections
+
+##### [Previous: Transforming Data](./transforming-data?id=transforming-data)
+
+##### [Support and Contacts](./contact)
+
+##### [Back to start?](./?id=convirgance)
+
 ## Further Reading
 
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">

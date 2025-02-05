@@ -35,9 +35,9 @@ See also: [Core Concepts > Transformations](concepts.md#transformations)
 
 ### Examples
 
-Below are two examples, one goes over the `SorterGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
+Below are two examples, one goes over the `SortedGroupByTransfromer` and the other demonstrates how to use the `Transformer` interface to create an anonymous class.
 
-#### SorterGroupByTransfromer Example
+#### SortedGroupByTransfromer Example
 
 The following example showcases joining two tables, and using the `SortedGroupByTransformer` to group the data into a more compact from.
 
@@ -182,6 +182,12 @@ public class DuplicationTransformer implements Transformer
 - Leverage `SortedGroupByTransformer` for efficient grouping when working with pre-sorted data.
 - Apply `UnsortedGroupByTransformer` when sorting is not guaranteed but grouping is required.
 - Combine transformers to build complex transformation pipelines.
+
+## Sections
+
+##### [Previous: Filtering Data](./filtering-data?id=filters)
+
+##### [Next: File Formats](./file-formats?id=file-formats)
 
 ## Further Reading
 
