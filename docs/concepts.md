@@ -90,7 +90,7 @@ data, expand the number of records, or reduce the number of records by filtering
 ## Filters
 
 Filters are an extension to transformers that specifically reject records
-based upon a "predicate". A predicate is a condition that must be met for the
+based upon a "predicate", a condition that must be met for the
 record to be kept.
 
 Convirgance supports many of the types of [filters](filtering-data.md) you would
@@ -100,7 +100,7 @@ based on boolean logic can be combined to create and/or/not logic.
 `Filter` also implements the `java.util.function.Predicate` interface to be compatible with
 Java functional programming techniques. Implementing a filter is accomplished
 in a very similar manner and can be done with either a class, anonymous inner
-class, or lambda arrow funtion. For example:
+class, or lambda arrow function. For example:
 
 ```java
 // Find Bob
@@ -127,7 +127,7 @@ Filter not = new NotFilter(or);
 
 ## Source and Target
 
-While `InputStream` and `OutputStream` are fantasic standard representations of
+While `InputStream` and `OutputStream` are fantastic standard representations of
 unix streams, they have the same problem as the `Iterator` in that the streams
 are active as soon as they exist.
 
@@ -135,7 +135,7 @@ This means these standard library classes play poorly with the use of
 `Iterable` that allows the pipeline
 of transformations to be pre-planned and `Iterable` instances to be reused
 throughout the code. To provide this compatibility, Convirgance introduces
-`Source` and `Target` classes analagous to `InputStream` and `OutputStream`
+`Source` and `Target` classes analogous to `InputStream` and `OutputStream`
 respectively.
 
 `Source` objects represent a plan to access the `InputStream` for a file, url,
