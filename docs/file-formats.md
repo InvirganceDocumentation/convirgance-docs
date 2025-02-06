@@ -281,6 +281,13 @@ model=photoshop-cs6
 - Robust error handling to deal with malformed files.
 - Optimize performance for large files by using streaming approaches where applicable.
 
+## Further Reading
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
+  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/source/package-summary.html">Java Documentation: File Formats</a>
+</div>
+
 ## Sections
 
 ##### [Previous: Transforming Data](./transforming-data?id=transforming-data)
@@ -288,10 +295,3 @@ model=photoshop-cs6
 ##### [Support and Contacts](./contact)
 
 ##### [Back to start?](./?id=convirgance)
-
-## Further Reading
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/source/package-summary.html">Java Documentation: File Formats</a>
-</div>

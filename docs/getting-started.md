@@ -90,12 +90,6 @@ Ready to dive deeper? Here's what you need to know:
 4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
 5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
 
-## Sections
-
-##### [Previous: Introduction](./?id=convirgance)
-
-##### [Next: Core Concepts](./concepts?id=core-concepts-and-goals)
-
 ## Community and Support
 
 We're here to help:
@@ -123,3 +117,9 @@ We're here to help:
     <span>- Have a look behind the scenes</span>
   </div>
 </div>
+
+## Sections
+
+##### [Previous: Introduction](./?id=convirgance)
+
+##### [Next: Core Concepts](./concepts?id=core-concepts-and-goals)

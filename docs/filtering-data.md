@@ -100,15 +100,15 @@ for(JSONObject oldRecord : old)
 - Use `NotFilter` to filter records using the falsy evaluation of other `Filter`(s).
 - When working with numeric or comparable fields, leverage `CoerceStringsTransformer` to make sure the records values are the correct data-type.
 
-## Sections
-
-##### [Previous: Database Operations](./database-operations?id=database-operations)
-
-##### [Next: Transforming Data](./transforming-data?id=transforming-data)
-
 ## Further Reading
 
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
   <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
   <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/filter/package-summary.html">Java Documentation: Filters</a>
 </div>
+
+## Sections
+
+##### [Previous: Database Operations](./database-operations?id=database-operations)
+
+##### [Next: Transforming Data](./transforming-data?id=transforming-data)
