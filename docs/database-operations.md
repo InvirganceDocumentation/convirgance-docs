@@ -109,7 +109,7 @@ Some common implementations include:
 ### Query Transactions
 
 The most basic type of database update is a simple insert or update.
-`QueryTransaction` supports this use case by wrapping a `Query` and running
+`QueryOperation` supports this use case by wrapping a `Query` and running
 the query with all the features of `Query` including bind variables.
 
 ```java
@@ -124,7 +124,7 @@ insert.setBinding("devices", 3);
 insert.setBinding("pets", 3);
 
 // Execute the insert
-dbms.update(transaction);
+dbms.update(operation);
 ```
 
 ### Bulk Inserts and Updates
