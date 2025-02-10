@@ -75,7 +75,7 @@ FileSource example = new FileSource("updates.json");
 Iterable<JSONObject> records = JSONInput().read(example);
 
 BatchOperation batch = new BatchOperation(query, records);
-database.execute(batch);
+database.update(batch);
 ```
 
 We can see by example, Convirgance can be used to seamlessly handle data as required, producing JSON for web consumption, exporting to delimited formats for reporting, and re-importing updates for database synchronization.
