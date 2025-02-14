@@ -39,7 +39,7 @@ The `Filter` interface extends `Transformer`, allowing you to quickly create fil
 
 ```java
 FileSource source = new FileSource("clientData.json");
-Iterator<JSONObject> records = new JSONInput().read(source);
+Iterator<JSONObject> records = new JSONInput().read(source).iterator();
 
 String key = "name";
 String find = "Smith";
