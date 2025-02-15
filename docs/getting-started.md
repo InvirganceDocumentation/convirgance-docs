@@ -72,7 +72,7 @@ String template = "INSERT INTO customer (id, name, age) VALUES (:id, :name, :age
 Query query = new Query(template);
 
 FileSource example = new FileSource("updates.json");
-Iterable<JSONObject> records = JSONInput().read(example);
+Iterable<JSONObject> records = new JSONInput().read(example);
 
 BatchOperation batch = new BatchOperation(query, records);
 database.update(batch);
