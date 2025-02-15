@@ -43,7 +43,10 @@ The following example showcases joining two tables, and using the `SortedGroupBy
 
 ```java
 String[] fields = new String[] {
-    "ORDER_ID", "RECIPIENT", "TOTAL", "ITEMS"
+    "ORDER_ID",
+    "RECIPIENT",
+    "TOTAL",
+    "ITEMS"
 };
 
 SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
@@ -52,7 +55,6 @@ Query query = new Query("SELECT * FROM purchases p " +
                         "ORDER BY p.order_id, l.line_id");
 
 Iterable<JSONObject> results = dbms.query(query);
-
 ```
 
 And this is what the results from the query would look like.
@@ -66,7 +68,7 @@ And this is what the results from the query would look like.
 Now to sort this we use the `SortedGroupByTransformer` on the results from the query. For unsorted data consider taking a look at [UnsortedGroupByTransformer](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/UnsortedGroupByTransformer.html)
 
 ```java
-Iterable<JSONObject> customerData = sorter.transform(results)
+Iterable<JSONObject> customerData = sorter.transform(results);
 ```
 
 The transformer would return the following. In comparison to what the database returned this output is much more concise. Also notice that the duplicate fields were removed.
