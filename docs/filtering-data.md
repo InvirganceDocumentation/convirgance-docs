@@ -2,6 +2,8 @@
 
 Filters provide SQL-like operations for working with data streams. You can use familiar concepts like equals, greater than, less than, and combine them with AND/OR operations - just like you would in a SQL WHERE clause. This gives you the power of SQL filtering even when working with non-SQL data sources. For example, you can easily filter records where age > 18 AND status = 'active', or find all users who are either admins OR moderators.
 
+<!-- TODO add Like, Contains -->
+
 ## Types of Filters
 
 | Symbol   | Description                                         |
@@ -28,7 +30,7 @@ String key = "height";
 int value = 122;
 
 JSONObject rider = new JSONObject("{\"height\": 152}");
-return new GreaterThanFilter(key, value).test(record);
+return new GreaterThanFilter(key, value).test(rider);
 ```
 
 ## Interface Examples
