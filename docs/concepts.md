@@ -30,7 +30,7 @@ Java enhances the idea of unix streams (represented by `InputStream` and
 types a level above a byte stream. Each entry is a Java `Object`, the type of
 which is specified using a generic.
 
-Convirgance hooks into this feature of the langauge by implementing its streams
+Convirgance hooks into this feature of the language by implementing its streams
 of records as `Iterator<JSONObject>`.
 
 The only issue with Iterators in Java is that they don't have full language
@@ -105,6 +105,8 @@ class, or lambda arrow function. For example:
 ```java
 // Find Bob
 Filter bob = new Filter() {
+
+    @Override
     public boolean test(JSONObject record)
     {
         String name = record.getString("name");
