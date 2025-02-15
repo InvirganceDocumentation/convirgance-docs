@@ -51,7 +51,7 @@ Filter nameFilter = new Filter()
     @Override
     public boolean test(JSONObject record)
     {
-        return record.get(key).contains(find);
+        return record.getString(key).contains(find);
     }
 };
 
@@ -63,37 +63,34 @@ Iterator<JSONObject> filtered = nameFilter.transform(records);
 The below example uses a custom `ComparatorFilter` to collect JSONObjects that are considered 'old'.
 
 ```java
+Iterable<JSONObject> current;
+Iterator updated;
+
 DBMS database = new DBMS(source);
 
 String search = "Select last_update FROM customer";
 
-ComparatorFilter dateFilter = new ComparatorFilter()
+ComparatorFilter date = new ComparatorFilter()
 {
     @Override
     public boolean test(JSONObject record)
     {
-        Date otherDate = new SimpleDateFormat("yyyy-MM-dd").parse(record.get(getKey()));
-        Date currentDate = new SimpleDateFormat("yyyy-MM-dd").parse(getValue());
+        String key = this.getKey();
+        Object value = this.getValue();
 
-        return currentDate.after(otherDate);
+        Date compare = new SimpleDateFormat("yyyy-MM-dd").parse(record.getString(key));
+        Date test = new SimpleDateFormat("yyyy-MM-dd").parse(value.toString());
+
+        return test.after(compare);
     }
 };
 
-Iterable<JSONObject> old = database.query(new Query(search));
+date.setKey("last_update");
+date.setValue("2007-01-01");
 
-JSONArray updatedItems = new JSONArray();
+current = database.query(new Query(search));
 
-dateFilter.setKey("last_update");
-dateFilter.setValue("2007-01-01");
-
-for(JSONObject oldRecord : old)
-{
-    if(dateFilter.test(oldRecord))
-    {
-        updatedItems.put(oldRecord);
-        continue;
-    }
-}
+updated = date.transform(current.iterator());
 ```
 
 ## Best Practices
