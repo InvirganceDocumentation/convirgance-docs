@@ -40,7 +40,7 @@ return new GreaterThanFilter(key, value).test(rider);
 The `Filter` interface extends `Transformer`, allowing you to quickly create filters to use on groups of `JSONObjects`.
 
 ```java
-FileSource source = new FileSource("clientData.json");
+FileSource source = new FileSource("client_data.json");
 Iterator<JSONObject> records = new JSONInput().read(source).iterator();
 
 String key = "name";
