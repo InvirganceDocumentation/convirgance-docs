@@ -46,8 +46,8 @@ Iterator<JSONObject> records = new JSONInput().read(source).iterator();
 String key = "name";
 String find = "Smith";
 
-Filter nameFilter = new Filter()
-{
+Filter nameFilter = new Filter() {
+
     @Override
     public boolean test(JSONObject record)
     {
@@ -70,8 +70,8 @@ DBMS database = new DBMS(source);
 
 String search = "Select last_update FROM customer";
 
-ComparatorFilter date = new ComparatorFilter()
-{
+ComparatorFilter date = new ComparatorFilter() {
+
     @Override
     public boolean test(JSONObject record)
     {

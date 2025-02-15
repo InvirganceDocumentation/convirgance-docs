@@ -140,6 +140,7 @@ Here is the basic implementation of `Input` for our `.properties` file.
 ```java
 // An `Input` to handle reading in a source containing the stream for some .properties file
 Input<JSONObject> input = new Input<JSONObject>() {
+
     @Override
     public InputCursor<JSONObject> read(Source source)
     {
@@ -209,6 +210,7 @@ Here is the basic implementation of `Output` for our `.properties` file.
  * This is used to write out JSONObjects to a .properties files.
  */
 Output propertiesOutput = new Output() {
+
     @Override
     public OutputCursor write(Target target)
     {
