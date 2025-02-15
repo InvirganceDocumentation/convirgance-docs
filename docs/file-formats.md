@@ -257,9 +257,9 @@ In the following example we are going to use our new `.properties` implementatio
 
 Database Data:
 
-| blending_mode | accuracy | model         |
-| ------------- | -------- | ------------- |
-| lighten       | 0.75     | photoshop-cs6 |
+| blending_mode | accuracy | model    |
+| ------------- | -------- | -------- |
+| lighten       | 0.75     | photopea |
 
 ```java
 DBMS dbms = new DBMS(source);
@@ -276,7 +276,7 @@ propertiesOutput.write(target, results);
 
 blending_mode=lighten
 accuracy=0.75
-model=photoshop-cs6
+model=photopea
 */
 ```
 

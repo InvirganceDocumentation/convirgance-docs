@@ -1,6 +1,6 @@
 # Core Concepts
 
-Today's systems collect more logging, handle more transations, report on more
+Today's systems collect more logging, handle more transactions, report more
 analytics, and define more complex relationships than ever before. This growth in
 data sizes strains the classic model of object mapping to its breaking point.
 
