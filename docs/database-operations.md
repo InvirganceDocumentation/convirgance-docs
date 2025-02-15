@@ -135,23 +135,23 @@ with a `Query` that will be used as a prepared statement for JDBC bulk inserts.
 The `BatchOperation` can then be fed an `Iterable<JSONObject>` stream that it
 will use as a source of records for the bulk insert/updates.
 
-For example, let's say we have the following JSON data set that we wish to
-bulk load:
+For example, let's say we have a file called `data.json` that has data we wish to bulk load:
 
 ```json
-{"id": 1, "name": "John",  "devices": 3, "pets": 1 }
-{"id": 2, "name": "Bob",   "devices": 1, "pets": 2 }
-{"id": 3, "name": "Kyle",  "devices": 1, "pets": 10}
-{"id": 4, "name": "Larry", "devices": 0, "pets": 0 }
-{"id": 5, "name": "Bubba", "devices": 3, "pets": 3 }
+[
+	{ "id": 1, "name": "John", "devices": 3, "pets": 1 },
+	{ "id": 2, "name": "Bob", "devices": 1, "pets": 2 },
+	{ "id": 3, "name": "Kyle", "devices": 1, "pets": 10 },
+	{ "id": 4, "name": "Larry", "devices": 0, "pets": 0 },
+	{ "id": 5, "name": "Bubba", "devices": 3, "pets": 3 }
+]
 ```
 
-The following code will load this JSON data and insert it into the `CUSTOMER`
-table:
+The following code will load the above `data.json` and insert it into the `CUSTOMER` table:
 
 ```java
 // Obtain a stream of JSON data
-Iterable<JSONObject> stream = new JSONInput().read(new FileTarget("data.json"));
+Iterable<JSONObject> stream = new JSONInput().read(new FileSource("data.json"));
 
 // Setup our query for each insert
 String sql = "insert into CUSTOMER values (:id, :name, :devices, :pets)";

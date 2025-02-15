@@ -51,7 +51,7 @@ And here is the converted file, `warehouse_status.json`
 
 ### Scenario 2: Warehouse Management (JSON)
 
-Our warehouse management system uses JSON for real-time updates. Here are a few implementation examples covering reading and writing JSON.
+Our warehouse management system uses JSON for real-time updates. Here are a few examples covering the implementation for reading and writing JSON.
 
 #### Reading Warehouse Data
 
@@ -120,6 +120,8 @@ JBINOutput output = new JBINOutput();
 
 output.write(target, distribution);
 ```
+
+<!-- TODO update this example when we have something like URLOut -->
 
 This approach has helped Global Logistics Corp **reduce data processing time** by a measurable amount while also **maintaining compatibility** with all their partners' systems.
 
@@ -249,7 +251,7 @@ Output propertiesOutput = new Output() {
 
 #### Reading properties values from a Database
 
-In the following example we are going to use our new `.properties` implementation to write the results of a query to a file.
+In the following example we are going to use our new `.properties` implementation to write the results of a query to a file. We will be using the `propertiesOutput` from the previous example.
 
 Database Data:
 
@@ -263,6 +265,7 @@ Query query = new Query("select blending_mode, accuracy, model from SETTINGS lim
 
 Iterable<JSONObject> results = dbms.query(query);
 FileTarget target = new FileTarget("user.properties");
+
 
 propertiesOutput.write(target, results);
 
