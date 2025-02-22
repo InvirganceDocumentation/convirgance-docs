@@ -53,4 +53,9 @@
   - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
   - [Best Practices](file-formats.md#best-practices)
 
+- [OLAP Tools](olap.md#olap)
+    
+    - [Representing Database Structure](olap.md#representing-database-structure)
+    - [tbd]
+
 - [Community and Support](contact.md)

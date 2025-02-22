@@ -296,7 +296,4 @@ model=photopea
 ## Sections
 
 ##### [Previous: Transforming Data](./transforming-data?id=transforming-data)
-
-##### [Support and Contacts](./contact)
-
-##### [Back to start?](./?id=convirgance)
+##### [Next: OLAP Tools](./olap)
