@@ -56,6 +56,8 @@
 - [OLAP Tools](olap.md#olap)
     
     - [Representing Database Structure](olap.md#representing-database-structure)
-    - [tbd]
+    - [Generating SQL Queries](olap.md#generating-sql-queries)
+    - [Spring Method](olap.md#spring-method)
+    - [OLAP Interface](olap.md#olap-interface)
 
 - [Community and Support](contact.md)

@@ -2,7 +2,7 @@
 
 Welcome to the Convirgance documentation! In this section we'll go over getting started, first installing and then covering a few simple examples.
 
-As you read through the documentation, I encourage you to build along and explore how different parts of the library interact with each other. It may seem daunting at first, but this is only because it's new. Convirgance is crazy simple-just give it a shot.
+As you read through the documentation, I encourage you to build along and explore how different parts of the library interact with each other. It may seem daunting at first, but this is only because it's new. Convirgance is crazy simple–just give it a shot.
 
 ## Installation
 
@@ -89,6 +89,7 @@ Ready to dive deeper? Here's what you need to know:
 3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
 4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
 5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
+6. [OLAP Tools](olap.md) - Convirgance-olap package for creating OLAP work
 
 ## Community and Support
 
