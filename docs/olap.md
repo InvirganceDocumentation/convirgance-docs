@@ -13,6 +13,18 @@ business intelligence without the need for expensive outsourcing.
 Read on to better understand how Convirgance-OLAP offers such functionality. 
 
 
+## Installation
+
+Add the following dependency to your Maven `pom.xml` file:
+
+```xml
+<dependency>
+    <groupId>com.invirgance</groupId>
+    <artifactId>convirgance-olap</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
 ## Representing Database Structure
 
 To provide the base for building OLAP tools, Convirgance-OLAP uses the 
@@ -26,7 +38,7 @@ we want to model:
 | ```SQLGenerator```         | Provides support for creating and outputting SQL queries for working with OLAP.             |
 | ```Table```                | Provides support for Table representation. Contains a primary key and list of foreign keys. |
 
-- [detailed documentation for the classes above (not published)]()
+- [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
 
 Note how the ```Table``` class only contains the primary and foreign keys, but no other 
 columns. This approach prevents us from the costly ORM-like representation and only
@@ -116,7 +128,7 @@ the Star Schema, from which we then generate reports.
 | ```ReportGenerator```      | Provides support for the SQL query generation from constructed star schemas.  |
 | ```Star```                 | Provides support for the central star schema.                                 |
 
--  [detailed documentation for the classes above (not published)]()
+-  [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/package-summary.html)
 
 1. The ```Star``` plays the role of a central container, and it tracks the fact table at the center. 
 Around the fact table are Dimensions. Inside the fact table are Metrics. 
