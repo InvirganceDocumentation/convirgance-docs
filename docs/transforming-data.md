@@ -42,17 +42,11 @@ Below are two examples, one goes over the `SortedGroupByTransformer` and the oth
 The following example showcases joining two tables, and using the `SortedGroupByTransformer` to group the data into a more compact from.
 
 ```java
-String[] fields = new String[] {
-    "ORDER_ID",
-    "RECIPIENT",
-    "TOTAL",
-    "ITEMS"
-};
-
+String[] fields = new String[] { "ORDER_ID", "RECIPIENT", "TOTAL", "ITEMS" };
 SortedGroupByTransformer sorter = new SortedGroupByTransformer(fields, "lines");
-Query query = new Query("SELECT * FROM purchases p " +
-                        "JOIN order_line l ON l.order_id = p.order_id " +
-                        "ORDER BY p.order_id, l.line_id");
+Query query = new Query("SELECT * FROM orders o " +
+                        "JOIN order_line l ON l.order_id = o.order_id " +
+                        "ORDER BY o.order_id, l.line_id");
 
 Iterable<JSONObject> results = dbms.query(query);
 ```
