@@ -1,15 +1,21 @@
 <style>body {text-align: left}</style>
 
-# OLAP
+# Online Analytical Processing (OLAP)
 
-Convirgance-OLAP, built on top of Convirgance package, further provides an easy and intuitive
-way to build fast OLAP tools for interactive multidimnesional data analysis.
+As businesses grow and expand, they gain useful analytical data about 
+their own customers and the market itself. OLAP (Online Analytical Processing) 
+provides a means of sythesizing this data into useful metrics to provide business intelligence insights.
 
-<!-- TODO 1: As businesses grow and expand they gain useful analytical data about their own customers and the market itself. OLAP (Online Analytical Processing) provides a means of sythesizing this data into useful metrics to better advise the business next decisision (where to market, or other). way to build queries for interactive multidimnesional data analysis. -->
+Convirgance-OLAP, built on top of Convirgance package, provides an easy and intuitive
+way to build OLAP tools such as queries against Star Schemas to perform such 
+interactive multidimensional data analysis and aid businesses in their operations.
 
-<!-- TODO this could be worded better 'to better advise the business' (This refers to TODO 1)-->
+A star schema is a type of multidimensional database design commonly used in data warehousing, 
+where a central fact table (containing quantitative data) is connected to multiple
+dimension tables (describing the context of the data) and other metric tables that also describe 
+quantitative data. This structure simplifies analytical queries and accelerates 
+information retrieval from databases.
 
-<!-- The queries themselves are used agaisnt Star Schemas. Star Schemas should be mentioned briefly -->
 
 With some additional web configuration, this package gives you an opportunity
 to quickly build in-house analytical systems to support your
@@ -37,24 +43,19 @@ we want to model:
 
 | Class          | Function                                                                                          |
 | -------------- | ------------------------------------------------------------------------------------------------- |
-| `Database`     | Provides support for Database structure representation; contains table objects.                   |
+| `Database`     | Database structure representation; contains table objects.                   |
 | `ForeignKey`   | Captures the connection between a source table, a column on the source table, and a target table. |
-| `SQLGenerator` | Provides support for creating and outputting SQL queries for working with OLAP.                   |
-| `Table`        | Provides support for Table representation. Contains a primary key and list of foreign keys.       |
+| `SQLGenerator` | Support for creating and outputting SQL queries for working with OLAP.                   |
+| `Table`        | For Table object representation. Contains a primary key and list of foreign keys, which are columns shared between a source and target table.      |
 
-<!-- TODO nit: Provides support repetitive -->
-<!-- TODO Foreign key function is a little unclear, try 'a column shared between a source and target table' -->
 
 - [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
 
 Note how the `Table` class only contains the primary and foreign keys, but no other
-columns. This approach prevents us from the costly ORM-like representation and only
+columns. This approach allows a cheap and easy setup for the program execution, 
+in comparison to ORMs that include all columns as fields within each record mapped onto an object.
 
-<!-- TODO switch the perspective around 'this approach allows ... cheap and easy... in comparison to ORMs -->
-<!-- We want to set the perspective clearly. It could be misread as the approach itself is costly, possibly losing the readers interest or causing them to 'trip' and require them to re-read -->
-
-captures the essential structure at this stage.
-The necessary columns are specified later within the SQLGenerator.
+The columns necessary for analysis are specified later within the SQLGenerator.
 
 With the relationship defined by the Table, ForeignKey, and Database classes,
 the SQLGenerator can now output OLAP queries for us. Here is how it works:
