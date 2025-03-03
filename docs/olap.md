@@ -6,7 +6,7 @@ As businesses grow and expand, they gain useful analytical data about
 their own customers and the market itself. OLAP (Online Analytical Processing) 
 provides a means of sythesizing this data into useful metrics to provide business intelligence insights.
 
-Convirgance-OLAP, built on top of Convirgance package, provides an easy and intuitive
+Convirgance (OLAP), built on top of Convirgance package, provides an easy and intuitive
 way to build OLAP tools such as queries against Star Schemas to perform such 
 interactive multidimensional data analysis and aid businesses in their operations.
 
@@ -21,7 +21,7 @@ With some additional web configuration, this package gives you an opportunity
 to quickly build in-house analytical systems to support your
 business either visualizing measures (ex. average sales) across different dimensions without the need for expensive outsourcing.
 
-Read on to better understand how Convirgance-OLAP offers such functionality.
+Read on to better understand how Convirgance (OLAP) offers such functionality.
 
 ## Installation
 
@@ -31,14 +31,24 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance-olap</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
+
+
+
 ## Representing Database Structure
 
-To provide the base for building OLAP tools, Convirgance-OLAP uses the
-following classes to capture the core structure of the database
+Suppose you are working on an online retail analytics and you have the following
+star schema model with ORDERS as the central fact table and PRODUCTS, 
+SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
+
+ ![alt text](images/starschema.svg)
+
+
+Convirgance (OLAP) uses the
+following classes to first capture the core database structure of the schema
 we want to model:
 
 | Class          | Function                                                                                          |
@@ -48,14 +58,65 @@ we want to model:
 | `SQLGenerator` | Support for creating and outputting SQL queries for working with OLAP.                   |
 | `Table`        | For Table object representation. Contains a primary key and list of foreign keys, which are columns shared between a source and target table.      |
 
-
 - [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
+
+
+Here is how to capture ...
+
+
+
+```java
+
+Database stardb = new Database("StarDB");
+
+Table orders = new Table("ORDERS", "order_id");
+Table products = new Table("PRODUCTS", "product_id");
+Table salespersons = new Table("SALESPERSONS", "salesperson_id");
+Table customers = new Table("CUSTOMERS", "customer_id");
+Table days = new Table("DAYS", "day_id");
+
+
+
+```
+
+
+
+
+
+
+
+
+
 
 Note how the `Table` class only contains the primary and foreign keys, but no other
 columns. This approach allows a cheap and easy setup for the program execution, 
 in comparison to ORMs that include all columns as fields within each record mapped onto an object.
 
 The columns necessary for analysis are specified later within the SQLGenerator.
+
+
+Here is how 
+
+
+
+
+<!-- This tool is for generating SQl out of olap structure. needs to understand the
+structure of teh data
+table just represents that a table exists. 
+an object in star schema. 
+on top of that we put dimensions/metrics
+
+todo: 1. just stay we create a structure for the star schema
+2. once we have the structure, we can specify the dimensions and metrics
+3. create a super simple star schema
+    star diagram (e.g. 4 dimensions, 1 central table)
+
+explain with the example the schema, dimensions, facts (metrics)
+
+fact table at the centre is the table containing all the facts/metrics 
+
+only have a few record (4-10)-->
+
 
 With the relationship defined by the Table, ForeignKey, and Database classes,
 the SQLGenerator can now output OLAP queries for us. Here is how it works:
@@ -76,7 +137,7 @@ the SQLGenerator can now output OLAP queries for us. Here is how it works:
 9.  We can call `addAggregate(String function, String column, Table table)` to add the aggregate to our select list
 10. We use an inner class called Aggregate to capture this select. Aggregate uses the inheritance pattern in OOP to “be” a Column while additionally capturing the function and overriding the getSQL() method.
 
-        - Because our Aggregate “is” a Column, we don’t need to change any of our select logic or manage it separately.
+    - Because our Aggregate “is” a Column, we don’t need to change any of our select logic or manage it separately.
 
     <!-- TODO nit: use single quotes when referring to something abstract ex nuclear fission reactors 'existed' 2 billion years ago but only because of the earths enviroment and very specific conditions. -->
 
@@ -129,7 +190,11 @@ The above example still requires a lot of code to produce a single query.
 We should have a config file. Thanks to the inherent properties of Java Objects, we can just pull a Spring configuration file off the shelf!
 We simply load the Spring context, request the database, and pull whichever tables we need by calling `database.getTable(String name)`.
 
-<!-- TODO maybe add an example for this -->
+<!-- TODO maybe add an example for this 
+
+use the example above, create the spring config file based off that.
+
+-->
 
 ## OLAP Interface
 
@@ -170,6 +235,9 @@ You can then lookup the Star from the configuration file and query immediately:
 
 Here's how we can generate the same SQL Query as above by using the Star configured in Spring:
 
+<!-- fill in the story with code actually constructing a star.
+There is a test case that constructs a star that you can use. -->
+
 ```java
 Star star = getStar(); // Load the Star from the Spring file
 ReportGenerator generator = new ReportGenerator(star);
@@ -181,8 +249,8 @@ generator.addMeasure(star.getMeasure("Units Sold"));
 generator.getSQL(); // Generate the SQL!
 ```
 
-As a next step, you can use [Convirgance-WEB](https://github.com/InvirganceOpenSource/convirgance-web) to create web services around this OLAP
-structure.
+<!--As a next step, you can use [Convirgance-WEB](https://github.com/InvirganceOpenSource/convirgance-web) to create web services around this OLAP
+structure. -->
 
 ##### [Previous: File Formats](./file-formats)
 
