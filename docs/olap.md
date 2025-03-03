@@ -41,7 +41,7 @@ Add the following dependency to your Maven `pom.xml` file:
 ## Representing Database Structure
 
 Suppose you are working on an online retail analytics and you have the following
-star schema model with ORDERS as the central fact table and PRODUCTS, 
+star schema model with ORDERS as the central fact table, and PRODUCTS, 
 SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
 
  ![alt text](images/starschema.svg)
@@ -61,9 +61,7 @@ we want to model:
 - [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
 
 
-Here is how to capture ...
-
-
+Here is how to capture the database structure from the above star schema:
 
 ```java
 
@@ -75,30 +73,27 @@ Table salespersons = new Table("SALESPERSONS", "salesperson_id");
 Table customers = new Table("CUSTOMERS", "customer_id");
 Table days = new Table("DAYS", "day_id");
 
+stardb.addTable(orders);
+stardb.addTable(products);
+stardb.addTable(salespersons);
+stardb.addTable(customers);
+stardb.addTable(days);
 
+orders.addForeignKey("product_id", products);
+orders.addForeignKey("salesperson_id", salespersons);
+orders.addForeignKey("customer_id", customers);
+orders.addForeignKey("day_id", days);
 
 ```
 
+Note that at this stage of representing tables, we simply capture a table's structure with the name and 
+primary key as parameters. We can later add foreign keys as needed, as we do 
+with our central fact table `ORDERS`. 
 
 
+The specific columns necessary for SQL queries are specified later within the SQLGenerator.
 
-
-
-
-
-
-
-Note how the `Table` class only contains the primary and foreign keys, but no other
-columns. This approach allows a cheap and easy setup for the program execution, 
-in comparison to ORMs that include all columns as fields within each record mapped onto an object.
-
-The columns necessary for analysis are specified later within the SQLGenerator.
-
-
-Here is how 
-
-
-
+___________
 
 <!-- This tool is for generating SQl out of olap structure. needs to understand the
 structure of teh data
@@ -141,10 +136,43 @@ the SQLGenerator can now output OLAP queries for us. Here is how it works:
 
     <!-- TODO nit: use single quotes when referring to something abstract ex nuclear fission reactors 'existed' 2 billion years ago but only because of the earths enviroment and very specific conditions. -->
 
+
+
 ## Generating SQL Queries
 
 Now that we have our database representation and tooling, we can generate
 SQL queries in the following way:
+
+This java code...
+
+```java
+
+generator.addTable(orders);
+generator.addSelect("product_name", products);
+generator.addSelect("saesperson_name", salespersons);
+
+generator.addAggregate("sum", "Quantity", sales, "Products Sold");
+
+generator.getSQL(); // Get the SQL!
+```
+
+...generates the following SQL query:
+
+```SQL
+select
+    DimFranchise.FranchiseName,
+    DimStore.StoreName,
+    sum(FactSales.Quantity)
+from FactSales
+join DimFranchise on DimFranchise.id = FactSales.FranchiseId
+join DimStore on DimStore.id = FactSales.StoreId
+group by
+    DimFranchise.FranchiseName,
+    DimStore.StoreName
+```
+
+
+<!--
 
 This java code...
 
@@ -183,7 +211,7 @@ group by
     DimFranchise.FranchiseName,
     DimStore.StoreName
 ```
-
+-->
 ## Spring Method
 
 The above example still requires a lot of code to produce a single query.
