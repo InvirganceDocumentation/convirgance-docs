@@ -108,6 +108,8 @@ Only have a few records (4-10).
 This java code...
 
 ```java
+SQLGenerator generator = new SQLGenerator();
+
 generator.addTable(orders);
 generator.addSelect("product_name", products);
 generator.addSelect("salesperson_name", salespersons);
