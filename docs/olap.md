@@ -16,17 +16,6 @@ where a central fact table (containing quantitative data) is connected to multip
 dimension tables (describing the context of the data). This structure simplifies analytical queries and accelerates 
 information retrieval from databases.
 
-## Scenario 
-Suppose you are working on an online retail analytics and you have the following
-star schema model with ORDERS as the central fact table, and PRODUCTS, 
-SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
-
- ![alt text](images/starschema.svg)
-
-
-The eventual goal of this exercise is to create SQL queries from OLAP structure.
-Read along to better understand how Convirgance (OLAP) offers such functionality.
-
 ## Installation
 
 Add the following dependency to your Maven `pom.xml` file:
@@ -38,6 +27,19 @@ Add the following dependency to your Maven `pom.xml` file:
     <version>0.1.0</version>
 </dependency>
 ```
+
+## Scenario 
+Suppose you are working on an online retail analytics and you have the following
+star schema model with ORDERS as the central fact table, and PRODUCTS, 
+SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
+
+ ![alt text](images/starschema.svg)
+
+
+The eventual goal of this exercise is to create SQL queries from OLAP structure.
+Read along to better understand how Convirgance (OLAP) offers such functionality.
+
+
 
 
 ## Representing Database Structure
@@ -140,8 +142,9 @@ select from table. It relies on previously specified primary and foreign keys to
 handle the joins. 
 
 3. The `addAggregate(String function, String column, Table table, String alias)` method
-allows you to specify an aggregate metric with a SQL function, which is generated over a quantitative
-measure in the central table. You can optionally specify the alias for the metric by passing
+allows you to aggregate a metric from the central table into a measure. The first
+parameter is a SQL function dictates the nature of 
+aggregation. You can optionally specify the alias for the measure by passing
 the fourth parameter to the method.
 
 
@@ -168,25 +171,17 @@ the fourth parameter to the method.
     <!-- TODO nit: use single quotes when referring to something abstract ex nuclear fission reactors 'existed' 2 billion years ago but only because of the earths enviroment and very specific conditions. -->
 
 
-- [detailed documentation for classes used above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
 
 
-
-## Spring Method
-
-The above example still requires a lot of code to produce a single query.
-We should have a config file. Thanks to the inherent properties of Java Objects, we can just pull a Spring configuration file off the shelf!
-We simply load the Spring context, request the database, and pull whichever tables we need by calling `database.getTable(String name)`.
-
-<!-- TODO maybe add an example for this 
-
-use the example above, create the spring config file based off that.
-
--->
 
 ## OLAP Interface
 
-To bridge the database representation with an OLAP interface, we need additional layer of tooling
+Using the `SQLGenerator` to generate SQL queries is not ideal as it does not actually
+capture the Dimensional analysis. Instead, we want to define Dimensions,
+Measures, and Metrics as part of the OLAP interface
+and simply let the user select Dimensions and Metrics for interactive analysis.
+
+To bridge the database representation with such an OLAP interface, we need additional layer of tooling
 to represent Dimensions, Metrics (aka Facts), and Measures (just aggregated Metrics). These act as building blocks to comprise
 the Star Schema, from which we then generate reports.
 
@@ -197,8 +192,6 @@ the Star Schema, from which we then generate reports.
 | `Metric`          | Provides support for quantitative values of data.                            |
 | `ReportGenerator` | Provides support for the SQL query generation from constructed star schemas. |
 | `Star`            | Provides support for the central star schema.                                |
-
-- [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/package-summary.html)
 
 1. The `Star` plays the role of a central container, and it tracks the fact table at the center.
    Around the fact table are Dimensions. Inside the fact table are Metrics.
@@ -239,6 +232,22 @@ generator.getSQL(); // Generate the SQL!
 
 <!--As a next step, you can use [Convirgance-WEB](https://github.com/InvirganceOpenSource/convirgance-web) to create web services around this OLAP
 structure. -->
+
+
+## Spring Method
+
+The above example still requires a lot of code to produce a single query.
+We should have a config file. Thanks to the inherent properties of Java Objects, we can just pull a Spring configuration file off the shelf!
+We simply load the Spring context, request the database, and pull whichever tables we need by calling `database.getTable(String name)`.
+
+<!-- TODO maybe add an example for this 
+
+use the example above, create the spring config file based off that.
+
+-->
+
+
+##### [JavaDocs](https://docs.invirgance.com/javadocs/convirgance-olap/latest/index.html)
 
 ##### [Previous: File Formats](./file-formats)
 
