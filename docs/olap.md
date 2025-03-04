@@ -3,25 +3,29 @@
 # Online Analytical Processing (OLAP)
 
 As businesses grow and expand, they gain useful analytical data about 
-their own customers and the market itself. OLAP (Online Analytical Processing) 
+their own customers and the market itself. Online Analytical Processing, or OLAP, 
 provides a means of sythesizing this data into useful metrics to provide business intelligence insights.
 
-Convirgance (OLAP), built on top of Convirgance package, provides an easy and intuitive
-way to build OLAP tools such as queries against Star Schemas to perform such 
-interactive multidimensional data analysis and aid businesses in their operations.
+Convirgance (OLAP) provides an easy and intuitive
+way to build OLAP tools around Star Schemas to produce SQL queries and perform 
+data analysis to aid businesses intelligence, without the need for expensive
+outsourcing.
 
 A star schema is a type of multidimensional database design commonly used in data warehousing, 
 where a central fact table (containing quantitative data) is connected to multiple
-dimension tables (describing the context of the data) and other metric tables that also describe 
-quantitative data. This structure simplifies analytical queries and accelerates 
+dimension tables (describing the context of the data). This structure simplifies analytical queries and accelerates 
 information retrieval from databases.
 
+## Scenario 
+Suppose you are working on an online retail analytics and you have the following
+star schema model with ORDERS as the central fact table, and PRODUCTS, 
+SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
 
-With some additional web configuration, this package gives you an opportunity
-to quickly build in-house analytical systems to support your
-business either visualizing measures (ex. average sales) across different dimensions without the need for expensive outsourcing.
+ ![alt text](images/starschema.svg)
 
-Read on to better understand how Convirgance (OLAP) offers such functionality.
+
+The eventual goal of this exercise is to create SQL queries from OLAP structure.
+Read along to better understand how Convirgance (OLAP) offers such functionality.
 
 ## Installation
 
@@ -36,38 +40,25 @@ Add the following dependency to your Maven `pom.xml` file:
 ```
 
 
-
-
 ## Representing Database Structure
 
-Suppose you are working on an online retail analytics and you have the following
-star schema model with ORDERS as the central fact table, and PRODUCTS, 
-SALESPERSONS, CUSTOMERS, and DAYS as dimensions:
 
- ![alt text](images/starschema.svg)
-
-
-Convirgance (OLAP) uses the
-following classes to first capture the core database structure of the schema
-we want to model:
-
+<!--
 | Class          | Function                                                                                          |
 | -------------- | ------------------------------------------------------------------------------------------------- |
 | `Database`     | Database structure representation; contains table objects.                   |
+| `Table`        | For Table object representation. Contains a primary key and list of foreign keys, which are columns shared between a source and target table.      |
 | `ForeignKey`   | Captures the connection between a source table, a column on the source table, and a target table. |
 | `SQLGenerator` | Support for creating and outputting SQL queries for working with OLAP.                   |
-| `Table`        | For Table object representation. Contains a primary key and list of foreign keys, which are columns shared between a source and target table.      |
 
-- [detailed documentation for the classes above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
+-->
 
-
-Here is how to capture the database structure from the above star schema:
+You can use Convirgance (OLAP) to first capture the database structure with the five tables:
 
 ```java
-
 Database stardb = new Database("StarDB");
 
-Table orders = new Table("ORDERS", "order_id");
+Table orders = new Table("ORDERS", "order_id"); // "order_id" is the primary key for ORDERS table
 Table products = new Table("PRODUCTS", "product_id");
 Table salespersons = new Table("SALESPERSONS", "salesperson_id");
 Table customers = new Table("CUSTOMERS", "customer_id");
@@ -78,57 +69,95 @@ stardb.addTable(products);
 stardb.addTable(salespersons);
 stardb.addTable(customers);
 stardb.addTable(days);
+```
 
-orders.addForeignKey("product_id", products);
+You can then capture the relationship between the ORDERS table and the rest of 
+the tables by adding the foreign keys. The ORDERS table will
+become the table following the `FROM` command in SQL queries.
+
+``` java
+orders.addForeignKey("product_id", products); 
 orders.addForeignKey("salesperson_id", salespersons);
 orders.addForeignKey("customer_id", customers);
 orders.addForeignKey("day_id", days);
-
 ```
 
-Note that at this stage of representing tables, we simply capture a table's structure with the name and 
-primary key as parameters. We can later add foreign keys as needed, as we do 
-with our central fact table `ORDERS`. 
+## Generating SQL Queries
 
 
-The specific columns necessary for SQL queries are specified later within the SQLGenerator.
+Now that we have our database representation, we can use the SQLGenerator to 
+output OLAP queries. Here is how it works:
 
-___________
-
-<!-- This tool is for generating SQl out of olap structure. needs to understand the
-structure of teh data
+<!-- 
 table just represents that a table exists. 
 an object in star schema. 
 on top of that we put dimensions/metrics
 
-todo: 1. just stay we create a structure for the star schema
+todo: 
+1. just say we create a structure for the star schema
 2. once we have the structure, we can specify the dimensions and metrics
 3. create a super simple star schema
     star diagram (e.g. 4 dimensions, 1 central table)
 
-explain with the example the schema, dimensions, facts (metrics)
+Explain with the example the schema, dimensions, facts (metrics)
+Fact table at the centre is the table containing all the facts/metrics.
+Only have a few records (4-10).
+-->
 
-fact table at the centre is the table containing all the facts/metrics 
 
-only have a few record (4-10)-->
+This java code...
+
+```java
+generator.addTable(orders);
+generator.addSelect("product_name", products);
+generator.addSelect("salesperson_name", salespersons);
+generator.addAggregate("sum", "cost_total", orders, "cost_dollars");
+
+generator.getSQL(); // Get the SQL!
+```
+...generates the following SQL query:
+
+```SQL
+select
+    PRODUCTS.product_name,
+    SALESPERSONS.salesperson_name,
+    sum(ORDERS.cost_dollars) as cost_total,
+from ORDERS
+join PRODUCTS on PRODUCTS.product_id = ORDERS.product_id
+join SALESPERSONS on SALESPERSONS.salesperson_id = ORDERS.salesperson_id
+group by
+    PRODUCTS.product_name,
+    SALESPERSONS.salesperson_name
+```
+
+1. Adding ORDERS table to the generator first sets it as the central fact table
+and handles the joins between ORDERS and other tables.
+
+2. The `addSelect(String Column, Table table)` method lets us specify which column to
+select from table. It relies on previously specified primary and foreign keys to
+handle the joins. 
+
+3. The `addAggregate(String function, String column, Table table, String alias)` method
+allows you to specify an aggregate metric with a SQL function, which is generated over a quantitative
+measure in the central table. You can optionally specify the alias for the metric by passing
+the fourth parameter to the method.
 
 
-With the relationship defined by the Table, ForeignKey, and Database classes,
-the SQLGenerator can now output OLAP queries for us. Here is how it works:
 
+<!--
 1.  The `addSelect(String column, Table table)` lets us define a select from a table
 2.  We capture this select in a `Column` inner class that represents the column and table
 3.  We add the table to a list of tables we need to create joins between
 4.  The addTable(Table table) method is public because OLAP queries are centered around a Fact table. The Fact table must be added first as the “From” table so that all joins fan out from it. Even if we never select any data from the Fact table itself.
 5.  The getSQL() method loops through the select list to generate the columns to select and generates the first table in the list as the “from” table. It then calls generateJoins(from) and generateGroupBy().
-<!-- TODO nit: 4 and 5 are a little on the long side -->
+<!-- TODO nit: 4 and 5 are a little on the long side 
 6.  generateJoins(from) matches the ForeignKeys in the “from” table to tables in our list of selects and generates a join for each one
 7.  generateGroupBy() loops through the selected columns again and generates a group by list of all columns that are not aggregates. i.e. They are dimension columns.
 
     - Wait… what are aggregates?
 
 8.  Aggregates are the “fact” or “metric” columns that we want to roll up using a function like “sum()” or “avg()”
-<!-- TODO nit 4, 5, 6, 8: use backticks when referring to the From table also with functions/objects table -->
+<!-- TODO nit 4, 5, 6, 8: use backticks when referring to the From table also with functions/objects table
 9.  We can call `addAggregate(String function, String column, Table table)` to add the aggregate to our select list
 10. We use an inner class called Aggregate to capture this select. Aggregate uses the inheritance pattern in OOP to “be” a Column while additionally capturing the function and overriding the getSQL() method.
 
@@ -137,81 +166,10 @@ the SQLGenerator can now output OLAP queries for us. Here is how it works:
     <!-- TODO nit: use single quotes when referring to something abstract ex nuclear fission reactors 'existed' 2 billion years ago but only because of the earths enviroment and very specific conditions. -->
 
 
-
-## Generating SQL Queries
-
-Now that we have our database representation and tooling, we can generate
-SQL queries in the following way:
-
-This java code...
-
-```java
-
-generator.addTable(orders);
-generator.addSelect("product_name", products);
-generator.addSelect("saesperson_name", salespersons);
-
-generator.addAggregate("sum", "Quantity", sales, "Products Sold");
-
-generator.getSQL(); // Get the SQL!
-```
-
-...generates the following SQL query:
-
-```SQL
-select
-    DimFranchise.FranchiseName,
-    DimStore.StoreName,
-    sum(FactSales.Quantity)
-from FactSales
-join DimFranchise on DimFranchise.id = FactSales.FranchiseId
-join DimStore on DimStore.id = FactSales.StoreId
-group by
-    DimFranchise.FranchiseName,
-    DimStore.StoreName
-```
+- [detailed documentation for classes used above](https://docs.invirgance.com/javadocs/convirgance-olap/latest/com/invirgance/convirgance/olap/sql/package-summary.html)
 
 
-<!--
 
-This java code...
-
-```java
-SQLGenerator generator = new SQLGenerator();
-Database stardb = new Database("StarDB");
-Table sales = new Table("FactSales", "id");
-Table franchise = new Table("DimFranchise", "id");
-Table store = new Table("DimStore", "id");
-
-stardb.addTable(sales);
-stardb.addTable(franchise);
-
-sales.addForeignKey("FranchiseId", franchise);
-sales.addForeignKey("StoreId", store);
-
-generator.addTable(sales);
-generator.addSelect("FranchiseName", franchise);
-generator.addSelect("StoreName", store);
-generator.addAggregate("sum", "Quantity", sales, "Products Sold");
-
-generator.getSQL(); // Get the SQL!
-```
-
-...generates the following SQL query:
-
-```SQL
-select
-    DimFranchise.FranchiseName,
-    DimStore.StoreName,
-    sum(FactSales.Quantity)
-from FactSales
-join DimFranchise on DimFranchise.id = FactSales.FranchiseId
-join DimStore on DimStore.id = FactSales.StoreId
-group by
-    DimFranchise.FranchiseName,
-    DimStore.StoreName
-```
--->
 ## Spring Method
 
 The above example still requires a lot of code to produce a single query.
