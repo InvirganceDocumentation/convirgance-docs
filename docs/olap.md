@@ -4,7 +4,7 @@
 
 As businesses grow and expand, they gain useful analytical data about 
 their own customers and the market itself. Online Analytical Processing, or OLAP, 
-provides a means of sythesizing this data into useful metrics to provide business intelligence insights.
+provides a means of sythesizing this data into useful measures to provide business intelligence insights.
 
 Convirgance (OLAP) provides an easy and intuitive
 way to build OLAP tools around Star Schemas to produce SQL queries and perform 
@@ -148,7 +148,12 @@ aggregation. You can optionally specify the alias for the measure by passing
 the fourth parameter to the method.
 
 
+Using the `SQLGenerator` to generate SQL queries in this way is simple; yet, not ideal. 
+The SQL Generator does not actually
+capture the Dimensional analysis needed for OLAP. We want to explicitly define Dimensions,
+Metrics, and Measures and let the user select them for interactive analysis. 
 
+Luckily, Convirgance (OLAP) introduces that additional layer for OLAP Interface. Read on to see how it works.
 <!--
 1.  The `addSelect(String column, Table table)` lets us define a select from a table
 2.  We capture this select in a `Column` inner class that represents the column and table
@@ -173,17 +178,58 @@ the fourth parameter to the method.
 
 
 
-
 ## OLAP Interface
 
-Using the `SQLGenerator` to generate SQL queries is not ideal as it does not actually
-capture the Dimensional analysis. Instead, we want to define Dimensions,
-Measures, and Metrics as part of the OLAP interface
-and simply let the user select Dimensions and Metrics for interactive analysis.
+To bridge the database representation with an OLAP interface, we have Dimensions 
+and Measures to work with as part of the Star Schema.
 
-To bridge the database representation with such an OLAP interface, we need additional layer of tooling
-to represent Dimensions, Metrics (aka Facts), and Measures (just aggregated Metrics). These act as building blocks to comprise
-the Star Schema, from which we then generate reports.
+Here is how we can first define all Dimensions and Measures we might want to reference later
+
+```java
+Dimension productName = new Dimension("Product Name", products, "product_name"); 
+Dimension salespersonName = new Dimension("Salesperson Name", salespersons, "salesperson_name");
+// Dimension anotherDimension = new Dimension(<Dimension Name>, table, <column_name>);
+// Repeat for any dimensions you want to define
+
+Measure costTotal = new Measure("Total", new Metric(orders, "cost_dollars"), "sum");
+// Measure anotherMeasure = new Measure(<name>, metric, <SQL function>);
+// Repeat for any measures 
+```
+Note we can create a metric object simply by specifying a table and a column with quantitative data.
+
+
+Now that we have our Dimensions and Measures, we can add them to the star object to complete the schema:
+
+```java
+Star star = new Star(orders); // sets ORDERS table as the central fact table
+
+star.addDimension(productName);
+star.addDimension(salespersonName);
+// Add any other dimensions
+
+star.addMeasure(costTotal);
+// Add any other measures
+```
+
+We now have the star object that reflects the star schema introduced at the beginning 
+of this exercise. We can now generate the same SQL queries by specifying existing 
+dimensions and measures:
+
+```java
+ReportGenerator generator = new ReportGenerator(star);
+
+generator.addDimension(star.getDimension("Product Name"));
+generator.addDimension(star.getDimension("Salesperson Name"));
+generator.addMeasure(star.getMeasure("Total"));
+
+generator.getSQL(); // Generate the SQL!
+```
+That's it! Once we have the Star object, we can simply use the ReportGenerator
+for our analytics. Of course, defining all these dimensions and measures for the star
+can be tedious, but fortunately we can use the Spring Configuration file to quickly 
+import our star. Move on to the next session to see an example.
+<!--
+
 
 | Class             | Function                                                                     |
 | ----------------- | ---------------------------------------------------------------------------- |
@@ -211,6 +257,7 @@ the Star Schema, from which we then generate reports.
 
   <!-- TODO nit: order list as items appear in the table or reoder the table -->
 
+<!--
 Here too, you can add the Star schema to the Spring configuration file just like we did with the Database above.
 You can then lookup the Star from the configuration file and query immediately:
 
@@ -219,16 +266,7 @@ Here's how we can generate the same SQL Query as above by using the Star configu
 <!-- fill in the story with code actually constructing a star.
 There is a test case that constructs a star that you can use. -->
 
-```java
-Star star = getStar(); // Load the Star from the Spring file
-ReportGenerator generator = new ReportGenerator(star);
 
-generator.addDimension(star.getDimension("Franchise Name"));
-generator.addDimension(star.getDimension("Store Name"));
-generator.addMeasure(star.getMeasure("Units Sold"));
-
-generator.getSQL(); // Generate the SQL!
-```
 
 <!--As a next step, you can use [Convirgance-WEB](https://github.com/InvirganceOpenSource/convirgance-web) to create web services around this OLAP
 structure. -->
