@@ -272,11 +272,9 @@ There is a test case that constructs a star that you can use. -->
 structure. -->
 
 
-## Spring Method
 
-The above example still requires a lot of code to produce a single query.
-We should have a config file. Thanks to the inherent properties of Java Objects, we can just pull a Spring configuration file off the shelf!
-We simply load the Spring context, request the database, and pull whichever tables we need by calling `database.getTable(String name)`.
+## Spring Method
+Thanks to the inherent properties of Java Objects, we can just use a Spring configuration file to import our Star object.
 
 <!-- TODO maybe add an example for this 
 
