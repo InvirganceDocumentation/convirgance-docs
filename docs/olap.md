@@ -183,26 +183,57 @@ Luckily, Convirgance (OLAP) introduces that additional layer for OLAP Interface.
 To bridge the database representation with an OLAP interface, we have Dimensions 
 and Measures to work with as part of the Star Schema.
 
-Here is how we can first define all Dimensions and Measures we might want to reference later
+Suppose we want to add the product name as one of the dimensions in our analysis,
+and remember that we have the `products` table defined above. Further suppose
+that the product names are contained in the `product_name`
+column in the `products ` table. We can create a `Dimension` object to represent this dimension as follows:
+```java
+Dimension productName = new Dimension("Product Name", products, "product_name");
+```
+The first parameter passed to the constructor above is just what we want to name our
+dimension. The second parameter is the table and the third is the column in the 
+table from which we pull our dimensional information. 
 
+
+Here is how we can define all Dimensions we might want to reference later
 ```java
 Dimension productName = new Dimension("Product Name", products, "product_name"); 
 Dimension salespersonName = new Dimension("Salesperson Name", salespersons, "salesperson_name");
 // Dimension anotherDimension = new Dimension(<Dimension Name>, table, <column_name>);
 // Repeat for any dimensions you want to define
+```
 
+It's a similar approach with Measures, which are aggregates over Metrics. We first
+want to create a Metric object by specifying the table and the column that contains 
+quantitative data. Suppose we want to look at the cost of an order. Remember we have
+our `orders` table already defined, and suppose it contains the `cost_dollars` column.
+We define the Metric as follows:
+```java
+Metric cost = new Metric(orders, "cost_dollars");
+```
+Now that we have the metric, we can define a measure over it, by specifying the 
+Measure's name, the Metric object, and the SQL function that aggregates the metric.
+Here is an example that creates a Measure for total cost:
+```java
+Measure costTotal = new Measure("Total", cost, "sum");
+```
+Of course, we can combine the creation of a Measure and Metric into a one-liner and 
+similarly define all 
+the measures we might want to reference later:
+```java
 Measure costTotal = new Measure("Total", new Metric(orders, "cost_dollars"), "sum");
 // Measure anotherMeasure = new Measure(<name>, metric, <SQL function>);
 // Repeat for any measures 
 ```
-Note we can create a metric object simply by specifying a table and a column with quantitative data.
-
 
 Now that we have our Dimensions and Measures, we can add them to the star object to complete the schema:
-
+Remember that the ORDERS table is at the center of our star schema. We thus want to construct
+our star object as such:
 ```java
 Star star = new Star(orders); // sets ORDERS table as the central fact table
-
+```
+Now we can add the dimensions and measures we defined above to our star object:
+```java
 star.addDimension(productName);
 star.addDimension(salespersonName);
 // Add any other dimensions
@@ -213,11 +244,12 @@ star.addMeasure(costTotal);
 
 We now have the star object that reflects the star schema introduced at the beginning 
 of this exercise. We can now generate the same SQL queries by specifying existing 
-dimensions and measures:
+dimensions and measures to our `ReportGenerator` object:
 
 ```java
-ReportGenerator generator = new ReportGenerator(star);
+ReportGenerator generator = new ReportGenerator(star); // First need to assign the generator to the star schema.
 
+// Dimensions and Metrics must come from the star object assigned to the generator.
 generator.addDimension(star.getDimension("Product Name"));
 generator.addDimension(star.getDimension("Salesperson Name"));
 generator.addMeasure(star.getMeasure("Total"));
