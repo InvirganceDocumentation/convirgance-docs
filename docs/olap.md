@@ -183,6 +183,7 @@ Luckily, Convirgance (OLAP) introduces that additional layer for OLAP Interface.
 To bridge the database representation with an OLAP interface, we have Dimensions 
 and Measures to work with as part of the Star Schema.
 
+#### Defining Dimensions and Measures
 Suppose we want to add the product name as one of the dimensions in our analysis,
 and remember that we have the `products` table defined above. Further suppose
 that the product names are contained in the `product_name`
@@ -226,6 +227,7 @@ Measure costTotal = new Measure("Total", new Metric(orders, "cost_dollars"), "su
 // Repeat for any measures 
 ```
 
+#### Defining a Star object to represent the Star Schema
 Now that we have our Dimensions and Measures, we can add them to the star object to complete the schema:
 Remember that the ORDERS table is at the center of our star schema. We thus want to construct
 our star object as such:
@@ -242,6 +244,7 @@ star.addMeasure(costTotal);
 // Add any other measures
 ```
 
+#### Creating a Report Generator to generate SQL
 We now have the star object that reflects the star schema introduced at the beginning 
 of this exercise. We can now generate the same SQL queries by specifying existing 
 dimensions and measures to our `ReportGenerator` object:
