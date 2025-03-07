@@ -16,6 +16,9 @@ where a central fact table (containing quantitative data) is connected to multip
 dimension tables (describing the context of the data). This structure simplifies analytical queries and accelerates 
 information retrieval from databases.
 
+> ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
+> Convirgance (OLAP) is in pre-release and may be subject to change
+
 ## Installation
 
 Add the following dependency to your Maven `pom.xml` file:
