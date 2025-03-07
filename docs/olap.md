@@ -308,21 +308,159 @@ structure. -->
 
 
 
-## Spring Method
-Thanks to the inherent properties of Java Objects, we can just use a Spring configuration file to import our Star object.
 
+## Spring Method
+Rather than manually defining all tables, dimensions, and measures for our star 
+schema, we can have a single configuration file to pull from. Follow along to see
+how we can setup and use a Spring configuration file for our star schema to generate SQL.
+
+Let's first configure the four tables surrounding our central ORDERS table. This might be a
+good time to remind ourselves what our star schema looked like. We define the tables
+in Spring as follows:
+```xml
+<bean id="products" class="com.invirgance.convirgance.olap.sql.Table">
+    <property name="name" value="PRODUCTS"/>
+    <property name="primaryKey" value="product_id"/>
+    <property name="foreignKeys">
+        <list></list>
+    </property>
+</bean>
+
+<bean id="salespersons" class="com.invirgance.convirgance.olap.sql.Table">
+    <property name="name" value="SALESPERSONS"/>
+    <property name="primaryKey" value="salesperson_id"/>
+    <property name="foreignKeys">
+        <list></list>
+    </property>
+</bean>
+
+<bean id="customers" class="com.invirgance.convirgance.olap.sql.Table">
+    <property name="name" value="CUSTOMERS"/>
+    <property name="primaryKey" value="customer_id"/>
+    <property name="foreignKeys">
+        <list></list>
+    </property>
+</bean>
+
+<bean id="days" class="com.invirgance.convirgance.olap.sql.Table">
+    <property name="name" value="DAYS"/>
+    <property name="primaryKey" value="day_id"/>
+    <property name="foreignKeys">
+        <list></list>
+    </property>
+</bean>
+```
+
+Next step is to configure our central fact table (ORDERS) with foreign keys referencing
+each of the four tables defined above:
+```xml
+<bean id="orders" class="com.invirgance.convirgance.olap.sql.Table">
+    <property name="name" value="ORDERS"/>
+    <property name="primaryKey" value="order_id"/>
+    <property name="foreignKeys">
+        <list>
+            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
+                <property name="sourceKey" value="product_id" />
+                <property name="target">
+                    <ref bean="products" />
+                </property>
+            </bean>
+            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
+                <property name="sourceKey" value="salesperson_id" />
+                <property name="target">
+                    <ref bean="salespersons" />
+                </property>
+            </bean>
+            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
+                <property name="sourceKey" value="customer_id" />
+                <property name="target">
+                    <ref bean="customers" />
+                </property>
+            </bean>
+            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
+                <property name="sourceKey" value="day_id" />
+                <property name="target">
+                    <ref bean="days" />
+                </property>
+            </bean>
+        </list>
+    </property>
+</bean>
+```
+
+Now that we have the tables, we can configure the star with the relevant 
+dimensions and measures:
+```xml
+<bean class="com.invirgance.convirgance.olap.Star">
+    <property name="fact">
+        <ref bean="orders"/>
+    </property>
+    <property name="dimensions">
+        <list>
+            <bean class="com.invirgance.convirgance.olap.Dimension">
+                <property name="name" value="Product Name"/>
+                <property name="column" value="product_name"/>
+                <property name="table">
+                    <ref bean="products"/>
+                </property>
+            </bean>
+            <bean class="com.invirgance.convirgance.olap.Dimension">
+                <property name="name" value="Salesperson Name"/>
+                <property name="column" value="salesperson_name"/>
+                <property name="table">
+                    <ref bean="salespersons"/>
+                </property>
+            </bean>
+            <!-- Other dimensions defined here -->
+        </list>
+    </property>
+    <property name="measures">
+        <list>
+            <bean class="com.invirgance.convirgance.olap.measures.SumMeasure">
+                <property name="name" value="Total"/>
+                <property name="metric">
+                    <bean class="com.invirgance.convirgance.olap.Metric">
+                        <property name="column" value="cost_dollars"/>
+                        <property name="table">
+                            <ref bean="orders"/>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+            <!-- Other measures defined here -->
+        </list>
+    </property>
+</bean>
+```
+That is all for the Spring file. Now we simply import the Star into java and use
+the report generator in the same way as we did in the previous section:
+```java
+Star star = getStar() // Load the Star from the Spring file
+
+ReportGenerator generator = new ReportGenerator(star);
+
+generator.addDimension(star.getDimension("Product Name"));
+generator.addDimension(star.getDimension("Salesperson Name"));
+generator.addMeasure(star.getMeasure("Total"));
+
+generator.getSQL(); // Generate the SQL!
+```
 <!-- TODO maybe add an example for this 
 
 use the example above, create the spring config file based off that.
 
 -->
 
+## Further Reading
 
-##### [JavaDocs](https://docs.invirgance.com/javadocs/convirgance-olap/latest/index.html)
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
+  <a href="https://docs.invirgance.com/javadocs/convirgance-olap/latest/index.html">Java Documentation: OLAP</a>
+</div>
+
+## Sections
 
 ##### [Previous: File Formats](./file-formats)
-
-##### [Support and Contacts](./contact)
 
 ##### [Back to start?](./?id=convirgance)
 

@@ -53,11 +53,13 @@
   - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
   - [Best Practices](file-formats.md#best-practices)
 
-- [OLAP Tools](olap.md#olap)
-    
-    - [Representing Database Structure](olap.md#representing-database-structure)
-    - [Generating SQL Queries](olap.md#generating-sql-queries)
-    - [Spring Method](olap.md#spring-method)
-    - [OLAP Interface](olap.md#olap-interface)
+- [OLAP](olap.md#online-analytical-processing-olap)
+
+  - [Installation](olap.md#installation)
+  - [Scenario](olap.md#scenario)
+  - [Representing Database Structure](olap.md#representing-database-structure)
+  - [Generating SQL Queries](olap.md#generating-sql-queries)
+  - [OLAP Interface](olap.md#olap-interface)
+  - [Spring Method](olap.md#spring-method)
 
 - [Community and Support](contact.md)
