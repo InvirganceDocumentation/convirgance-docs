@@ -114,7 +114,7 @@ We're here to help:
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
   <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
   <div>
-    <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/package-summary.html">Java Documentation</a>
+    <a href="https://docs.invirgance.com/javadocs/convirgance/latest/">JavaDocs</a>
     <span>- Have a look behind the scenes</span>
   </div>
 </div>
