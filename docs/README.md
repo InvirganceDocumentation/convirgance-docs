@@ -70,7 +70,7 @@ We're here to help:
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
  <img src="./images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
  <div>
-     <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
+     <a target="_blank" href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
      <span>- Report bugs or request features</span>
  </div>
 </div>
@@ -80,6 +80,14 @@ We're here to help:
   <div>
     <a href="./#/contact.md">Contact</a>
     <span>- Get in touch with the team</span>
+  </div>
+</div>
+
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
+  <img src="./images/discourse.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
+  <div>
+    <a target="_blank" href="https://discuss.convirgance.com">Online Forum</a>
+    <span>- Get help and support</span>
   </div>
 </div>
 
