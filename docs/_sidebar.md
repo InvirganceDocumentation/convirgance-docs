@@ -62,4 +62,10 @@
   - [OLAP Interface](olap.md#olap-interface)
   - [Spring Method](olap.md#spring-method)
 
+- [JDBC](convirgance-jdbc.md.md#convirgance-jdbc)
+
+  - [Installation](convirgance-jdbc.md#installation)
+  - [Usage](convirgance-jdbc.md#scenario)
+  - [Example](convirgance-jdbc.md#representing-database-structure)
+
 - [Community and Support](contact.md)

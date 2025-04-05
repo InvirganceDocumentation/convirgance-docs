@@ -296,4 +296,5 @@ model=photopea
 ## Sections
 
 ##### [Previous: Transforming Data](./transforming-data?id=transforming-data)
-##### [Next: OLAP Tools](./olap)
+
+##### [Next: OLAP Tools](./olap?id=online-analytical-processing-olap)
