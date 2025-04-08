@@ -89,7 +89,7 @@ SQLStatement statement = table
                         .where()
                           .equals(table.getColumn("status"), "active")
                           .and()
-                            .greaterThan(table.getColumn("last_order"), someDate)
+                            .greaterThan(table.getColumn("last_order_id"), 8)
                           .end()
                         .done()
                         .order(table.getColumn("name"));
