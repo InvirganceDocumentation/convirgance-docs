@@ -127,33 +127,42 @@ Below is a complete example of a Spring XML configuration for a product service:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans ...>
-    <!-- Product Listing Service (GET) -->
+    <!-- Customer Lookup Service (GET) -->
     <bean class="com.invirgance.convirgance.web.service.SelectService">
         <property name="parameters">
             <list>
                 <bean class="com.invirgance.convirgance.web.parameter.RequestParameter">
-                    <property name="name" value="categoryId"/>
-                    <property name="defaultValue" value="0"/>
+                    <property name="name" value="zipcode" />
+                    <property name="defaultValue" value="" />
                 </bean>
                 <bean class="com.invirgance.convirgance.web.parameter.RequestParameter">
-                    <property name="name" value="sortBy"/>
-                    <property name="defaultValue" value="name"/>
+                    <property name="name" value="state" />
+                    <property name="defaultValue" value="" />
+                </bean>
+                <bean class="com.invirgance.convirgance.web.parameter.RequestParameter">
+                    <property name="name" value="discountCode" />
+                    <property name="defaultValue" value="" />
+                </bean>
+                <bean class="com.invirgance.convirgance.web.parameter.RequestParameter">
+                    <property name="name" value="minPurchaseCount" />
+                    <property name="defaultValue" value="0" />
+                </bean>
+                <bean class="com.invirgance.convirgance.web.parameter.RequestParameter">
+                    <property name="name" value="nameSearch" />
+                    <property name="defaultValue" value="" />
                 </bean>
             </list>
         </property>
         <property name="binding">
             <bean class="com.invirgance.convirgance.web.binding.QueryBinding">
-                <property name="jndiName" value="jdbc/ProductDB"/>
+                <property name="jndiName" value="jdbc/CustomerDB"/>
                 <property name="sql">
                     <value>
 <![CDATA[
-  SELECT p.product_id, p.name, p.description, p.price, c.category_name
-  FROM products p
-  JOIN categories c ON p.category_id = c.category_id
-  WHERE (:categoryId = 0 OR p.category_id = :categoryId)
-  ORDER BY
-    CASE WHEN :sortBy = 'name' THEN p.name END ASC,
-    CASE WHEN :sortBy = 'price' THEN p.price END ASC
+  SELECT * from APP.CUSTOMER
+  WHERE (:zipcode = '' or ZIP = :zipcode)
+  AND (:state = '' or STATE = :state)
+  AND (:discountCode = '' or DISCOUNT_CODE = :discountCode)
 ]]>
                     </value>
                 </property>
@@ -161,12 +170,37 @@ Below is a complete example of a Spring XML configuration for a product service:
         </property>
         <property name="transformers">
             <list>
-                <bean class="com.invirgance.convirgance.transform.MapTransformer">
-                    <property name="mappings">
-                        <map>
-                            <entry key="id" value="product_id"/>
-                            <entry key="category" value="category_name"/>
-                        </map>
+                <!-- Additional filtering based on purchase count -->
+                <bean class="com.invirgance.convirgance.transform.filter.GreaterThanFilter">
+                    <property name="key" value="PURCHASE_COUNT"/>
+                    <property name="value">
+                        <bean class="com.invirgance.convirgance.web.service.BindingParameter">
+                            <property name="key" value="minPurchaseCount"/>
+                        </bean>
+                    </property>
+                </bean>
+
+                <!-- Text search on customer name -->
+                <bean class="com.invirgance.convirgance.transform.filter.AndFilter">
+                    <property name="filters">
+                        <list>
+                            <bean class="com.invirgance.convirgance.web.service.BindingFilter">
+                                <property name="filter">
+                                    <bean class="com.invirgance.convirgance.transform.filter.EqualsFilter">
+                                        <property name="key" value="nameSearch"/>
+                                        <property name="value" value=""/>
+                                    </bean>
+                                </property>
+                            </bean>
+                            <bean class="com.invirgance.convirgance.transform.filter.ContainsFilter">
+                                <property name="key" value="NAME"/>
+                                <property name="value">
+                                    <bean class="com.invirgance.convirgance.web.service.BindingParameter">
+                                        <property name="key" value="nameSearch"/>
+                                    </bean>
+                                </property>
+                            </bean>
+                        </list>
                     </property>
                 </bean>
             </list>
