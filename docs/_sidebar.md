@@ -62,10 +62,18 @@
   - [OLAP Interface](olap.md#olap-interface)
   - [Spring Method](olap.md#spring-method)
 
-- [JDBC](convirgance-jdbc.md.md#convirgance-jdbc)
+- [JDBC](convirgance-jdbc.md#convirgance-jdbc)
 
   - [Installation](convirgance-jdbc.md#installation)
-  - [Usage](convirgance-jdbc.md#scenario)
-  - [Example](convirgance-jdbc.md#representing-database-structure)
+  - [Automatic Drivers](convirgance-jdbc.md#Automatic-Drivers)
+  - [Stored Connections](convirgance-jdbc.md#Stored-Connections)
+  - [Example](convirgance-jdbc.md#Example-SQLStatement)
+
+- [Web](convirgance-web.md#convirgance-web)
+
+  - [Installation](convirgance-web.md#installation)
+  - [Core Architecture](convirgance-web.md#Core-Architecture)
+  - [JSP Custom Tags](convirgance-web.md#JSP-Custom-Tags)
+  - [Complete Example](convirgance-web.md#Complete-Example)
 
 - [Community and Support](contact.md)

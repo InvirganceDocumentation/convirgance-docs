@@ -7,8 +7,6 @@ Convirgance (JDBC) is a AIO database library, bridging the gaps across the varie
 > ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
 > Convirgance (JDBC) is in pre-release and may be subject to change
 
-## Installation
-
 Add the following dependency to your Maven `pom.xml` file:
 
 ```xml
@@ -19,7 +17,7 @@ Add the following dependency to your Maven `pom.xml` file:
 </dependency>
 ```
 
-## AutomaticDrivers
+## Automatic Drivers
 
 Like previously mentioned drivers can be lazy loaded.
 
@@ -98,7 +96,7 @@ SQLStatement statement = table
 
 ## Further Reading
 
-<!-- TODO add public doc link -->
+<!-- TODO add public java doc link -->
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
   <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
   <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/package-summary.html">TODO JavaDocs: Convirgance (JDBC)</a>
@@ -108,4 +106,4 @@ SQLStatement statement = table
 
 ##### [Previous: OLAP](./olap?id=online-analytical-processing-olap)
 
-##### [Back to start?](./?id=convirgance)
+##### [Next: Web Components](./convirgance-web?id=convirgance-web)
