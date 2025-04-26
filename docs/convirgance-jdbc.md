@@ -22,7 +22,42 @@ Add the following dependency to your Maven `pom.xml` file:
 </dependency>
 ```
 
-## Automatic Driver Download
+## Quick Start
+
+Have a connection ```url``` and just need a ```DataSource``` to connect to a 
+database? The following code is all you need. Convirgance (JDBC) will 
+automatically download the necessary database driver and return you an
+configured instance of ```DriverDataSource```.
+
+```java
+String url = "jdbc:postgres://my_server/my_database";
+String username = "user";
+String password = "password";
+
+DataSource source = DriverDataSource.getDataSource(url, username, password);
+DBMS dbms = new DBMS(source);
+```
+
+## Supported Databases
+
+Convirgance (JDBC) ships with configurations for the following databases:
+
+- Oracle Thin Driver
+- Derby Network
+- Derby Embedded
+- SQL Server (jTDS)
+- HSQLDB
+- H2
+- PostgreSQL
+- MariaDB/MySQL
+- DB2
+
+All drivers are Type IV drivers, meaning they are pure Java implementations that
+require no native libraries or intermediate servers. The names above can be used 
+in a program to obtain the desired driver from ```AutomaticDrivers.getDriverByName(<name>)```.
+
+
+## Automatic Driver
 
 Convirgance (JDBC) maintains a library of database systems for which it knows
 how to retrieve the JDBC driver. Identified drivers are pulled from Maven Central
