@@ -1,9 +1,8 @@
 # Convirgance (JDBC)
 
-Convirgance (JDBC) is a database library that bridging the gaps across the 
-variety of SQL servers libraries in the Java ecosystem. It provides automatic
-driver downloads for a variety of databases systems, ability to register and 
-remember database connections, a clean object heirarchy for navigating the database 
+Convirgance (JDBC) provides features to simplify database connectivity and bridge
+the gaps between the variety of relational databases on the market. It provides automatic
+driver downloads, ability to register and remember database connections, a clean object heirarchy for navigating the database 
 schema, and an ability to dynamically create queries from database objects.
 
 
