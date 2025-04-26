@@ -57,7 +57,7 @@ require no native libraries or intermediate servers. The names above can be used
 in a program to obtain the desired driver from ```AutomaticDrivers.getDriverByName(<name>)```.
 
 
-## Automatic Driver
+## Automatic Drivers
 
 Convirgance (JDBC) maintains a library of database systems for which it knows
 how to retrieve the JDBC driver. Identified drivers are pulled from Maven Central
@@ -132,7 +132,7 @@ StoredConnection customers = mysql.createConnection("CustomersDB")
 customers.save();
 ```
 
-### Navigating Heirarchy
+## Navigating Heirarchy
 
 Once we have a configured connection, we can use it to navigate our database's
 metadata heirarchy. For example:
@@ -169,7 +169,7 @@ new CSVOutput().write(new FileTarget("customers.csv"), customers);
 ```
 
 
-### Example SQLStatement
+## SQL Statements
 
 Accessing all the records in a table is useful, but not ideal under all 
 circumstances. Rather than pushing the use of filters in Convirgance (which 

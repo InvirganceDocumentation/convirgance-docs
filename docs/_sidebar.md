@@ -65,9 +65,11 @@
 - [JDBC](convirgance-jdbc.md#convirgance-jdbc)
 
   - [Installation](convirgance-jdbc.md#installation)
+  - [Quick Start](convirgance-jdbc.md#Quick-Start)
+  - [Supported Databases](convirgance-jdbc.md#Supported-Databases)
   - [Automatic Drivers](convirgance-jdbc.md#Automatic-Drivers)
   - [Stored Connections](convirgance-jdbc.md#Stored-Connections)
-  - [Example](convirgance-jdbc.md#Example-SQLStatement)
+  - [SQL Statements](convirgance-jdbc.md#SQL-Statements)
 
 - [Web](convirgance-web.md#convirgance-web)
 
