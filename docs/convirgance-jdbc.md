@@ -1,11 +1,16 @@
 # Convirgance (JDBC)
 
-Convirgance (JDBC) is a AIO database library, bridging the gaps across the variety of SQL servers libraries in the Java ecosystem. Further, through the use of lazy loading by using this library you won't bloat your application size with external SQL libraries. Its hassle-free query builders let you focus on business logic rather than SQL syntax, while providing universal support for any SQL driver library and offering stored connection management.
+Convirgance (JDBC) is a database library that bridging the gaps across the 
+variety of SQL servers libraries in the Java ecosystem. It provides automatic
+driver downloads for a variety of databases systems, ability to register and 
+remember database connections, a clean object heirarchy for navigating the database 
+schema, and an ability to dynamically create queries from database objects.
+
 
 ## Installation
 
 > ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
-> Convirgance (JDBC) is in pre-release and may be subject to change
+> Convirgance (JDBC) is in pre-release and may be subject to changes in the APIs
 
 Add the following dependency to your Maven `pom.xml` file:
 
@@ -13,67 +18,134 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance-jdbc</artifactId>
-    <version>0.1.0</version>
+    <version>0.3.0</version>
 </dependency>
 ```
 
-## Automatic Drivers
+## Automatic Driver Download
 
-Like previously mentioned drivers can be lazy loaded.
+Convirgance (JDBC) maintains a library of database systems for which it knows
+how to retrieve the JDBC driver. Identified drivers are pulled from Maven Central
+using Maven's artifcat locator APIs on demand, and thus do not need to ship with your application
+
+For example, this will get you the ```java.sql.Driver``` implementation for PostgreSQL:
 
 ```java
 AutomaticDriver postgres = AutomaticDrivers.getDriverByName("PostgreSQL");
+Driver driver = postgres.getDriver();
 ```
 
-And thankfully its just as simple to add your own lazy-loaded drivers. All you need to do is provide the artifact id, connection prefix and a datasource.
+The database of drivers can be adjusted if you wish to add another database or
+modify an existing configuration for your specific needs. The only requirement 
+is that you know the Maven artifact coordinates for the driver file(s). 
+
+For example, we may need to access an older version of PostgreSQL that is no longer
+compatible with the latest driver. Here we'll create an alternate PostgreSQL 
+registration for a 9.2.x driver that we can use as needed:
 
 ```java
-String name = "PostgreSQLAlternative";
-AutomaticDrivers.AutomaticDriverBuilder builder;
-AutomaticDrivers drivers = new AutomaticDrivers();
-AutomaticDriver descriptor = drivers.getDriverByName(name)
+AutomaticDriver postgres9x = AutomaticDrivers
+        .createDriver("PostgreSQL9x")
+        .artifact("org.postgresql:postgresql:9.2-1004-jdbc3")
+        .driver("org.postgresql.Driver")
+        .datasource("org.postgresql.ds. PGSimpleDataSource")
+        .build();
 
-builder = drivers.createDriver(name)
-        .artifact(artifacts.toArray(new String[artifacts.size()]))
-        .prefix(prefixes.toArray(new String[prefixes.size()]))
-        .datasource("com.invirgance.virge.jdbc.DriverDataSource");
-
-descriptor = builder.build();
-descriptor.save()
+// Persist the driver for future use
+postgres9x.save();
 ```
+
 
 ## Stored Connections
 
-Stored connections can be used to create reusable pre-configured database connections.
+Stored connections can be used to create reusable pre-configured database 
+connections. The ```url``` or ```javax.sql.DataSource``` values can be configured
+once and then the connection can be looked up across restarts of the program.
+
+Here is an example of configuring a driver by ```url```:
 
 ```java
 
 AutomaticDriver postgres = AutomaticDrivers.getDriverByName("PostgreSQL");
-StoredConnection inventory = postgres.createConnection("InventoryDB")
+StoredConnection inventory = postgres
+    .createConnection("InventoryDB")
     .driver()
         .url("jdbc:postgresql://localhost:5432/inventory")
         .username("postgres")
     .build();
-inventory.save();
 
-AutomaticDriver mysql = AutomaticDrivers.getDriverByName("MySQL");
+// Persist the connection information
+inventory.save();
+```
+
+This version configured the ```javax.sql.DataSource``` parameters
+instead:
+
+```java
+AutomaticDriver mysql = AutomaticDrivers.getDriverByName("MariaDB/MySQL");
 StoredConnection customers = mysql.createConnection("CustomersDB")
                             .datasource()
-                                .property("serverTimezone", "UTC")
                                 .property("useSSL", true)
-                                .property("connectTimeout", 5000)
-                            .done()
-                            .driver()
-                                .url("jdbc:mysql://localhost:3306/customers")
-                                .username("root")
-                                .password("password")
+                                .property("serverName", "localhost")
+                                .property("port", 3306)
+                                .property("databaseName", "customers")
+                                .property("user", "root")
+                                .property("password", "pass")
                             .build();
+
+// Persist the connection information
 customers.save();
 ```
 
+### Navigating Heirarchy
+
+Once we have a configured connection, we can use it to navigate our database's
+metadata heirarchy. For example:
+
+```java
+StoredConnection customers = StoredConnections.getConnection("CustomersDB");
+DatabaseSchemaLayout layout = customers.getSchemaLayout();
+
+System.out.println("Total Catalogs: " + layout.getCatalogs().length);
+System.out.println("Current Catalog: " + layout.getCurrentCatalog().getName());
+System.out.println("Current Schema: " + layout.getCurrentSchema().getName());
+```
+
+Database objects that can be queried implement ```Iterable<JSONObject>```, allowing
+them to be used as stream in Convirgance APIs. Note that when a specific
+object is requested, a "best match" algorithm is used to handle case sensitivity.
+If an object is found that matches the case precisely, it is the item returned. If
+the case does not match, the first object returned by the database that matches
+a case-insentive compare is returned.
+
+```java
+Table type = layout.getCurrentSchema().getTable("CUSTOMER_TYPES");
+Table customers = layout.getCurrentSchema().getTable("customers");
+
+// Print data in CUSTOMER_TYPES table
+for(var record : type)
+{
+    System.out.println(record);
+}
+
+// Export CUSTOMERS table
+new CSVOutput().write(new FileTarget("customers.csv"), customers);
+
+```
+
+
 ### Example SQLStatement
 
-The SQLStatement implementations simplify the process of creating queries based off of existing Table objects. You can also create aliases, filter data. Pretty much anything you can think of.
+Accessing all the records in a table is useful, but not ideal under all 
+circumstances. Rather than pushing the use of filters in Convirgance (which 
+still have to pull all that data for processing), the Convirgance (JDBC) API
+allows you to obtain a SQL Query that can be modified with filters, order by,
+and other common decorations. 
+
+One the ```SQLStatement``` is modified as needed, it can be transformed into a
+Convirgance ```Query``` for execution.
+
+Example:
 
 ```java
 DatabaseSchemaLayout layout = getLayout();
@@ -85,25 +157,26 @@ SQLStatement statement = table
                         .column(table.getColumn("email"), "contact_email")
                         .from(table, "c")
                         .where()
-                          .equals(table.getColumn("status"), "active")
-                          .and()
-                            .greaterThan(table.getColumn("last_order_id"), 8)
-                          .end()
+                            .and()
+                                .equals(table.getColumn("status"), "active")
+                                .greaterThan(table.getColumn("last_order_id"), 8)
+                            .end()
                         .done()
                         .order(table.getColumn("name"));
 
+// Ready to use Query object
+Query query = statement.query();
 ```
 
 ## Further Reading
 
-<!-- TODO add public java doc link -->
 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
   <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/package-summary.html">TODO JavaDocs: Convirgance (JDBC)</a>
+  <a href="https://docs.invirgance.com/javadocs/convirgance-jdbc/">JavaDocs: Convirgance (JDBC)</a>
 </div>
 
 ## Sections
 
 ##### [Previous: OLAP](./olap?id=online-analytical-processing-olap)
 
-##### [Next: Web Components](./convirgance-web?id=convirgance-web)
+##### [Next: Web Services](./convirgance-web?id=convirgance-web)
