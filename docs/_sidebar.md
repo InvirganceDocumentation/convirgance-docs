@@ -71,11 +71,4 @@
   - [Stored Connections](convirgance-jdbc.md#Stored-Connections)
   - [SQL Statements](convirgance-jdbc.md#SQL-Statements)
 
-- [Web](convirgance-web.md#convirgance-web)
-
-  - [Installation](convirgance-web.md#installation)
-  - [Core Architecture](convirgance-web.md#Core-Architecture)
-  - [JSP Custom Tags](convirgance-web.md#JSP-Custom-Tags)
-  - [Complete Example](convirgance-web.md#Complete-Example)
-
 - [Community and Support](contact.md)
