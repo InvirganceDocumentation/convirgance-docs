@@ -53,6 +53,14 @@
   - [Example: Using the Properties Implementation](file-formats.md#using-the-properties-implementation)
   - [Best Practices](file-formats.md#best-practices)
 
+- [Wiring](convirgance-wiring.md#wiring-compositional-configuration)
+  - [Installation](convirgance-wiring.md#installation)
+  - [Structure](convirgance-wiring.md#structure)
+  - [Custom Tags](convirgance-wiring.md#custom-tags)
+  - [Type Tags](convirgance-wiring.md#type-tags)
+  - [Built-In Types](convirgance-wiring.md#built-in-type-tags)
+  - [Identifiers](convirgance-wiring.md#identifier-access)
+
 - [OLAP](olap.md#online-analytical-processing-olap)
 
   - [Installation](olap.md#installation)
