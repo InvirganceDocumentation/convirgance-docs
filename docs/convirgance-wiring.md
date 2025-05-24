@@ -142,7 +142,7 @@ following code:
 
 ```java
 var source = new FileSource("configuration.xml");
-var root = new XMLWiringParser(source).getRoot();
+var root = new XMLWiringParser<Object>(source).getRoot();
 ```
 
 However, it is sometimes desirable to look up individual objects contained within
@@ -162,7 +162,7 @@ Now we can access the message directly with the identifer:
 var source = new FileSource("configuration.xml");
 var parser = new XMLWiringParser(source);
 
-String message = parser.get("msg");
+String message = (String)parser.get("msg");
 ```
 
 ## Arrays
