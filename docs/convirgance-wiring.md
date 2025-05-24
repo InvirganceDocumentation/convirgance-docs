@@ -20,7 +20,7 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance-wiring</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -165,6 +165,41 @@ var parser = new XMLWiringParser(source);
 String message = parser.get("msg");
 ```
 
+## Arrays
+
+Wiring has special support for array types like `String[]` or `int[]`. In the
+case of a string array, you can pass a comma-separated list:
+
+```xml
+<stringArray>One, Two, Three</stringArray>
+```
+
+Elements will be automatically trimmed, so only use this approach if your data
+is fairly simple, has no commas, and does not care about whitespace.
+
+Arrays in general can be set with the `<list>` tag like this:
+
+```xml
+<intArray>
+    <list>
+        <int>1</int>
+        <int>2</int>
+        <int>3</int>
+    </list>
+</intArray>
+``` 
+
+In cases of simple data types, this can be simplified with the use of the
+`<json>` tag:
+
+```xml
+<intArray>
+    <json>[1, 2, 3]</json>
+</intArray>
+``` 
+
+This works because `JSONArray` implements `List` and the array values are parsed
+into the expected type. 
 
 ## Further Reading
 
