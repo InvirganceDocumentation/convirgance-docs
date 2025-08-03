@@ -12,7 +12,7 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance</artifactId>
-    <version>1.2.3</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
