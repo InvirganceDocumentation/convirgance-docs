@@ -70,13 +70,30 @@ it past client-side validation.
 
 ## Services
 
+There are several `Service` implementations that can provide a useful base for
+composing logic. Most applications will start with a `SelectService` to provide
+data to the user interface and then add an `InsertService` to save data. 
+
+More complex applications can use `RoutedService`, `RESTService`, and 
+`HypermediaService` to create rich applications that utilize REST approaches
+to application design.
+
 ### SelectService
+
+The workhorse of the service implementations, `SelectService` provides an easy
+method of developing data retrieval services. It functions by collecting key/value
+pairs from a set of pluggable parameters, then passing those key/value pairs to
+a binding for processing.
+
+The binding then returns a stream of data that can be transformed before being
+serialized to the desired format. While most oftent that format will be JSON, it
+can just as easily be CSV, pipe-delimited, YAML, and many other formats. 
 
 **Pipeline:**
 
 | Plugin            | Required | Description                                                                       |
 |-------------------|----------|-----------------------------------------------------------------------------------|
-| parameters        | Yes      | Collects key/value parameters for use in the binding                              |
+| parameters        | No       | Collects key/value parameters for use in the binding                              |
 | binding           | Yes      | Produces a stream of `JSONObject` records based on the parameters                 |
 | transformers      | No       | Manipulates the data returned by the binding before being passed to the output    |
 | output            | Yes      | Serializes the data into the desired format. Most services will use `JSONOutput`. |
