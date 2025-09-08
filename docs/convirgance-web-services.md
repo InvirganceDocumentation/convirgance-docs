@@ -187,6 +187,12 @@ error.
 
 ### RoutedService
 
+Calls other services based upon the path of the request. Longer paths have
+priority over shorter paths, allowing for complex heirarchies of services to be
+created. 
+
+The `*` can be used as a wildcard in the path for places where the value in the
+URL is not known ahead of time. 
 
 **Pipeline:**
 
@@ -202,13 +208,13 @@ error.
     <routes>
         <list>
             <entry>
-                <string>/services/owner</string>
+                <string>/api/owner</string>
                 <SelectService>
                 ...
                 </SelectService>
             </entry>
             <entry>
-                <string>/services/owner/*/pet</string>
+                <string>/api/owner/*/pet</string>
                 <SelectService>
                 ...
                 </SelectService>
