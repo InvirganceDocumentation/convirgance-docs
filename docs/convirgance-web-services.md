@@ -226,6 +226,21 @@ URL is not known ahead of time.
 
 ### HypermediaService
 
+Allows JSP pages or other template components to be organized into a Hypermedia
+Driven Application (HDA) based on REST principles. 
+
+Making a `GET` request on the service will render the requested JSP (or other template
+language) path. The collected parameters will be available to the JSP as regular
+`${param.name}` values. 
+
+`HypermediaVerb` instances can be registered to handle verbs like `edit` and
+`create`. These verbs will cause alternate pages to be rendered on a `GET`
+request, and provide a backend service to handle a `POST` request. This allows
+Hypermedia to be accomplished within the bounds of standard form controls.
+
+**Note:** Forms submitted to the `HypermediaService` will be transformed into a
+`JSONObject` stream in the request body before being forwarded to the backend 
+service. This makes the form submission transparent to the backing service.
 
 **Pipeline:**
 
