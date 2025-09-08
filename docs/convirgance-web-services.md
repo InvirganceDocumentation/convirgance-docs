@@ -153,6 +153,9 @@ WHERE ZIP = :zipcode
 
 ### RESTService
 
+Used to route requests to a different `Service` implementations based upon the
+HTTP method. Any method without a `Service` to handle it will return a `404 Not Found`
+error.
 
 **Pipeline:**
 
