@@ -15,6 +15,19 @@ at runtime.
 For example, the file `src/main/webapp/api/CustomersByZipcode.xml` in the project
 would be available at the URL path of `/api/CustomersByZipcode`.
 
+## URL Paths
+
+Before URLs will begin handling services, the servlet handler must be [configured](convirgance-web-quickstart.md#configure-webxml) 
+in the `web.xml` file. Once that step is complete, all `.xml` files in the path can
+be loaded as `Service` implementations.
+
+The `.xml` extension is not part of the URL, so `/api/example.xml` would be accessed
+at the URL `/api/example`. Further URL path components are ignored, so the URL
+`/api/example/12/subitems/23` would still map to `/api/example.xml`. 
+
+An alternate naming scheme for services is to place `wiring.xml` in a directory. So the
+`/api/example` URL could also be served by a file named `/api/example/wiring.xml`.
+
 ## Common Concepts
 
 This section goes over some of the common plugin concepts used across the
