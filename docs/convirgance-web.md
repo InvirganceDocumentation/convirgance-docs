@@ -13,12 +13,12 @@ architecture.
 
 Key Features:
 
-- [Wiring](convirgance-wiring.md) Components
-- JSP TagLib
+- [Wiring](convirgance-wiring.md) Components for Web Services
+- JSP Tag Library
 - Servlet Infrastructure
 - Convirgance (Boot) self-executable microservices
 
-## Documentation
+## Sections
 
 - [Getting Started](convirgance-web-quickstart.md)
 - [Web Services](convirgance-web-services.md)
@@ -26,18 +26,8 @@ Key Features:
 - [Tag Library](convirgance-web-taglib.md)
 - [Application Configuration / Boot](convirgance-web-boot.md)
 
-
 ## Further Reading
 
 📚 [JavaDocs: Convirgance (Web Services)](https://docs.invirgance.com/javadocs/convirgance-web/)
 
 📚 [Tag Library Docs: Convirgance (Web Services)](https://docs.invirgance.com/tlddocs/convirgance-web/)
-
-
-## Sections
-
-##### [Previous: JDBC](convirgance-jdbc?id=convirgance-jdbc)
-
-##### [Next: Getting Started](convirgance-web-quickstart.md)
-
-##### [Back to start?](./?id=convirgance)
