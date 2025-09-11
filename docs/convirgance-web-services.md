@@ -147,13 +147,13 @@ WHERE ZIP = :zipcode
 
 | Plugin            | Required | Description                                                                       |
 |-------------------|----------|-----------------------------------------------------------------------------------|
-| parameters        | Yes      | Collects key/value parameters for use in the binding                              |
-| input             | Yes      |                  |
-| origin            | Yes      |                  |
-| injectParameters  | Yes      |                  |
-| transformers      | No       | Manipulates the stream data before being passed to the consumer    |
-| consumer          | Yes      |                  |
-| output            | No       | Serializes the data into the desired format. If not specified, default is `JSONOutput` |
+| parameters        | No       | Collects key/value parameters                                                     |
+| input             | Yes      | The format of data to read in. Generally this will be a `JSONInput`.              |
+| origin            | Yes      | Read the data via a method stuch as `RequestBodyOrigin` or `ParameterOrigin`      |
+| injectParameters  | No       | A list of parameter names that should be injected as key/value pairs into each record |
+| transformers      | No       | Manipulates the stream data before being passed to the consumer                   |
+| consumer          | Yes      | Consumes each record (e.g. SQL insert) and returns any response records generated |
+| output            | No       | Format to serialize response records. If not specified, default is `JSONOutput`   |
 
 
 **Example:**
@@ -161,6 +161,65 @@ WHERE ZIP = :zipcode
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <InsertService>
+    <origin>
+        <RequestBodyOrigin />
+    </origin>
+    <input>
+        <JSONInput />
+    </input>
+    <transformers>
+        <list>
+            <NotBlankValidation>
+                <key>firstName</key>
+            </NotBlankValidation>
+            <NotBlankValidation>
+                <key>lastName</key>
+            </NotBlankValidation>
+            <NotBlankValidation>
+                <key>address</key>
+            </NotBlankValidation>
+            <NotBlankValidation>
+                <key>city</key>
+            </NotBlankValidation>
+            <NotBlankValidation>
+                <key>telephone</key>
+            </NotBlankValidation>
+            <RegExValidation>
+                <key>telephone</key>
+                <regex>\d{10}</regex>
+            </RegExValidation>
+        </list>
+    </transformers>
+    <consumer>
+        <QueryConsumer>
+            <jndiName>jdbc/petclinic</jndiName>
+            <sql>
+                <![CDATA[
+    insert into owners (
+        id,
+        first_name,
+        last_name,
+        address,
+        city,
+        telephone
+    ) values (
+        :id,
+        :firstName,
+        :lastName,
+        :address,
+        :city,
+        :telephone
+    )
+]]>
+            </sql>
+            <sequenceSql>
+                <![CDATA[
+    VALUES NEXT VALUE FOR identifiers
+]]>
+            </sequenceSql>
+            <sequenceId>id</sequenceId>
+        </QueryConsumer>
+    </consumer>
 </InsertService>
 ```
 
