@@ -64,7 +64,31 @@ suggestions:
 
 ## Service Call
 
+The `virge:service` call allows you to easily access backend services from the
+JSP page. Note that this tag is intended to allow access to data and must route
+to a `SelectService` or equivalent. The request to the service is equivalent to
+a `GET` request to the service.
 
+Example of a service call to retrieve a single customer:
+
+```xml
+<virge:service var="customers" path="/api/customers/${param.api}" />
+<virge:set var="customer" value="${virge:first(customers)}" />
+```
+
+The `virge:parameter` tag can be used to pass query parameters to the service. You
+can use the `default` attribute to control what gets passed to the service rather
+than passing a `null` value.
+
+Example of a service call to retrieve a filtered customer list:
+
+```xml
+<virge:service var="customers" path="/api/customers">
+    <virge:parameter name="zipcode" value="${param.zipcode}" default="" />
+    <virge:parameter name="state" value="${param.state}" default="" />
+    <virge:parameter name="discountCode" value="${param.discountCode}" default="" />
+</virge:service>
+```
 
 ## Control Flow
 
