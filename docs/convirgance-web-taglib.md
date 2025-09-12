@@ -41,9 +41,26 @@ to retrieve the first or last records of an iterable such as a service call.
 
 ## JSON
 
-- :json
-- :object
-- :array
+JSON tags allow JSON objects to be created and manipulated within a JSP page. All
+tags have an optional `var` attribute to assign the object to, and a `scope`
+variable to set the scope of the `var`. 
+
+However, these tags can be embedded into other tags, allowing the creation of
+deep hierarchies created at runtime.
+
+| Tag            | Contents                |
+|----------------|-------------------------|
+| virge:json     | A JSON string to decode |
+| virge:object   | Use the `virge:key` tag as children to set the key/value pairs of the `JSONObject` |
+| virge:array    | Use the `virge:value` tag to add entries to the `JSONArray` |
+
+These tags can be incredibly useful in a number of ways. Here are just a few
+suggestions:
+
+- Description of a form layout which can then be looped through to generate form fields
+- Construction of a `JSONObject` from parameter data serialized into a Javascript variable
+- Parameters to another tag like `virge:query`
+
 
 ## Service Call
 
