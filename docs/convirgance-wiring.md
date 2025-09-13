@@ -203,10 +203,8 @@ into the expected type.
 
 ## Further Reading
 
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <a href="https://docs.invirgance.com/javadocs/convirgance-wiring/">JavaDocs: Convirgance (JDBC)</a>
-</div>
+📚 [JavaDocs: Convirgance (Wiring)](https://docs.invirgance.com/javadocs/convirgance-wiring/)
+
 
 ## Sections
 
