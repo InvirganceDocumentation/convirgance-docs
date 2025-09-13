@@ -92,8 +92,53 @@ Example of a service call to retrieve a filtered customer list:
 
 ## Control Flow
 
-- Iterator
-- If
-- Set
+The Convirgance (Web Services) tag library provides control flow tools designed
+to work more cleanly with the `Iterable`, `JSONObject`, and `JSONArray` objects
+that the platform is based upon. 
+
+In addition, key functionality from the Java Standard Tag Library (JSTL) has been
+reimplemented to avoid having to include multiple tag libraries.
+
+All tags have a `var` attribute to assign the object to, and a `scope`
+variable to set the scope of the `var`. In the case of `virge:iterate`, the variable
+specified by `var` will contain the current object for that loop.
+
+| Tag              | Description                                                |
+|------------------|------------------------------------------------------------|
+| `virge:iterate`  | Iterates over the values passed to the `items` attribute.  |
+| `virge:if`       | Evaluates the `test` attribute as a boolean. Contents of the tag are only rendered if `test` is true.  |
+| `virge:set`      | Sets the value passed to the `value` attribute as the value of the variable specified by `var` |
+
 
 ## Database Query
+
+While it is generally not recommended to make direct database queries from web page
+templates, the Convirgance (Web Services) tag library provides the `virge:query`
+tag to accomplish direct queries.
+
+The JNDI path of the database connection must be passed in the `jndi` attribute. A
+binding object can also be optionally passed to the `binding` attribute. Typically
+this object would be constructed with one of the JSON tags above.
+
+The contents of tag is the query that you want to execute. Values from the binding
+object can be referenced by using the named parameter `:key` syntax.
+
+Note that JSP EL syntax is explicity disabled in the query. To prevent SQL injection
+attacks, you must use a binding object to pass in parameters.
+
+**Example:**
+
+```html
+<virge:object var="binding">
+    <virge:key name="zipcode" value="${param.zipcode}" default="" />
+    <virge:key name="state" value="${param.state}" default="" />
+    <virge:key name="discountCode" value="${param.discountCode}" default="" />
+</virge:object>
+
+<virge:query var="customers" jndi="jdbc/sample" binding="${binding}">
+select * from APP.CUSTOMER
+where (:zipcode = '' or ZIP = :zipcode)
+and (:state = '' or STATE = :state)
+and (:discountCode = '' or DISCOUNT_CODE = :discountCode)
+</virge:query>
+```
