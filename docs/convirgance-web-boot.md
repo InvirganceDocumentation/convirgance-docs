@@ -62,3 +62,9 @@ add the following properties to configure database access:
 | jdbc.init.sql.schema     | No       | A script to run at startup for initializing the database schema |
 | jdbc.init.sql.data       | No       | A script to run at startup for loading data into the database schema |
 
+
+## Sections
+
+##### [Previous: Hypermedia](convirgance-web-hypermedia.md)
+
+##### [Next: Community and Support](contact.md)

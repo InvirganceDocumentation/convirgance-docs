@@ -270,3 +270,10 @@ The result is a clean form that is easy to understand and update:
     <body>
 </html>
 ```
+
+
+## Sections
+
+##### [Previous: Tag Library](convirgance-web-taglib.md)
+
+##### [Next: Application Configuration](convirgance-web-boot.md)

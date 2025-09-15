@@ -22,9 +22,9 @@ Key Features:
 
 - [Getting Started](convirgance-web-quickstart.md)
 - [Web Services](convirgance-web-services.md)
-- [Hypermedia](convirgance-web-hypermedia.md)
 - [Tag Library](convirgance-web-taglib.md)
-- [Application Configuration / Boot](convirgance-web-boot.md)
+- [Hypermedia](convirgance-web-hypermedia.md)
+- [Application Configuration](convirgance-web-boot.md)
 
 ## Further Reading
 
