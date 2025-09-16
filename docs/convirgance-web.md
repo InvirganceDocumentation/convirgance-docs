@@ -31,3 +31,12 @@ Key Features:
 📚 [JavaDocs: Convirgance (Web Services)](https://docs.invirgance.com/javadocs/convirgance-web/)
 
 📚 [Tag Library Docs: Convirgance (Web Services)](https://docs.invirgance.com/tlddocs/convirgance-web/)
+
+
+<div class="sections-prev-next">
+
+##### [&laquo; Previous: Convirgance (JDBC)](./convirgance-jdbc?id=convirgance-jdbc)
+
+##### [Next: Getting Started &raquo;](convirgance-web-quickstart.md)
+
+</div>

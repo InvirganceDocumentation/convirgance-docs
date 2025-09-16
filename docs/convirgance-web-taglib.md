@@ -144,8 +144,10 @@ and (:discountCode = '' or DISCOUNT_CODE = :discountCode)
 ```
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Service Components](convirgance-web-services.md)
+##### [&laquo; Previous: Service Components](convirgance-web-services.md)
 
-##### [Next: Hypermedia](convirgance-web-hypermedia.md)
+##### [Next: Hypermedia &raquo;](convirgance-web-hypermedia.md)
+
+</div>

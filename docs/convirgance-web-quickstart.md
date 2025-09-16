@@ -178,9 +178,10 @@ when you created the project. If you're uncertain, look in the `target/` directo
 for the `.jar` file.
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Web Services](convirgance-web.md?id=convirgance-web)
+##### [&laquo; Previous: Web Services](convirgance-web.md?id=convirgance-web)
 
-##### [Next: Service Components](convirgance-web-services.md)
+##### [Next: Service Components &raquo;](convirgance-web-services.md)
 
+</div>

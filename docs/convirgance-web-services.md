@@ -1,4 +1,4 @@
-# Convirgance (Web Service): Wiring Components
+# Convirgance (Web Services): Wiring Components
 
 Web Services is based around the `Service` interface. Services are similar to
 Jakarta Servlets, processing web requests using `HttpRequest` and `HttpResponse`
@@ -368,8 +368,10 @@ service. This makes the form submission transparent to the backing service.
 ```
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Getting Started](convirgance-web-quickstart.md)
+##### [&laquo; Previous: Getting Started](convirgance-web-quickstart.md)
 
-##### [Next: Tag Library](convirgance-web-taglib.md)
+##### [Next: Tag Library &raquo;](convirgance-web-taglib.md)
+
+</div>

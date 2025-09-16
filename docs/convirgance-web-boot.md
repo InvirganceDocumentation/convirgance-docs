@@ -63,8 +63,10 @@ add the following properties to configure database access:
 | jdbc.init.sql.data       | No       | A script to run at startup for loading data into the database schema |
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Hypermedia](convirgance-web-hypermedia.md)
+##### [&laquo; Previous: Hypermedia](convirgance-web-hypermedia.md)
 
-##### [Next: Community and Support](contact.md)
+##### [Next: Community and Support &raquo;](contact.md)
+
+</div>

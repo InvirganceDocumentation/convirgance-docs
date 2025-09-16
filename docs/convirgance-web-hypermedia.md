@@ -272,8 +272,10 @@ The result is a clean form that is easy to understand and update:
 ```
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Tag Library](convirgance-web-taglib.md)
+##### [&laquo; Previous: Tag Library](convirgance-web-taglib.md)
 
-##### [Next: Application Configuration](convirgance-web-boot.md)
+##### [Next: Application Configuration &raquo;](convirgance-web-boot.md)
+
+</div>
