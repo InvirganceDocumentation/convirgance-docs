@@ -470,8 +470,11 @@ use the example above, create the spring config file based off that.
   <a href="https://docs.invirgance.com/javadocs/convirgance-olap/latest/index.html">JavaDocs: OLAP</a>
 </div>
 
-## Sections
 
-##### [Previous: File Formats](./file-formats?id=file-formats)
+<div class="sections-prev-next">
 
-##### [Convirgance JDBC](./convirgance-jdbc?id=convirgance-jdbc)
+##### [&laquo; Previous: Wiring](convirgance-wiring.md)
+
+##### [Next: Convirgance (JDBC) &raquo;](./convirgance-jdbc?id=convirgance-jdbc)
+
+</div>

@@ -209,8 +209,11 @@ Query query = statement.query();
   <a href="https://docs.invirgance.com/javadocs/convirgance-jdbc/">JavaDocs: Convirgance (JDBC)</a>
 </div>
 
-## Sections
 
-##### [Previous: OLAP](./olap?id=online-analytical-processing-olap)
+<div class="sections-prev-next">
 
-##### [Next: Web Services](./convirgance-web?id=convirgance-web)
+##### [&laquo; Previous: OLAP](./olap?id=online-analytical-processing-olap)
+
+##### [Next: Web Services &raquo;](./convirgance-web?id=convirgance-web)
+
+</div>
