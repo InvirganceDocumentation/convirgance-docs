@@ -166,8 +166,10 @@ tab-delimited, pipe-delimited, and even binary encodings. Additional formats
 can be plugged in using the `Input` and `Output` concepts, thereby making
 Convirgance a universal data processing platform.
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Getting Started](./getting-started?id=getting-started-with-convirgance)
+##### [&laquo; Previous: Getting Started](./getting-started?id=getting-started-with-convirgance)
 
-##### [Next: Database Operations](./database-operations?id=database-operations)
+##### [Next: Database Operations &raquo;](./database-operations?id=database-operations)
+
+</div>

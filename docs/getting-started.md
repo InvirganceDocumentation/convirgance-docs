@@ -91,8 +91,11 @@ Ready to dive deeper? Here's what you need to know:
 - [File Formats](file-formats.md) - Working with CSV, JSON, and more
 
 
-## Sections
 
-##### [Previous: Introduction](./?id=convirgance)
+<div class="sections-prev-next">
 
-##### [Next: Core Concepts](./concepts?id=core-concepts-and-goals)
+##### [&laquo; Previous: Introduction](./?id=convirgance)
+
+##### [Next: Core Concepts &raquo;](./concepts?id=core-concepts-and-goals)
+
+</div>
