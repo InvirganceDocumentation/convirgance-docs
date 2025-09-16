@@ -300,8 +300,11 @@ model=photopea
   <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/input/package-summary.html">JavaDocs: File Formats</a>
 </div>
 
-## Sections
 
-##### [Previous: Transforming Data](./transforming-data?id=transforming-data)
+<div class="sections-prev-next">
 
-##### [Next: OLAP Tools](./olap?id=online-analytical-processing-olap)
+##### [&laquo; Previous: Transforming Data](./transforming-data?id=transforming-data)
+
+##### [Next: Wiring &raquo;](convirgance-wiring.md)
+
+</div>

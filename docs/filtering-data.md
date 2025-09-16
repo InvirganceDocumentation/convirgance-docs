@@ -106,8 +106,11 @@ updated = date.transform(current.iterator());
   <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/filter/package-summary.html">JavaDocs: Filters</a>
 </div>
 
-## Sections
 
-##### [Previous: Database Operations](./database-operations?id=database-operations)
+<div class="sections-prev-next">
 
-##### [Next: Transforming Data](./transforming-data?id=transforming-data)
+##### [&laquo; Previous: Database Operations](./database-operations?id=database-operations)
+
+##### [Next: Transforming Data &raquo;](./transforming-data?id=transforming-data)
+
+</div>

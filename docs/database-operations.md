@@ -202,8 +202,11 @@ dbms.update(transaction);
   <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/dbms/package-summary.html">JavaDocs: DBMS</a>
 </div>
 
-## Sections
 
-##### [Previous: Core Concepts](./concepts?id=core-concepts)
+<div class="sections-prev-next">
 
-##### [Next: Filtering Data](./filtering-data?id=filters)
+##### [&laquo; Previous: Core Concepts](./concepts?id=core-concepts)
+
+##### [Next: Filtering Data &raquo;](./filtering-data?id=filters)
+
+</div>

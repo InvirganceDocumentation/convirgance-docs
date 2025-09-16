@@ -206,8 +206,10 @@ into the expected type.
 📚 [JavaDocs: Convirgance (Wiring)](https://docs.invirgance.com/javadocs/convirgance-wiring/)
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: File Formats](./file-formats?id=file-formats)
+##### [&laquo; Previous: File Formats](./file-formats?id=file-formats)
 
-##### [Next: OLAP](./olap?id=online-analytical-processing-olap)
+##### [Next: OLAP &raquo;](./olap?id=online-analytical-processing-olap)
+
+</div>

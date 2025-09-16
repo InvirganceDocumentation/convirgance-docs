@@ -183,8 +183,10 @@ public class DuplicationTransformer implements Transformer
 📚 [JavaDocs: Transformers](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/package-summary.html)
 
 
-## Sections
+<div class="sections-prev-next">
 
-##### [Previous: Filtering Data](./filtering-data?id=filters)
+##### [&laquo; Previous: Filtering Data](./filtering-data?id=filters)
 
-##### [Next: File Formats](./file-formats?id=file-formats)
+##### [Next: File Formats &raquo;](./file-formats?id=file-formats)
+
+</div>
