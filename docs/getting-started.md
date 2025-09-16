@@ -84,40 +84,12 @@ We can see by example, Convirgance can be used to seamlessly handle data as requ
 
 Ready to dive deeper? Here's what you need to know:
 
-1. [Core Concepts](core-concepts.md) - The concepts underpinning Convirgance architecture
-2. [Database Operations](database-operations.md) - Working with databases efficiently
-3. [Filtering Data](filtering-data.md) - SQL-like operations for any data source
-4. [Transforming Data](transforming-data.md) - Reshape and enrich your data
-5. [File Formats](file-formats.md) - Working with CSV, JSON, and more
-6. [OLAP Tools](olap.md) - Convirgance-olap package for creating OLAP work
+- [Core Concepts](core-concepts.md) - The concepts underpinning Convirgance architecture
+- [Database Operations](database-operations.md) - Working with databases efficiently
+- [Filtering Data](filtering-data.md) - SQL-like operations for any data source
+- [Transforming Data](transforming-data.md) - Reshape and enrich your data
+- [File Formats](file-formats.md) - Working with CSV, JSON, and more
 
-## Community and Support
-
-We're here to help:
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
- <img src="./images/github.png" width="24" height="24" style="display: flex; align-items: center; justify-content: center;">
- <div>
-     <a href="https://github.com/InvirganceOpenSource/convirgance">Convirgance</a>
-     <span>- Report bugs or request features</span>
- </div>
-</div>
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📑</span>
-  <div>
-    <a href="./#/contact.md">Contact</a>
-    <span>- Get in touch with the team</span>
-  </div>
-</div>
-
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <div>
-    <a href="https://docs.invirgance.com/javadocs/convirgance/latest/">JavaDocs</a>
-    <span>- Have a look behind the scenes</span>
-  </div>
-</div>
 
 ## Sections
 

@@ -1,67 +1,43 @@
 # Convirgance
 
-Convirgance is a modern, streamlined approach to database access. Unlike traditional
-ORM frameworks that map your database into Java objects, Convirgance gives you direct
-control over your SQL queries, returning results as a stream of `Map` objects.
+Convirgance is a high-performance application platform built upon the Java ecosystem 
+and engineered with a Data Oriented Design (DOD) architecture for speed, scalability, 
+and efficiency. It supports workloads ranging from high-throughput database pipelines 
+to low-latency AI-powered services. All with a fraction of the code required by 
+traditional stacks.
 
-Not only does this reduce coding by as much as 60%, the stream of data can
-be transformed, filtered, and manipulated before being serialized to nearly
-any data format. Web Services, ETL, configuration databases, OLAP, and many other
-use cases can be completed in minutes rather than hours or even days.
+Because it runs on the Java platform, Convirgance benefits from decades of ecosystem
+maturity, proven stability, and battle-tested performance. Applications start in 
+milliseconds, use minimal runtime resources and scale better than even Node.js 
+microservices. The architecture cleanly separates code from data, allowing 
+applications to be snapped together like legos. No boilerplate required.
 
-## Why Convirgance?
+The design uses static typing to ensure components snap together correctly
+and dynamic typing to maintain integrity as data flows through its transformation 
+pipeline. This keeps processing flexible and lightweight, minimizes development 
+overhead, and delivers the reliability, maintainability, and performance of the 
+Java platform.
 
-Traditional ORMs force you to map your database to Java objects, adding complexity and overhead. Convirgance takes a different approach:
+## Platform
 
-- **Direct SQL Queries**: No need to write Data Access Objects. Write or generate the SQL you want to get back the data you need.
-- **Stream Processing**: Handle large datasets in small memory footprints without GC pauses, cache thrashing, or memory pressure.
-- **Format Freedom**: Read from a database, output to CSV, or transform JSON - streams can be read from any format and written to any format.
-- **SQL-Like Operations**: Filters and transformers provide advanced concepts like WHERE-clause and GROUP BY features, allowing powerful manipulation of data.
-- **High Performance**: SQL queries produce better query plans, data streams have lower latency, and CPU cache utilization is higher.
+The Convirgance Platform is a cohesive set of APIs and components that layer together to 
+deliver high-performance application services, from raw data streaming to AI-driven web 
+applications. Each layer builds on the one below it, so you can adopt just what you need 
+or use the full stack for maximum productivity.
+
+- **Convirgance (Core)** - High-speed data streaming APIs form the basis of the platform
+- **Convirgance (Wiring)** - An XML-based configuration system for rapidly connecting Java objects into cohesive applications such as REST services 
+- **Convirgance (Web Services)** - Lightweight, Jakarta EE components for building scalable web services using Wiring files. Includes an integrated JSP tag library for creating hypermedia-driven applications (HDA) alongside JSON services.
+- **Convirgance (AI Services)** - Ready-to-use components for building agentic applications on top of common AI engines
+- **Convirgance (JDBC)** - Automatically retrieves JDBC drivers from Maven Central alongside apis for exploring database metadata
+- **Convirgance (OLAP)** - Components for dynamically querying multidimensional datasets in OLAP structures such as Star Schemas
+
 
 ## Documentation
 
 📑 High Level Documentation: https://docs.invirgance.com/convirgance/
 
 📚 JavaDocs: https://docs.invirgance.com/javadocs/convirgance/
-
-## Example
-
-Here is an example demonstrating the simplicity of the
-Convirgance approach.
-
-In the few lines of code below we are querying the `CUSTOMER` table
-in the database and writing the results to a CSV file.
-
-```java
-// Query the database
-DBMS database = new DBMS(source);
-Query query = new Query("select name, devices, pets from CUSTOMER");
-Iterable<JSONObject> results = database.query(query);
-
-// Specify the target file
-FileTarget target = new FileTarget("example.csv");
-
-// Write the stream to a CSV file
-new CSVOutput().write(target, results);
-```
-
-The resulting `example.csv` file can be opened in a program like Excel to view
-the exported data:
-
-| name | devices | pets |
-| ---- | ------- | ---- |
-| John | 3       | 1    |
-| Bob  | 1       | 2    |
-| Kyle | 1       | 10   |
-| ...  | ...     | ...  |
-
-Output formats can be easily swapped. For example, we can replace the last
-line to output JSON instead:
-
-```java
-new JSONOutput().write(new FileTarget("example.json", results));
-```
 
 ## Community and Support
 
