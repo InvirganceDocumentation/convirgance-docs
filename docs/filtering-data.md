@@ -93,7 +93,7 @@ current = database.query(new Query(search));
 updated = date.transform(current.iterator());
 ```
 
-## Best Practices
+## Tips
 
 - Combine filters with `AndFilter` and `OrFilter` to define complex filtering criteria.
 - Use `NotFilter` to filter records using the falsy evaluation of other `Filter`(s).

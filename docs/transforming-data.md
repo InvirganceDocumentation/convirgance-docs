@@ -171,20 +171,17 @@ public class DuplicationTransformer implements Transformer
 }
 ```
 
-## Best Practices
+## Tips
 
 - Avoid `ArrayList` and other buffers in your transformer. Memory buffers can cause `OutOfMemoryError` exceptions that crash your program.
-- Use `CoerceStringsTransformer` to standardize data types before processing.
-- Leverage `SortedGroupByTransformer` for efficient grouping when working with pre-sorted data.
-- Apply `UnsortedGroupByTransformer` when sorting is not guaranteed but grouping is required.
-- Combine transformers to build complex transformation pipelines.
+- Use `CoerceStringsTransformer` to standardize data types before processing
+- Leverage `SortedGroupByTransformer` for efficient grouping when working with sorted data
+- Combine transformers to build complex transformation pipelines
 
 ## Further Reading
 
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <a href="https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/package-summary.html">JavaDocs: Transformers</a>
-</div>
+📚 [JavaDocs: Transformers](https://docs.invirgance.com/javadocs/convirgance/latest/com/invirgance/convirgance/transform/package-summary.html)
+
 
 ## Sections
 

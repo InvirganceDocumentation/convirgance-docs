@@ -13,6 +13,18 @@ Convirgance treats all data sources equally, whether they're CSV files, JSON doc
 | JSON           | JavaScript Object Notation for structured data | Read/Write | `.json`        |
 | JBIN           | Binary JSON format                             | Read/Write | `.bin`,`.jbin` |
 
+
+## Additional Formats
+
+The number of formats can be extended with custom implementations of the `Input` and `Output`
+interfaces. Known implementations are linked to in the table below.
+
+
+| Format         | Description                          | Read/Write | Extensions     | Link |
+| -------------- | ------------------------------------ | ---------- | -------------- |------|
+| YAML           | Support for YAML data format         | Read/Write | `.yaml`        | [GitHub](https://github.com/InvirganceOpenSource/convirgance-yaml) |
+
+
 ## Input and Output
 
 The `Input` and `Output` interfaces are used to read/write from an `Iterable` stream to a `Object` implementing `Source` or `Target` respectively.
@@ -280,11 +292,6 @@ model=photopea
 */
 ```
 
-### Best Practices
-
-- Ensure you're following the file-type specifications, created by [IETF](https://www.ietf.org/).
-- Robust error handling to deal with malformed files.
-- Optimize performance for large files by using streaming approaches where applicable.
 
 ## Further Reading
 

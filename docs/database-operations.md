@@ -188,12 +188,12 @@ TransactionOperation transaction = new TransactionOperation(delete, insert);
 dbms.update(transaction);
 ```
 
-## Best Practices
+## Tips
 
-- Use `TransactionOperation` for multiple operations and to ensure atomicity incase issues arise.
-- Leverage `BatchOperation` for large-scale operations to optimize performance.
-- Using interval commits to avoid overflowing the transaction buffer
-- Utilize named bindings as they ensure the correct JSONObject values will be used.
+- Use `TransactionOperation` for multiple operations and to ensure atomicity
+- Leverage `BatchOperation` for large-scale operations to optimize performance
+- Watch out for interval commits when there is a danger of overflowing the transaction buffer
+- Utilize named bindings for security, performance, and sophisticated application logic
 
 ## Further Reading
 
