@@ -60,7 +60,7 @@
   - [Representing Database Structure](olap.md#representing-database-structure)
   - [Generating SQL Queries](olap.md#generating-sql-queries)
   - [OLAP Interface](olap.md#olap-interface)
-  - [Spring Method](olap.md#spring-method)
+  - [Wiring Files](olap.md#wiring-configuration)
 
 - [JDBC](convirgance-jdbc.md#convirgance-jdbc)
 

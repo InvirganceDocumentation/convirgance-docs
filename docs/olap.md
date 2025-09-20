@@ -268,7 +268,7 @@ generator.getSQL(); // Generate the SQL!
 
 That's it! Once we have the Star object, we can simply use the ReportGenerator
 for our analytics. Of course, defining all these dimensions and measures for the star
-can be tedious, but fortunately we can use the Spring Configuration file to quickly
+can be tedious, but fortunately we can use a [Wiring](convirgance-wiring.md) Configuration file to quickly
 import our star. Move on to the next session to see an example.
 
 <!--
