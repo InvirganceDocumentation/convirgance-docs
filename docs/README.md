@@ -28,7 +28,7 @@ or use the full stack for maximum productivity.
 - **Convirgance (Core)** - High-speed data streaming APIs form the basis of the platform
 - **Convirgance (Wiring)** - An XML-based configuration system for rapidly connecting Java objects into cohesive applications such as REST services 
 - **Convirgance (Web Services)** - Lightweight, Jakarta EE components for building scalable web services using Wiring files. Includes an integrated JSP tag library for creating hypermedia-driven applications (HDA) alongside JSON services.
-- **Convirgance (AI Services)** - Ready-to-use components for building agentic applications on top of common AI engines
+- **Convirgance (AI Services)** - Ready-to-use components for building agentic applications on top of common AI engines *(coming soon)*
 - **Convirgance (JDBC)** - Automatically retrieves JDBC drivers from Maven Central alongside apis for exploring database metadata
 - **Convirgance (OLAP)** - Components for dynamically querying multidimensional datasets in OLAP structures such as Star Schemas
 
