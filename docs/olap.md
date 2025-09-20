@@ -16,8 +16,6 @@ where a central fact table (containing quantitative data) is connected to multip
 dimension tables (describing the context of the data). This structure simplifies analytical queries and accelerates
 information retrieval from databases.
 
-> ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
-> Convirgance (OLAP) is in pre-release and may be subject to change
 
 ## Installation
 
@@ -27,7 +25,7 @@ Add the following dependency to your Maven `pom.xml` file:
 <dependency>
     <groupId>com.invirgance</groupId>
     <artifactId>convirgance-olap</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -314,139 +312,152 @@ There is a test case that constructs a star that you can use. -->
 <!--As a next step, you can use [Convirgance-WEB](https://github.com/InvirganceOpenSource/convirgance-web) to create web services around this OLAP
 structure. -->
 
-## Spring Method
+## Wiring Configuration
 
 Rather than manually defining all tables, dimensions, and measures for our star
 schema, we can have a single configuration file to pull from. Follow along to see
-how we can setup and use a Spring configuration file for our star schema to generate SQL.
+how we can setup and use a [Wiring](convirgance-wiring.md) configuration file for 
+our star schema to generate SQL.
 
 Let's first configure the four tables surrounding our central ORDERS table. This might be a
 good time to remind ourselves what our star schema looked like. We define the tables
-in Spring as follows:
+in Wiring as follows:
 
 ```xml
-<bean id="products" class="com.invirgance.convirgance.olap.sql.Table">
-    <property name="name" value="PRODUCTS"/>
-    <property name="primaryKey" value="product_id"/>
-    <property name="foreignKeys">
+<Table>
+    <name>PRODUCTS</name>
+    <primaryKey>product_id</primaryKey>
+    <foreignKeys">
         <list></list>
-    </property>
+    </foreignKeys>
+</Table>
+
+<Table id="salespersons">
+    <name>SALESPERSONS</name>
+    <primaryKey>salesperson_id</primaryKey>
+    <foreignKeys>
+        <list></list>
+    </foreignKeys>
+</Table>
+
+<Table id="customers">
+    <name>CUSTOMERS</name>
+    <primaryKey>customer_id</primaryKey>
+    <foreignKeys>
+        <list></list>
+    </foreignKeys>
 </bean>
 
-<bean id="salespersons" class="com.invirgance.convirgance.olap.sql.Table">
-    <property name="name" value="SALESPERSONS"/>
-    <property name="primaryKey" value="salesperson_id"/>
+<Table id="days">
+    <name>DAYS</name>
+    <primaryKey>day_id</primaryKey>
     <property name="foreignKeys">
         <list></list>
     </property>
-</bean>
-
-<bean id="customers" class="com.invirgance.convirgance.olap.sql.Table">
-    <property name="name" value="CUSTOMERS"/>
-    <property name="primaryKey" value="customer_id"/>
-    <property name="foreignKeys">
-        <list></list>
-    </property>
-</bean>
-
-<bean id="days" class="com.invirgance.convirgance.olap.sql.Table">
-    <property name="name" value="DAYS"/>
-    <property name="primaryKey" value="day_id"/>
-    <property name="foreignKeys">
-        <list></list>
-    </property>
-</bean>
+</Table>
 ```
 
 Next step is to configure our central fact table (ORDERS) with foreign keys referencing
 each of the four tables defined above:
 
 ```xml
-<bean id="orders" class="com.invirgance.convirgance.olap.sql.Table">
-    <property name="name" value="ORDERS"/>
-    <property name="primaryKey" value="order_id"/>
-    <property name="foreignKeys">
+<Table id="orders">
+    <name>ORDERS</name>
+    <primaryKey>order_id</primaryKey>
+    <foreignKeys>
         <list>
-            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
-                <property name="sourceKey" value="product_id" />
-                <property name="target">
-                    <ref bean="products" />
-                </property>
-            </bean>
-            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
-                <property name="sourceKey" value="salesperson_id" />
-                <property name="target">
-                    <ref bean="salespersons" />
-                </property>
-            </bean>
-            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
-                <property name="sourceKey" value="customer_id" />
-                <property name="target">
-                    <ref bean="customers" />
-                </property>
-            </bean>
-            <bean class="com.invirgance.convirgance.olap.sql.ForeignKey">
-                <property name="sourceKey" value="day_id" />
-                <property name="target">
-                    <ref bean="days" />
-                </property>
-            </bean>
+            <ForeignKey>
+                <sourceKey>product_id</sourceKey>
+                <target>
+                    <ref id="products" />
+                </target>
+            </ForeignKey>
+            <ForeignKey>
+                <sourceKey>salesperson_id</sourceKey>
+                <target>
+                    <ref id="salespersons" />
+                </target>
+            </ForeignKey>
+            <ForeignKey>
+                <sourceKey>customer_id</sourceKey>
+                <target>
+                    <ref id="customers" />
+                </target>
+            </ForeignKey>
+            <ForeignKey>
+                <sourceKey>day_id</sourceKey>
+                <target>
+                    <ref id="days" />
+                </target>
+            </ForeignKey>
         </list>
-    </property>
-</bean>
+    </foreignKeys>
+</Table>
 ```
 
 Now that we have the tables, we can configure the star with the relevant
 dimensions and measures:
 
 ```xml
-<bean class="com.invirgance.convirgance.olap.Star">
-    <property name="fact">
-        <ref bean="orders"/>
-    </property>
-    <property name="dimensions">
+<Star>
+    <fact>
+        <ref id="orders"/>
+    </fact>
+    <dimensions>
         <list>
-            <bean class="com.invirgance.convirgance.olap.Dimension">
-                <property name="name" value="Product Name"/>
-                <property name="column" value="product_name"/>
-                <property name="table">
-                    <ref bean="products"/>
-                </property>
-            </bean>
-            <bean class="com.invirgance.convirgance.olap.Dimension">
-                <property name="name" value="Salesperson Name"/>
-                <property name="column" value="salesperson_name"/>
-                <property name="table">
-                    <ref bean="salespersons"/>
-                </property>
-            </bean>
+            <Dimension>
+                <name>Product Name</name>
+                <column>product_name</column>
+                <table>
+                    <ref id="products"/>
+                </table>
+            </Dimension>
+            <Dimension>
+                <name>Salesperson Name</name>
+                <column>salesperson_name</column>
+                <table>
+                    <ref id="salespersons"/>
+                </table>
+            </Dimension>
             <!-- Other dimensions defined here -->
         </list>
-    </property>
-    <property name="measures">
+    </dimensions>
+    <measures>
         <list>
-            <bean class="com.invirgance.convirgance.olap.measures.SumMeasure">
-                <property name="name" value="Total"/>
-                <property name="metric">
-                    <bean class="com.invirgance.convirgance.olap.Metric">
-                        <property name="column" value="cost_dollars"/>
-                        <property name="table">
-                            <ref bean="orders"/>
-                        </property>
-                    </bean>
-                </property>
-            </bean>
+            <SumMeasure>
+                <name>Total</name>
+                <metric>
+                    <Metric>
+                        <column>cost_dollars</column>
+                        <table>
+                            <ref id="orders"/>
+                        </table>
+                    </Metric>
+                </metric>
+            </SumMeasure>
             <!-- Other measures defined here -->
         </list>
-    </property>
-</bean>
+    </measures>
+</Star>
 ```
 
-That is all for the Spring file. Now we simply import the Star into java and use
+Note that when you bring this together, you'll need a root tag to contain it
+all. Use `<list>` to contain all the objects. e.g.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<list>
+    <Table id="date">...<Table>
+    <Star>...</Star>
+</list>
+```
+
+Now we simply import the Star into java and use
 the report generator in the same way as we did in the previous section:
 
 ```java
-Star star = getStar() // Load the Star from the Spring file
+Star star = getStar() // Load the Star from the Wiring file
 
 ReportGenerator generator = new ReportGenerator(star);
 
@@ -457,6 +468,22 @@ generator.addMeasure(star.getMeasure("Total"));
 generator.getSQL(); // Generate the SQL!
 ```
 
+The `getStar()` method might look something like this:
+
+```java
+public Star getStar()
+{
+    List list = new XMLWiringParser<List>(new FileSource("star.xml")).getRoot();
+
+    for(var object : list)
+    {
+        if(object instanceof Star) return (Star) object;
+    }
+
+    throw new ConvirganceException("Star not found in wiring file!");
+}
+```
+
 <!-- TODO maybe add an example for this
 
 use the example above, create the spring config file based off that.
@@ -465,10 +492,7 @@ use the example above, create the spring config file based off that.
 
 ## Further Reading
 
-<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px">
-  <span style="display: flex; align-items: center; justify-content: center;font-size:20px; width: 24px; height: 24px">📚</span>
-  <a href="https://docs.invirgance.com/javadocs/convirgance-olap/latest/index.html">JavaDocs: OLAP</a>
-</div>
+📚  [JavaDocs: OLAP](https://docs.invirgance.com/javadocs/convirgance-olap/latest/)
 
 
 <div class="sections-prev-next">

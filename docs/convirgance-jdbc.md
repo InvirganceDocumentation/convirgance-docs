@@ -8,9 +8,6 @@ schema, and an ability to dynamically create queries from database objects.
 
 ## Installation
 
-> ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
-> Convirgance (JDBC) is in pre-release and may be subject to changes in the APIs
-
 Add the following dependency to your Maven `pom.xml` file:
 
 ```xml

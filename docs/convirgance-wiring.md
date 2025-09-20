@@ -11,9 +11,6 @@ complex system where a configuration format is needed.
 
 ## Installation
 
-> ![WARNING](images/warning.svg) **<font color="#AA9900">WARNING:</font>**
-> Convirgance (Wiring) is in pre-release and may be subject to changes in the APIs
-
 Add the following dependency to your Maven `pom.xml` file:
 
 ```xml
