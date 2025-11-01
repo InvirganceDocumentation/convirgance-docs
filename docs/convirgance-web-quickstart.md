@@ -40,7 +40,7 @@ Run the following command to create the project:
 ```sh
 mvn -DarchetypeGroupId=com.invirgance \
     -DarchetypeArtifactId=convirgance-web-archetype \
-    -DarchetypeVersion=0.1.0 \
+    -DarchetypeVersion=0.2.0 \
     org.apache.maven.plugins:maven-archetype-plugin:3.2.1:generate
 ```
 
@@ -155,7 +155,7 @@ following plugin to the `<build>` plugins in your `pom.xml`:
 <plugin>
     <groupId>com.invirgance</groupId>
     <artifactId>convirganceboot-maven-plugin</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <executions>
         <execution>
             <goals>
